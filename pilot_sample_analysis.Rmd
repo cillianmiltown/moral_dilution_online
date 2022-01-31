@@ -1,0 +1,746 @@
+---
+title: "Sample Analysis Pilot"
+author: "Cillian McHugh"
+date: "5th November 2021"
+bibliography: "resources/bib/My Library.bib"
+csl: "resources/bib/apa.csl"
+output:
+  bookdown::html_document2:
+    fig_caption: yes
+    toc: true
+    toc_float:
+      toc_collapsed: false
+    toc_depth: 4
+    number_sections: false
+editor_options: 
+  chunk_output_type: console
+---
+
+# Pilot Study
+
+Below is the analysis for the pilot study.
+
+```{r setup, include=FALSE}
+#knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(eval = TRUE, echo = TRUE)
+#knitr::opts_chunk$set(include = FALSE)
+```
+
+# Setting Up
+## Load Libraries
+
+```{r, results = "hide"}
+
+rm(list = ls())
+# devtools::install_github("cillianmiltown/R_desnum")
+#install.packages("PowerTOST")
+library(desnum)
+library(psych)
+library(corx)
+library(nlme)
+library(TOSTER)
+library(scales)
+suppressMessages(library(tidyverse))
+suppressMessages(library(car))
+# library("PowerTOST")
+```
+
+## Check Required Sample Sizes
+
+### Sample Required for `d = .1`
+```{r, include = TRUE, echo = TRUE}
+d <- .1
+TOSTER::powerTOSTpaired(.05, .8, low_eqbound_dz = -d, high_eqbound_dz = d)
+```
+
+### Sample Required for `d = .15`
+```{r, include = TRUE, echo = TRUE}
+d <- .15
+TOSTER::powerTOSTpaired(.05, .8, low_eqbound_dz = -d, high_eqbound_dz = d)
+```
+
+### Sample Required for `d = .2`
+```{r, include = TRUE, echo = TRUE}
+d <- .2
+TOSTER::powerTOSTpaired(.05, .8, low_eqbound_dz = -d, high_eqbound_dz = d)
+```
+
+### Sample Required for `d = .3`
+```{r, include = TRUE, echo = TRUE}
+d <- .3
+TOSTER::powerTOSTpaired(.05, .8, low_eqbound_dz = -d, high_eqbound_dz = d)
+```
+
+
+## Run Script to set up Data
+```{r, echo=TRUE}
+
+source("pilot_set_up_data.R")
+#source("pilot_simulating_data.R")
+# create functions
+source("create_functions.R")
+
+x <- full_long
+
+```
+
+# Overview
+Below is a sample analysis for a proposed replication extension of @railton_moral_2017, using simulated data, with a total sample of *N* = `r length(x$gender)`, (female = `r sum(x$gender=="0")`, male = `r sum(x$gender=="1")/4`, *M~age~* = `r round(mean(x$age),digits=1)`, *SD* = `r round(sd(x$age),digits=1)`).
+
+## Checking cell sizes
+
+```{r, include = TRUE, echo = TRUE}
+table(x$means)
+table(x$scenario)
+
+table(x$scenario, x$means)
+```
+
+## Attention Checks
+
+
+```{r, include = TRUE, echo = TRUE}
+table(x$attn_chk_1Q)
+table(x$attn_chk_2Q)
+```
+
+Total number of participants reamaining after excluding participants who failed both attention checks:
+```{r, include = TRUE, echo = TRUE}
+sum(x$attn_chk_1Q==7 | (x$attn_chk_2Q==2|x$attn_chk_2Q==5))/4
+```
+
+```{r, include = TRUE, echo = TRUE}
+x <- x[which(x$attn_chk_1Q==7 | (x$attn_chk_2Q==2|x$attn_chk_2Q==5)),]
+```
+
+## Quick look at the data
+
+```{r, include = TRUE, echo = TRUE}
+skimr::skim(x)
+```
+
+## Checking Assumptions
+
+### Homogeneity of Variance
+#### Judgment
+```{r, include = TRUE, echo = TRUE}
+leveneTest(x$judgment, x$four_conditions, center = mean)
+```
+
+#### Confidence
+```{r, include = TRUE, echo = TRUE}
+leveneTest(x$confidence, x$four_conditions, center = mean)
+```
+
+#### Trust Friend
+```{r, include = TRUE, echo = TRUE}
+leveneTest(x$trust_friend, x$four_conditions, center = mean)
+```
+
+#### Trust Partner
+```{r, include = TRUE, echo = TRUE}
+leveneTest(x$trust_partner, x$four_conditions, center = mean)
+```
+
+#### Trust Politician
+```{r, include = TRUE, echo = TRUE}
+leveneTest(x$trust_politician, x$four_conditions, center = mean)
+```
+
+### Multicollinearity
+
+Check Correlation Table\ \@ref(tab:corrtable) for correlations greater than .8.
+
+# Basic Correlations
+
+```{r}
+
+#x <- x[which(x$gender<2),]
+
+y <- x %>% select(
+   action_choice
+  ,judgment
+  ,confidence
+  ,trust_friend
+  ,trust_partner
+  ,trust_politician
+)
+z <- as.data.frame(sapply(y, as.numeric))
+
+test <- corx(z,
+          triangle = "lower",
+          stars = c(0.05, 0.001),
+          describe = c(`$M$` = mean, `$SD$` = sd))
+
+```
+
+
+
+```{r corrtable, include=TRUE}
+
+papaja::apa_table(test$apa, # apa contains the data.frame needed for apa_table
+                  caption = "Correlations between variables of interest",
+                  note = "* p < 0.05; ** p < 0.001",
+                  escape = F)
+
+
+
+```
+
+
+# Full Sample
+
+```{r, include = TRUE, echo = TRUE}
+# Set the effect size
+d <- .2
+```
+
+## Action Choice
+
+### Scenario
+
+```{r, include = TRUE, echo = TRUE}
+table(x$scenario,x$action_choice)
+(table(x$scenario,x$action_choice)/(length(x$gender)/2))*100
+chisq.test(table(x$scenario,x$action_choice))
+```
+
+
+```{r, include = TRUE, echo = TRUE}
+g1 <- x$action_choice[which(x$scenario=="wave")]
+g2 <- x$action_choice[which(x$scenario=="beckon")]
+```
+
+
+```{r, include = TRUE, echo = TRUE}
+equivalence_means_test(g1,g2,d)
+
+```
+
+```{r, include = TRUE, echo = TRUE}
+
+#y <- table(df3$InCS,df3$condition)
+y <- table(x$action_choice,x$scenario)
+y <- as.data.frame(y)
+#colnames(y) <- c("condition","InCS","Freq")
+colnames(y) <- c("action_choice","scenario","Freq")
+
+z <- as.data.frame(table(x$action_choice,x$scenario)/length(x$gender)*2)
+
+
+
+z <- rbind(as.data.frame(table(x$action_choice[which(x$scenario=="wave")])/
+                           length(x$action_choice[which(x$scenario=="wave")])),
+           as.data.frame(table(x$action_choice[which(x$scenario=="beckon")])/
+                           length(x$action_choice[which(x$scenario=="beckon")])))
+
+
+perc <- z$Freq
+test <- cbind(y,perc)
+```
+
+```{r, include = TRUE, echo = TRUE}
+
+ggplot(test, aes(x=scenario, y=perc, fill=factor(action_choice,labels=c("Act","Do not Act")
+                                                      ))) +
+  scale_y_continuous(limits = c(-.03,1),
+                     labels = percent_format()
+  )+ 
+  geom_col(position = "dodge",
+           color="black",
+           size=.2
+  )+
+  geom_text(family = "Times", size=4.2,
+            aes( label = scales::percent(test$perc),
+                 y= perc ),
+            stat= "identity",
+            vjust = -.5,
+            position = position_dodge(.9),
+            fontface='plain'
+            )+
+  geom_text(family = "Times", size=4.2,
+            aes(label = format(Freq),
+                y= -3*(..count../100)/(..count..)),
+            stat= "count",
+            position = position_dodge(0.9),
+            #vjust = -.05,
+            fontface='plain'
+            ) +
+  xlab("Scenario") +
+  ylab("Percentage of participants selecting each response")+
+  scale_x_discrete(labels=c("Beckon", "Wave")) +
+  scale_fill_grey(start = .5, end = .8) +
+  labs(fill="Action Choice") +
+  
+  geom_text(family = "Times", size=4.2,
+            aes( label = scales::percent(test$perc),
+                 y= test$perc ),
+            stat= "identity",
+            vjust = -.5,
+            position = position_dodge(.9),
+            fontface='plain'
+            )+
+  #theme_apa() +
+  theme_bw() +
+  theme(plot.title=element_text(family="Times",
+                                size=12
+                                ),
+        legend.text=element_text(family="Times",
+                                 size=8
+                                 ),
+          legend.title=element_text(family="Times",
+                                    size=10
+                                    ),
+          axis.text=element_text(family="Times",
+                                 colour = "black",
+                                 size=10
+                                 ),
+          axis.ticks.x = element_blank(),
+          axis.title=element_text(family="Times",
+                                  size=12
+                                  ),
+          strip.text=element_text(family = "Times",
+                                  size = 12
+                                  ),
+          strip.background = element_rect(fill = "white"),
+          legend.position="right")
+
+```
+
+
+### Means vs Side-Effect
+
+```{r, include = TRUE, echo = TRUE}
+
+table(x$means,x$action_choice)
+(table(x$means,x$action_choice)/(length(x$gender)/2))*100
+chisq.test(table(x$means,x$action_choice))
+
+```
+
+
+```{r, include = TRUE, echo = TRUE}
+g1 <- x$action_choice[which(x$means=="means")]
+g2 <- x$action_choice[which(x$means=="side-effect")]
+```
+
+
+```{r, include = TRUE, echo = TRUE}
+equivalence_means_test(g1,g2,d)
+
+```
+
+
+
+```{r, include = TRUE, echo = TRUE}
+
+#y <- table(df3$InCS,df3$condition)
+y <- table(x$action_choice,x$means)
+y <- as.data.frame(y)
+#colnames(y) <- c("condition","InCS","Freq")
+colnames(y) <- c("action_choice","means","Freq")
+
+z <- as.data.frame(table(x$action_choice,x$scenario)/length(x$gender)*2)
+
+
+
+z <- rbind(as.data.frame(table(x$action_choice[which(x$means=="means")])/
+                           length(x$action_choice[which(x$means=="means")])),
+           as.data.frame(table(x$action_choice[which(x$means=="side-effect")])/
+                           length(x$action_choice[which(x$means=="side-effect")])))
+
+
+perc <- z$Freq
+test <- cbind(y,perc)
+```
+
+```{r, include = TRUE, echo = TRUE}
+
+ggplot(test, aes(x=means, y=perc, fill=factor(action_choice,labels=c("Act","Do not Act")
+                                                      ))) +
+  scale_y_continuous(limits = c(-.03,1),
+                     labels = percent_format()
+  )+ 
+  geom_col(position = "dodge",
+           color="black",
+           size=.2
+  )+
+  geom_text(family = "Times", size=4.2,
+            aes( label = scales::percent(test$perc),
+                 y= perc ),
+            stat= "identity",
+            vjust = -.5,
+            position = position_dodge(.9),
+            fontface='plain'
+            )+
+  geom_text(family = "Times", size=4.2,
+            aes(label = format(Freq),
+                y= -3*(..count../100)/(..count..)),
+            stat= "count",
+            position = position_dodge(0.9),
+            #vjust = -.05,
+            fontface='plain'
+            ) +
+  xlab("Condition") +
+  ylab("Percentage of participants selecting each response")+
+  scale_x_discrete(labels=c("Means", "Side-Effect")) +
+  scale_fill_grey(start = .5, end = .8) +
+  labs(fill="Action Choice") +
+  
+  geom_text(family = "Times", size=4.2,
+            aes( label = scales::percent(test$perc),
+                 y= test$perc ),
+            stat= "identity",
+            vjust = -.5,
+            position = position_dodge(.9),
+            fontface='plain'
+            )+
+  #theme_apa() +
+  theme_bw() +
+  theme(plot.title=element_text(family="Times",
+                                size=12
+                                ),
+        legend.text=element_text(family="Times",
+                                 size=8
+                                 ),
+          legend.title=element_text(family="Times",
+                                    size=10
+                                    ),
+          axis.text=element_text(family="Times",
+                                 colour = "black",
+                                 size=10
+                                 ),
+          axis.ticks.x = element_blank(),
+          axis.title=element_text(family="Times",
+                                  size=12
+                                  ),
+          strip.text=element_text(family = "Times",
+                                  size = 12
+                                  ),
+          strip.background = element_rect(fill = "white"),
+          legend.position="right")
+
+```
+
+
+
+## Other Variables of Interest
+
+## Judgment
+### Difference Test
+```{r, include = TRUE, echo = TRUE}
+tapply(x$judgment, x$means, descriptives)
+tapply(x$judgment, x$scenario_abb, descriptives)
+summary(aov(judgment ~ means * scenario, x))
+```
+
+### Equivalence Test
+```{r, include = TRUE, echo = TRUE}
+k1 <- x$judgment[which(x$scenario=="wave")]
+k2 <- x$judgment[which(x$scenario=="beckon")]
+equivalence_means_test(k1,k2,d)
+```
+
+
+## Confidence
+### Difference Test
+```{r, include = TRUE, echo = TRUE}
+tapply(x$confidence, x$four_conditions, descriptives)
+summary(aov(confidence ~ means * scenario, x))
+```
+
+### Equivalence Test
+```{r, include = TRUE, echo = TRUE}
+k1 <- x$confidence[which(x$scenario=="wave")]
+k2 <- x$confidence[which(x$scenario=="beckon")]
+equivalence_means_test(k1,k2,d)
+```
+
+## Trust
+### Friend
+#### Difference Test
+```{r, include = TRUE, echo = TRUE}
+tapply(x$trust_friend, x$four_conditions, descriptives)
+summary(aov(trust_friend ~ means * scenario, x))
+```
+
+#### Equivalence Test
+```{r, include = TRUE, echo = TRUE}
+k1 <- x$trust_friend[which(x$scenario=="wave")]
+k2 <- x$trust_friend[which(x$scenario=="beckon")]
+equivalence_means_test(k1,k2,d)
+```
+
+
+### Romantic Partner
+#### Difference Test
+```{r, include = TRUE, echo = TRUE}
+tapply(x$trust_partner, x$four_conditions, descriptives)
+summary(aov(trust_partner ~ means * scenario, x))
+```
+
+#### Equivalence Test
+```{r, include = TRUE, echo = TRUE}
+k1 <- x$trust_partner[which(x$scenario=="wave")]
+k2 <- x$trust_partner[which(x$scenario=="beckon")]
+equivalence_means_test(k1,k2,d)
+```
+
+### Politician
+#### Difference Test
+```{r, include = TRUE, echo = TRUE}
+tapply(x$trust_politician, x$four_conditions, descriptives)
+summary(aov(trust_politician ~ means * scenario, x))
+```
+
+#### Equivalence Test
+```{r, include = TRUE, echo = TRUE}
+k1 <- x$trust_politician[which(x$scenario=="wave")]
+k2 <- x$trust_politician[which(x$scenario=="beckon")]
+equivalence_means_test(k1,k2,d)
+```
+
+
+
+# Means
+
+```{r, include = TRUE, echo = TRUE}
+x <- full_long[which(full_long$means=="means"),]
+```
+
+## Action Choice
+
+### Scenario
+
+```{r, include = TRUE, echo = TRUE}
+table(x$scenario,x$action_choice)
+chisq.test(table(x$scenario,x$action_choice))
+```
+
+
+```{r, include = TRUE, echo = TRUE}
+g1 <- x$action_choice[which(x$scenario=="wave")]
+g2 <- x$action_choice[which(x$scenario=="beckon")]
+```
+
+```{r, include = TRUE, echo = TRUE}
+equivalence_means_test(g1,g2,d)
+
+```
+
+
+
+## Other Variables of Interest
+
+## Judgment
+### Difference Test
+```{r, include = TRUE, echo = TRUE}
+tapply(x$judgment, x$scenario, descriptives)
+summary(aov(judgment ~ scenario, x))
+```
+
+### Equivalence Test
+```{r, include = TRUE, echo = TRUE}
+k1 <- x$judgment[which(x$scenario=="wave")]
+k2 <- x$judgment[which(x$scenario=="beckon")]
+equivalence_means_test(k1,k2,d)
+```
+
+
+## Confidence
+### Difference Test
+```{r, include = TRUE, echo = TRUE}
+tapply(x$confidence, x$scenario, descriptives)
+summary(aov(confidence ~ scenario, x))
+```
+
+### Equivalence Test
+```{r, include = TRUE, echo = TRUE}
+k1 <- x$confidence[which(x$scenario=="wave")]
+k2 <- x$confidence[which(x$scenario=="beckon")]
+equivalence_means_test(k1,k2,d)
+```
+
+## Trust
+### Friend
+#### Difference Test
+```{r, include = TRUE, echo = TRUE}
+tapply(x$trust_friend, x$scenario, descriptives)
+summary(aov(trust_friend ~ scenario, x))
+```
+
+#### Equivalence Test
+```{r, include = TRUE, echo = TRUE}
+k1 <- x$trust_friend[which(x$scenario=="wave")]
+k2 <- x$trust_friend[which(x$scenario=="beckon")]
+equivalence_means_test(k1,k2,d)
+```
+
+
+### Romantic Partner
+#### Difference Test
+```{r, include = TRUE, echo = TRUE}
+tapply(x$trust_partner, x$scenario, descriptives)
+summary(aov(trust_partner ~ scenario, x))
+```
+
+#### Equivalence Test
+```{r, include = TRUE, echo = TRUE}
+k1 <- x$trust_partner[which(x$scenario=="wave")]
+k2 <- x$trust_partner[which(x$scenario=="beckon")]
+equivalence_means_test(k1,k2,d)
+```
+
+### Politician
+#### Difference Test
+```{r, include = TRUE, echo = TRUE}
+tapply(x$trust_politician, x$scenario, descriptives)
+summary(aov(trust_politician ~ scenario, x))
+```
+
+#### Equivalence Test
+```{r, include = TRUE, echo = TRUE}
+k1 <- x$trust_politician[which(x$scenario=="wave")]
+k2 <- x$trust_politician[which(x$scenario=="beckon")]
+equivalence_means_test(k1,k2,d)
+```
+
+
+# Side-Effect
+
+```{r, include = TRUE, echo = TRUE}
+x <- full_long[which(full_long$means=="side-effect"),]
+```
+
+## Action Choice
+
+### Scenario
+
+```{r, include = TRUE, echo = TRUE}
+table(x$scenario,x$action_choice)
+chisq.test(table(x$scenario,x$action_choice))
+```
+
+
+```{r, include = TRUE, echo = TRUE}
+g1 <- x$action_choice[which(x$scenario=="wave")]
+g2 <- x$action_choice[which(x$scenario=="beckon")]
+```
+
+
+```{r, include = TRUE, echo = TRUE}
+equivalence_means_test(g1,g2,d)
+
+```
+
+
+## Other Variables of Interest
+
+
+## Judgment
+### Difference Test
+```{r, include = TRUE, echo = TRUE}
+tapply(x$judgment, x$scenario, descriptives)
+summary(aov(judgment ~ scenario, x))
+```
+
+### Equivalence Test
+```{r, include = TRUE, echo = TRUE}
+k1 <- x$judgment[which(x$scenario=="wave")]
+k2 <- x$judgment[which(x$scenario=="beckon")]
+equivalence_means_test(k1,k2,d)
+```
+
+
+## Confidence
+### Difference Test
+```{r, include = TRUE, echo = TRUE}
+tapply(x$confidence, x$scenario, descriptives)
+summary(aov(confidence ~ scenario, x))
+```
+
+### Equivalence Test
+```{r, include = TRUE, echo = TRUE}
+k1 <- x$confidence[which(x$scenario=="wave")]
+k2 <- x$confidence[which(x$scenario=="beckon")]
+equivalence_means_test(k1,k2,d)
+```
+
+## Trust
+### Friend
+#### Difference Test
+```{r, include = TRUE, echo = TRUE}
+tapply(x$trust_friend, x$scenario, descriptives)
+summary(aov(trust_friend ~ scenario, x))
+```
+
+#### Equivalence Test
+```{r, include = TRUE, echo = TRUE}
+k1 <- x$trust_friend[which(x$scenario=="wave")]
+k2 <- x$trust_friend[which(x$scenario=="beckon")]
+equivalence_means_test(k1,k2,d)
+```
+
+
+### Romantic Partner
+#### Difference Test
+```{r, include = TRUE, echo = TRUE}
+tapply(x$trust_partner, x$scenario, descriptives)
+summary(aov(trust_partner ~ scenario, x))
+```
+
+#### Equivalence Test
+```{r, include = TRUE, echo = TRUE}
+k1 <- x$trust_partner[which(x$scenario=="wave")]
+k2 <- x$trust_partner[which(x$scenario=="beckon")]
+equivalence_means_test(k1,k2,d)
+```
+
+### Politician
+#### Difference Test
+```{r, include = TRUE, echo = TRUE}
+tapply(x$trust_politician, x$scenario, descriptives)
+summary(aov(trust_politician ~ scenario, x))
+```
+
+#### Equivalence Test
+```{r, include = TRUE, echo = TRUE}
+k1 <- x$trust_politician[which(x$scenario=="wave")]
+k2 <- x$trust_politician[which(x$scenario=="beckon")]
+equivalence_means_test(k1,k2,d)
+```
+
+
+# Hypothesis Testing
+
+
+```{r, include = TRUE, echo = TRUE}
+x <- full_long
+```
+
+This is a rough draft of the test we could run. I'm open to suggestions. Also I'm not massively familiar with the inclusion of participants as random effects. Happy to take guidance on it.
+
+## Using `nlme`
+
+```{r, include = TRUE, echo = TRUE}
+m1 <- lme(action_choice ~ 
+            means 
+          + scenario 
+          + means*scenario
+          +judgment
+          + confidence
+          + trust_friend
+          + trust_partner
+          + trust_politician
+          + age
+          + gender
+          ,data = x, random = ~ 1 | ResponseId)
+summary(m1)
+```
+
+# References
+
+
+
+
+
