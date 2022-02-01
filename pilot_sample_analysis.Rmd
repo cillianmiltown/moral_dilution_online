@@ -41,6 +41,7 @@ library(nlme)
 library(lme4)
 library(TOSTER)
 library(scales)
+#install.packages("ez")
 suppressMessages(library(tidyverse))
 suppressMessages(library(car))
 # library("PowerTOST")
@@ -66,7 +67,7 @@ sum(x$gender=="Female",na.rm = T)
 # Overview
 Below is an analysis of the pilot study, with a total sample of *N* = `r length(x$gender)/6`, (female = `r sum(x$gender=="Female",na.rm = T)/6`, male = `r sum(x$gender=="Male",na.rm = T)/6`, non-binary = `r sum(x$gender=="Non-binary / third gender",na.rm = T)/6`, prefer not to say = `r sum(x$gender=="Prefer not to say",na.rm = T)/6`, *M~age~* = `r round(mean(x$age,na.rm = T),digits=1)`, *SD* = `r round(sd(x$age,na.rm = T),digits=1)`).
 
-## Running Quick Tests
+## Measures
 
 ```{r}
 
@@ -107,6 +108,8 @@ mean(x$MP_R1)
 t_paired_paragraph2 <- function (x, y, measure) 
 {
     t <- t.test(x, y, paired = TRUE)
+    d <- lsr::cohensD(x,y,method = "paired")
+    d <- round(d,digits = 2)
     labels <- measure
     tsl <- as.vector(t$statistic)
     ts <- round(tsl, digits = 3)
@@ -126,17 +129,19 @@ t_paired_paragraph2 <- function (x, y, measure)
         print(paste0("A paired samples t-test revealed a significant difference in ", 
             measure, " between the Diagnostic Condition, (M = ", mx, ", SD = ", 
             sdx, "), and the Non-Diagnostic condition, (M =", my, ", SD = ", sdy, 
-            "), t(", d_f, ") = ", ts, ", p = ", tp, "."), quote = FALSE)
+            "), t(", d_f, ") = ", ts, ", p = ", tp, ", d = ", d, "."), quote = FALSE)
     if (tp > 0.05) 
         print(paste0("A paired samples t-test revealed no difference in ", 
             measure, " between the Diagnostic Condition, (M = ", mx, ", SD = ", 
             sdx, "), and the Non-Diagnostic Condition, (M =", my, ", SD = ", sdy, 
-            "), t(", d_f, ") = ", ts, ", p = ", tp, "."), quote = FALSE)
+            "), t(", d_f, ") = ", ts, ", p = ", tp, ", d = ", d, "."), quote = FALSE)
 }
 
 ```
 
 We used two measures of moral perception. The first measure Moral Perception Scale (MPS) four items rated on 7-point Likert scales (with anchors Bad/Good, Immoral/Moral, Violent/Peaceful, Merciless/Empathetic), this showed excellent reliability &alpha; = `r round(alpha1$alpha,digits=2)`, *M* = `r round(mean(x$MPS),digits=1)`, *SD* = `r round(sd(x$MPS),digits=1)`. The second measure was a single item Moral Perception Measure (M1), participants were asked to "Please Rate [character name] according to immoral or moral you view them" on a slider rating from 0-100 with (0 = *Very Immoral*, and 100 = *Very Moral*); *M* = `r round(mean(x$M_1),digits=1)`, *SD* = `r round(sd(x$M_1),digits=1)`.
+
+## Differences in M1
 
 ```{r}
 M1 <- x %>% 
@@ -173,6 +178,10 @@ t_paired_paragraph2(M3$Diagnostic,M3$`Non-Diagnostic`, "moral Perception")
 ```
 
 
+```{r include=TRUE}
+ez::ezANOVA(data=x,dv=.(M_1),wid=.(ResponseId),within=.(scenario_abb),type=3)
+```
+
 ```{r, include=TRUE}
 
 ggplot(M4,aes(x=condition,y=M1))+
@@ -182,12 +191,67 @@ ggplot(M4,aes(x=condition,y=M1))+
 #  geom_dotplot(binaxis='y', stackdir='center', dotsize=.05)+
 # violin plot with jittered points
 # 0.2 : degree of jitter in x direction
-  geom_jitter(shape=16, position=position_jitter(0.15), size=.8)
+  geom_jitter(shape=16, position=position_jitter(0.15), size=.8, color="dark grey")
 # violin plot with median points
 #p + stat_summary(fun.y=median, geom="point", size=.2, color="red")
 
 ```
 
+
+```{r include=TRUE}
+
+ggplot(x,aes(x=scenario_abb,y=M_1))+
+  geom_violin() +
+  stat_summary(fun=mean, geom="point", shape=23, size=.5)+
+  geom_boxplot(width=0.1)+
+  #geom_dotplot(binaxis='y', stackdir='center', dotsize=.5)+
+# violin plot with jittered points
+# 0.2 : degree of jitter in x direction
+  geom_jitter(shape=16, position=position_jitter(0.15), size = .3, color="dark grey")
+# violin plot with median points
+#p + stat_summary(fun.y=median, geom="point", size=.2, color="red")
+
+```
+
+
+
+## Differences in MPS
+
+```{r}
+M1 <- x %>% 
+  select("ResponseId","condition","scenario_abb","MPS") %>% 
+  pivot_wider(names_from = scenario_abb, values_from = MPS)
+
+M1$M1 <- NA
+
+D <- M1[which(M1$condition=="Diagnostic"),]
+ND <- M1[which(M1$condition=="Non-Diagnostic"),]
+
+#D$M1 <- 
+D$M1 <- D %>% select("Sam","Francis","Alex","Robin") %>% rowMeans()
+ND$M1 <- ND %>% select("Charlie","Jackie") %>% rowMeans()
+
+M2 <- rbind(D,ND)
+M3 <- M2 %>% 
+  select("ResponseId","condition","M1") %>% 
+  pivot_wider(names_from = condition, values_from = M1)
+
+M4 <- 
+M3 %>% pivot_longer(
+  cols = c("Diagnostic","Non-Diagnostic"),
+  names_to = "condition",
+  values_to = "M1"
+)
+
+t <- t.test(M3$Diagnostic,M3$`Non-Diagnostic`,paired = T)
+lsr::cohensD(M3$Diagnostic,M3$`Non-Diagnostic`,method = "paired")
+
+
+```
+
+```{r include=TRUE}
+t_paired_paragraph2(M3$Diagnostic,M3$`Non-Diagnostic`, "moral Perception")
+```
 
 
 
@@ -218,13 +282,14 @@ M3 %>% pivot_longer(
 )
 
 t <- t.test(M3$Diagnostic,M3$`Non-Diagnostic`,paired = T)
+lsr::cohensD(M3$Diagnostic,M3$`Non-Diagnostic`,method = "paired")
+
 
 ```
 
 ```{r include=TRUE}
 t_paired_paragraph2(M3$Diagnostic,M3$`Non-Diagnostic`, "moral Perception")
 ```
-
 
 ```{r include=TRUE}
 
@@ -235,12 +300,31 @@ ggplot(M4,aes(x=condition,y=M1))+
   #geom_dotplot(binaxis='y', stackdir='center', dotsize=.5)+
 # violin plot with jittered points
 # 0.2 : degree of jitter in x direction
-  geom_jitter(shape=16, position=position_jitter(0.15), size = .8)
+  geom_jitter(shape=16, position=position_jitter(0.15), size = .8, color="dark grey")
 # violin plot with median points
 #p + stat_summary(fun.y=median, geom="point", size=.2, color="red")
 
 ```
 
+
+```{r include=TRUE}
+ez::ezANOVA(data=x,dv=.(MPS),wid=.(ResponseId),within=.(scenario_abb),type=3)
+```
+
+```{r, include=TRUE}
+
+ggplot(x,aes(x=scenario_abb,y=MPS))+
+  geom_violin() +
+  stat_summary(fun=mean, geom="point", shape=23, size=2)+
+  geom_boxplot(width=0.1)+
+#  geom_dotplot(binaxis='y', stackdir='center', dotsize=.05)+
+# violin plot with jittered points
+# 0.2 : degree of jitter in x direction
+  geom_jitter(shape=16, position=position_jitter(0.15), size=.3, color="dark grey")
+# violin plot with median points
+#p + stat_summary(fun.y=median, geom="point", size=.2, color="red")
+
+```
 
 
 ```{r, include = FALSE, echo = FALSE}
