@@ -1,7 +1,7 @@
 ---
 title: "Sample Analysis Pilot"
 author: "Cillian McHugh"
-date: "5th November 2021"
+date: "31st January 2022"
 bibliography: "resources/bib/My Library.bib"
 csl: "resources/bib/apa.csl"
 output:
@@ -21,9 +21,9 @@ editor_options:
 Below is the analysis for the pilot study.
 
 ```{r setup, include=FALSE}
-#knitr::opts_chunk$set(echo = FALSE)
-knitr::opts_chunk$set(eval = TRUE, echo = TRUE)
-#knitr::opts_chunk$set(include = FALSE)
+knitr::opts_chunk$set(echo = FALSE)
+#knitr::opts_chunk$set(eval = TRUE, echo = TRUE)
+knitr::opts_chunk$set(include = FALSE)
 ```
 
 # Setting Up
@@ -38,37 +38,12 @@ library(desnum)
 library(psych)
 library(corx)
 library(nlme)
+library(lme4)
 library(TOSTER)
 library(scales)
 suppressMessages(library(tidyverse))
 suppressMessages(library(car))
 # library("PowerTOST")
-```
-
-## Check Required Sample Sizes
-
-### Sample Required for `d = .1`
-```{r, include = TRUE, echo = TRUE}
-d <- .1
-TOSTER::powerTOSTpaired(.05, .8, low_eqbound_dz = -d, high_eqbound_dz = d)
-```
-
-### Sample Required for `d = .15`
-```{r, include = TRUE, echo = TRUE}
-d <- .15
-TOSTER::powerTOSTpaired(.05, .8, low_eqbound_dz = -d, high_eqbound_dz = d)
-```
-
-### Sample Required for `d = .2`
-```{r, include = TRUE, echo = TRUE}
-d <- .2
-TOSTER::powerTOSTpaired(.05, .8, low_eqbound_dz = -d, high_eqbound_dz = d)
-```
-
-### Sample Required for `d = .3`
-```{r, include = TRUE, echo = TRUE}
-d <- .3
-TOSTER::powerTOSTpaired(.05, .8, low_eqbound_dz = -d, high_eqbound_dz = d)
 ```
 
 
@@ -78,669 +53,283 @@ TOSTER::powerTOSTpaired(.05, .8, low_eqbound_dz = -d, high_eqbound_dz = d)
 source("pilot_set_up_data.R")
 #source("pilot_simulating_data.R")
 # create functions
-source("create_functions.R")
+#source("create_functions.R")
 
 x <- full_long
+x <- full_long_clean
+length(x$gender)/6
+
+sum(x$gender=="Female",na.rm = T)
 
 ```
 
 # Overview
-Below is a sample analysis for a proposed replication extension of @railton_moral_2017, using simulated data, with a total sample of *N* = `r length(x$gender)`, (female = `r sum(x$gender=="0")`, male = `r sum(x$gender=="1")/4`, *M~age~* = `r round(mean(x$age),digits=1)`, *SD* = `r round(sd(x$age),digits=1)`).
+Below is an analysis of the pilot study, with a total sample of *N* = `r length(x$gender)/6`, (female = `r sum(x$gender=="Female",na.rm = T)/6`, male = `r sum(x$gender=="Male",na.rm = T)/6`, non-binary = `r sum(x$gender=="Non-binary / third gender",na.rm = T)/6`, prefer not to say = `r sum(x$gender=="Prefer not to say",na.rm = T)/6`, *M~age~* = `r round(mean(x$age,na.rm = T),digits=1)`, *SD* = `r round(sd(x$age,na.rm = T),digits=1)`).
 
-## Checking cell sizes
-
-```{r, include = TRUE, echo = TRUE}
-table(x$means)
-table(x$scenario)
-
-table(x$scenario, x$means)
-```
-
-## Attention Checks
-
-
-```{r, include = TRUE, echo = TRUE}
-table(x$attn_chk_1Q)
-table(x$attn_chk_2Q)
-```
-
-Total number of participants reamaining after excluding participants who failed both attention checks:
-```{r, include = TRUE, echo = TRUE}
-sum(x$attn_chk_1Q==7 | (x$attn_chk_2Q==2|x$attn_chk_2Q==5))/4
-```
-
-```{r, include = TRUE, echo = TRUE}
-x <- x[which(x$attn_chk_1Q==7 | (x$attn_chk_2Q==2|x$attn_chk_2Q==5)),]
-```
-
-## Quick look at the data
-
-```{r, include = TRUE, echo = TRUE}
-skimr::skim(x)
-```
-
-## Checking Assumptions
-
-### Homogeneity of Variance
-#### Judgment
-```{r, include = TRUE, echo = TRUE}
-leveneTest(x$judgment, x$four_conditions, center = mean)
-```
-
-#### Confidence
-```{r, include = TRUE, echo = TRUE}
-leveneTest(x$confidence, x$four_conditions, center = mean)
-```
-
-#### Trust Friend
-```{r, include = TRUE, echo = TRUE}
-leveneTest(x$trust_friend, x$four_conditions, center = mean)
-```
-
-#### Trust Partner
-```{r, include = TRUE, echo = TRUE}
-leveneTest(x$trust_partner, x$four_conditions, center = mean)
-```
-
-#### Trust Politician
-```{r, include = TRUE, echo = TRUE}
-leveneTest(x$trust_politician, x$four_conditions, center = mean)
-```
-
-### Multicollinearity
-
-Check Correlation Table\ \@ref(tab:corrtable) for correlations greater than .8.
-
-# Basic Correlations
+## Running Quick Tests
 
 ```{r}
 
-#x <- x[which(x$gender<2),]
 
-y <- x %>% select(
-   action_choice
-  ,judgment
-  ,confidence
-  ,trust_friend
-  ,trust_partner
-  ,trust_politician
+MPS <- x %>% 
+  select(MP_R1,MP_R2,MP_R3,MP_R4)
+
+alpha1 <- ltm::cronbach.alpha(MPS)
+
+x$MPS <- 
+  x %>% 
+  select(MP_R1,MP_R2,MP_R3,MP_R4) %>% 
+  rowMeans()
+
+rowMeans(MPS)
+
+ltm::cronbach.alpha(MPS)
+
+t_paragraph(x$M_1,x$condition,"moral perception")
+
+
+t_paragraph(x$MPS,x$condition,"moral perception")
+
+
+model1 <- lme4::lmer(M_1 ~ 
+                  condition+scenario_abb
+                + (1|ResponseId)
+                , data = x
+               # , family=gaussian
+            )
+
+
+summary(model1)
+
+#lmer(M_1~condition+scenario_abb,data = x, random = ~ 1 | ResponseId)
+
+mean(x$MP_R1)
+t_paired_paragraph2 <- function (x, y, measure) 
+{
+    t <- t.test(x, y, paired = TRUE)
+    labels <- measure
+    tsl <- as.vector(t$statistic)
+    ts <- round(tsl, digits = 3)
+    tpl <- as.vector(t$p.value)
+    tp <- round(tpl, digits = 3)
+    d_fl <- as.vector(t$parameter)
+    d_f <- round(d_fl, digits = 2)
+    mxl <- as.vector(mean(x))
+    mx <- round(mxl, digits = 2)
+    myl <- as.vector(mean(y))
+    my <- round(myl, digits = 2)
+    sdxl <- as.vector(sd(x))
+    sdx <- round(sdxl, digits = 2)
+    sdyl <- as.vector(sd(y))
+    sdy <- round(sdyl, digits = 2)
+    if (tp < 0.05) 
+        print(paste0("A paired samples t-test revealed a significant difference in ", 
+            measure, " between the Diagnostic Condition, (M = ", mx, ", SD = ", 
+            sdx, "), and the Non-Diagnostic condition, (M =", my, ", SD = ", sdy, 
+            "), t(", d_f, ") = ", ts, ", p = ", tp, "."), quote = FALSE)
+    if (tp > 0.05) 
+        print(paste0("A paired samples t-test revealed no difference in ", 
+            measure, " between the Diagnostic Condition, (M = ", mx, ", SD = ", 
+            sdx, "), and the Non-Diagnostic Condition, (M =", my, ", SD = ", sdy, 
+            "), t(", d_f, ") = ", ts, ", p = ", tp, "."), quote = FALSE)
+}
+
+```
+
+We used two measures of moral perception. The first measure Moral Perception Scale (MPS) four items rated on 7-point Likert scales (with anchors Bad/Good, Immoral/Moral, Violent/Peaceful, Merciless/Empathetic), this showed excellent reliability &alpha; = `r round(alpha1$alpha,digits=2)`, *M* = `r round(mean(x$MPS),digits=1)`, *SD* = `r round(sd(x$MPS),digits=1)`. The second measure was a single item Moral Perception Measure (M1), participants were asked to "Please Rate [character name] according to immoral or moral you view them" on a slider rating from 0-100 with (0 = *Very Immoral*, and 100 = *Very Moral*); *M* = `r round(mean(x$M_1),digits=1)`, *SD* = `r round(sd(x$M_1),digits=1)`.
+
+```{r}
+M1 <- x %>% 
+  select("ResponseId","condition","scenario_abb","M_1") %>% 
+  pivot_wider(names_from = scenario_abb, values_from = M_1)
+
+M1$M1 <- NA
+
+D <- M1[which(M1$condition=="Diagnostic"),]
+ND <- M1[which(M1$condition=="Non-Diagnostic"),]
+
+#D$M1 <- 
+D$M1 <- D %>% select("Sam","Francis","Alex","Robin") %>% rowMeans()
+ND$M1 <- ND %>% select("Charlie","Jackie") %>% rowMeans()
+
+M2 <- rbind(D,ND)
+M3 <- M2 %>% 
+  select("ResponseId","condition","M1") %>% 
+  pivot_wider(names_from = condition, values_from = M1)
+
+M4 <- 
+M3 %>% pivot_longer(
+  cols = c("Diagnostic","Non-Diagnostic"),
+  names_to = "condition",
+  values_to = "M1"
 )
-z <- as.data.frame(sapply(y, as.numeric))
 
-test <- corx(z,
-          triangle = "lower",
-          stars = c(0.05, 0.001),
-          describe = c(`$M$` = mean, `$SD$` = sd))
+t <- t.test(M3$Diagnostic,M3$`Non-Diagnostic`,paired = T)
+
+```
+
+```{r include=TRUE}
+t_paired_paragraph2(M3$Diagnostic,M3$`Non-Diagnostic`, "moral Perception")
+```
+
+
+```{r, include=TRUE}
+
+ggplot(M4,aes(x=condition,y=M1))+
+  geom_violin() +
+  stat_summary(fun=mean, geom="point", shape=23, size=2)+
+  geom_boxplot(width=0.1)+
+#  geom_dotplot(binaxis='y', stackdir='center', dotsize=.05)+
+# violin plot with jittered points
+# 0.2 : degree of jitter in x direction
+  geom_jitter(shape=16, position=position_jitter(0.15), size=.8)
+# violin plot with median points
+#p + stat_summary(fun.y=median, geom="point", size=.2, color="red")
 
 ```
 
 
 
-```{r corrtable, include=TRUE}
 
-papaja::apa_table(test$apa, # apa contains the data.frame needed for apa_table
-                  caption = "Correlations between variables of interest",
-                  note = "* p < 0.05; ** p < 0.001",
-                  escape = F)
+```{r}
+M1 <- x %>% 
+  select("ResponseId","condition","scenario_abb","MPS") %>% 
+  pivot_wider(names_from = scenario_abb, values_from = MPS)
 
+M1$M1 <- NA
 
+D <- M1[which(M1$condition=="Diagnostic"),]
+ND <- M1[which(M1$condition=="Non-Diagnostic"),]
 
-```
+#D$M1 <- 
+D$M1 <- D %>% select("Sam","Francis","Alex","Robin") %>% rowMeans()
+ND$M1 <- ND %>% select("Charlie","Jackie") %>% rowMeans()
 
+M2 <- rbind(D,ND)
+M3 <- M2 %>% 
+  select("ResponseId","condition","M1") %>% 
+  pivot_wider(names_from = condition, values_from = M1)
 
-# Full Sample
+M4 <- 
+M3 %>% pivot_longer(
+  cols = c("Diagnostic","Non-Diagnostic"),
+  names_to = "condition",
+  values_to = "M1"
+)
 
-```{r, include = TRUE, echo = TRUE}
-# Set the effect size
-d <- .2
-```
-
-## Action Choice
-
-### Scenario
-
-```{r, include = TRUE, echo = TRUE}
-table(x$scenario,x$action_choice)
-(table(x$scenario,x$action_choice)/(length(x$gender)/2))*100
-chisq.test(table(x$scenario,x$action_choice))
-```
-
-
-```{r, include = TRUE, echo = TRUE}
-g1 <- x$action_choice[which(x$scenario=="wave")]
-g2 <- x$action_choice[which(x$scenario=="beckon")]
-```
-
-
-```{r, include = TRUE, echo = TRUE}
-equivalence_means_test(g1,g2,d)
+t <- t.test(M3$Diagnostic,M3$`Non-Diagnostic`,paired = T)
 
 ```
 
-```{r, include = TRUE, echo = TRUE}
-
-#y <- table(df3$InCS,df3$condition)
-y <- table(x$action_choice,x$scenario)
-y <- as.data.frame(y)
-#colnames(y) <- c("condition","InCS","Freq")
-colnames(y) <- c("action_choice","scenario","Freq")
-
-z <- as.data.frame(table(x$action_choice,x$scenario)/length(x$gender)*2)
-
-
-
-z <- rbind(as.data.frame(table(x$action_choice[which(x$scenario=="wave")])/
-                           length(x$action_choice[which(x$scenario=="wave")])),
-           as.data.frame(table(x$action_choice[which(x$scenario=="beckon")])/
-                           length(x$action_choice[which(x$scenario=="beckon")])))
-
-
-perc <- z$Freq
-test <- cbind(y,perc)
-```
-
-```{r, include = TRUE, echo = TRUE}
-
-ggplot(test, aes(x=scenario, y=perc, fill=factor(action_choice,labels=c("Act","Do not Act")
-                                                      ))) +
-  scale_y_continuous(limits = c(-.03,1),
-                     labels = percent_format()
-  )+ 
-  geom_col(position = "dodge",
-           color="black",
-           size=.2
-  )+
-  geom_text(family = "Times", size=4.2,
-            aes( label = scales::percent(test$perc),
-                 y= perc ),
-            stat= "identity",
-            vjust = -.5,
-            position = position_dodge(.9),
-            fontface='plain'
-            )+
-  geom_text(family = "Times", size=4.2,
-            aes(label = format(Freq),
-                y= -3*(..count../100)/(..count..)),
-            stat= "count",
-            position = position_dodge(0.9),
-            #vjust = -.05,
-            fontface='plain'
-            ) +
-  xlab("Scenario") +
-  ylab("Percentage of participants selecting each response")+
-  scale_x_discrete(labels=c("Beckon", "Wave")) +
-  scale_fill_grey(start = .5, end = .8) +
-  labs(fill="Action Choice") +
-  
-  geom_text(family = "Times", size=4.2,
-            aes( label = scales::percent(test$perc),
-                 y= test$perc ),
-            stat= "identity",
-            vjust = -.5,
-            position = position_dodge(.9),
-            fontface='plain'
-            )+
-  #theme_apa() +
-  theme_bw() +
-  theme(plot.title=element_text(family="Times",
-                                size=12
-                                ),
-        legend.text=element_text(family="Times",
-                                 size=8
-                                 ),
-          legend.title=element_text(family="Times",
-                                    size=10
-                                    ),
-          axis.text=element_text(family="Times",
-                                 colour = "black",
-                                 size=10
-                                 ),
-          axis.ticks.x = element_blank(),
-          axis.title=element_text(family="Times",
-                                  size=12
-                                  ),
-          strip.text=element_text(family = "Times",
-                                  size = 12
-                                  ),
-          strip.background = element_rect(fill = "white"),
-          legend.position="right")
-
+```{r include=TRUE}
+t_paired_paragraph2(M3$Diagnostic,M3$`Non-Diagnostic`, "moral Perception")
 ```
 
 
-### Means vs Side-Effect
+```{r include=TRUE}
 
-```{r, include = TRUE, echo = TRUE}
-
-table(x$means,x$action_choice)
-(table(x$means,x$action_choice)/(length(x$gender)/2))*100
-chisq.test(table(x$means,x$action_choice))
-
-```
-
-
-```{r, include = TRUE, echo = TRUE}
-g1 <- x$action_choice[which(x$means=="means")]
-g2 <- x$action_choice[which(x$means=="side-effect")]
-```
-
-
-```{r, include = TRUE, echo = TRUE}
-equivalence_means_test(g1,g2,d)
+ggplot(M4,aes(x=condition,y=M1))+
+  geom_violin() +
+  stat_summary(fun=mean, geom="point", shape=23, size=1)+
+  geom_boxplot(width=0.1)+
+  #geom_dotplot(binaxis='y', stackdir='center', dotsize=.5)+
+# violin plot with jittered points
+# 0.2 : degree of jitter in x direction
+  geom_jitter(shape=16, position=position_jitter(0.15), size = .8)
+# violin plot with median points
+#p + stat_summary(fun.y=median, geom="point", size=.2, color="red")
 
 ```
 
 
 
-```{r, include = TRUE, echo = TRUE}
-
-#y <- table(df3$InCS,df3$condition)
-y <- table(x$action_choice,x$means)
-y <- as.data.frame(y)
-#colnames(y) <- c("condition","InCS","Freq")
-colnames(y) <- c("action_choice","means","Freq")
-
-z <- as.data.frame(table(x$action_choice,x$scenario)/length(x$gender)*2)
-
-
-
-z <- rbind(as.data.frame(table(x$action_choice[which(x$means=="means")])/
-                           length(x$action_choice[which(x$means=="means")])),
-           as.data.frame(table(x$action_choice[which(x$means=="side-effect")])/
-                           length(x$action_choice[which(x$means=="side-effect")])))
-
-
-perc <- z$Freq
-test <- cbind(y,perc)
+```{r, include = FALSE, echo = FALSE}
+# 
+# #y <- table(df3$InCS,df3$condition)
+# y <- table(x$action_choice,x$scenario)
+# y <- as.data.frame(y)
+# #colnames(y) <- c("condition","InCS","Freq")
+# colnames(y) <- c("action_choice","scenario","Freq")
+# 
+# z <- as.data.frame(table(x$action_choice,x$scenario)/length(x$gender)*2)
+# 
+# 
+# 
+# z <- rbind(as.data.frame(table(x$action_choice[which(x$scenario=="wave")])/
+#                            length(x$action_choice[which(x$scenario=="wave")])),
+#            as.data.frame(table(x$action_choice[which(x$scenario=="beckon")])/
+#                            length(x$action_choice[which(x$scenario=="beckon")])))
+# 
+# 
+# perc <- z$Freq
+# test <- cbind(y,perc)
 ```
 
-```{r, include = TRUE, echo = TRUE}
-
-ggplot(test, aes(x=means, y=perc, fill=factor(action_choice,labels=c("Act","Do not Act")
-                                                      ))) +
-  scale_y_continuous(limits = c(-.03,1),
-                     labels = percent_format()
-  )+ 
-  geom_col(position = "dodge",
-           color="black",
-           size=.2
-  )+
-  geom_text(family = "Times", size=4.2,
-            aes( label = scales::percent(test$perc),
-                 y= perc ),
-            stat= "identity",
-            vjust = -.5,
-            position = position_dodge(.9),
-            fontface='plain'
-            )+
-  geom_text(family = "Times", size=4.2,
-            aes(label = format(Freq),
-                y= -3*(..count../100)/(..count..)),
-            stat= "count",
-            position = position_dodge(0.9),
-            #vjust = -.05,
-            fontface='plain'
-            ) +
-  xlab("Condition") +
-  ylab("Percentage of participants selecting each response")+
-  scale_x_discrete(labels=c("Means", "Side-Effect")) +
-  scale_fill_grey(start = .5, end = .8) +
-  labs(fill="Action Choice") +
-  
-  geom_text(family = "Times", size=4.2,
-            aes( label = scales::percent(test$perc),
-                 y= test$perc ),
-            stat= "identity",
-            vjust = -.5,
-            position = position_dodge(.9),
-            fontface='plain'
-            )+
-  #theme_apa() +
-  theme_bw() +
-  theme(plot.title=element_text(family="Times",
-                                size=12
-                                ),
-        legend.text=element_text(family="Times",
-                                 size=8
-                                 ),
-          legend.title=element_text(family="Times",
-                                    size=10
-                                    ),
-          axis.text=element_text(family="Times",
-                                 colour = "black",
-                                 size=10
-                                 ),
-          axis.ticks.x = element_blank(),
-          axis.title=element_text(family="Times",
-                                  size=12
-                                  ),
-          strip.text=element_text(family = "Times",
-                                  size = 12
-                                  ),
-          strip.background = element_rect(fill = "white"),
-          legend.position="right")
-
-```
-
-
-
-## Other Variables of Interest
-
-## Judgment
-### Difference Test
-```{r, include = TRUE, echo = TRUE}
-tapply(x$judgment, x$means, descriptives)
-tapply(x$judgment, x$scenario_abb, descriptives)
-summary(aov(judgment ~ means * scenario, x))
-```
-
-### Equivalence Test
-```{r, include = TRUE, echo = TRUE}
-k1 <- x$judgment[which(x$scenario=="wave")]
-k2 <- x$judgment[which(x$scenario=="beckon")]
-equivalence_means_test(k1,k2,d)
-```
-
-
-## Confidence
-### Difference Test
-```{r, include = TRUE, echo = TRUE}
-tapply(x$confidence, x$four_conditions, descriptives)
-summary(aov(confidence ~ means * scenario, x))
-```
-
-### Equivalence Test
-```{r, include = TRUE, echo = TRUE}
-k1 <- x$confidence[which(x$scenario=="wave")]
-k2 <- x$confidence[which(x$scenario=="beckon")]
-equivalence_means_test(k1,k2,d)
-```
-
-## Trust
-### Friend
-#### Difference Test
-```{r, include = TRUE, echo = TRUE}
-tapply(x$trust_friend, x$four_conditions, descriptives)
-summary(aov(trust_friend ~ means * scenario, x))
-```
-
-#### Equivalence Test
-```{r, include = TRUE, echo = TRUE}
-k1 <- x$trust_friend[which(x$scenario=="wave")]
-k2 <- x$trust_friend[which(x$scenario=="beckon")]
-equivalence_means_test(k1,k2,d)
-```
-
-
-### Romantic Partner
-#### Difference Test
-```{r, include = TRUE, echo = TRUE}
-tapply(x$trust_partner, x$four_conditions, descriptives)
-summary(aov(trust_partner ~ means * scenario, x))
-```
-
-#### Equivalence Test
-```{r, include = TRUE, echo = TRUE}
-k1 <- x$trust_partner[which(x$scenario=="wave")]
-k2 <- x$trust_partner[which(x$scenario=="beckon")]
-equivalence_means_test(k1,k2,d)
-```
-
-### Politician
-#### Difference Test
-```{r, include = TRUE, echo = TRUE}
-tapply(x$trust_politician, x$four_conditions, descriptives)
-summary(aov(trust_politician ~ means * scenario, x))
-```
-
-#### Equivalence Test
-```{r, include = TRUE, echo = TRUE}
-k1 <- x$trust_politician[which(x$scenario=="wave")]
-k2 <- x$trust_politician[which(x$scenario=="beckon")]
-equivalence_means_test(k1,k2,d)
-```
-
-
-
-# Means
-
-```{r, include = TRUE, echo = TRUE}
-x <- full_long[which(full_long$means=="means"),]
-```
-
-## Action Choice
-
-### Scenario
-
-```{r, include = TRUE, echo = TRUE}
-table(x$scenario,x$action_choice)
-chisq.test(table(x$scenario,x$action_choice))
-```
-
-
-```{r, include = TRUE, echo = TRUE}
-g1 <- x$action_choice[which(x$scenario=="wave")]
-g2 <- x$action_choice[which(x$scenario=="beckon")]
-```
-
-```{r, include = TRUE, echo = TRUE}
-equivalence_means_test(g1,g2,d)
+```{r, include = FALSE, echo = FALSE}
+# 
+# ggplot(test, aes(x=scenario, y=perc, fill=factor(action_choice,labels=c("Act","Do not Act")
+#                                                       ))) +
+#   scale_y_continuous(limits = c(-.03,1),
+#                      labels = percent_format()
+#   )+ 
+#   geom_col(position = "dodge",
+#            color="black",
+#            size=.2
+#   )+
+#   geom_text(family = "Times", size=4.2,
+#             aes( label = scales::percent(test$perc),
+#                  y= perc ),
+#             stat= "identity",
+#             vjust = -.5,
+#             position = position_dodge(.9),
+#             fontface='plain'
+#             )+
+#   geom_text(family = "Times", size=4.2,
+#             aes(label = format(Freq),
+#                 y= -3*(..count../100)/(..count..)),
+#             stat= "count",
+#             position = position_dodge(0.9),
+#             #vjust = -.05,
+#             fontface='plain'
+#             ) +
+#   xlab("Scenario") +
+#   ylab("Percentage of participants selecting each response")+
+#   scale_x_discrete(labels=c("Beckon", "Wave")) +
+#   scale_fill_grey(start = .5, end = .8) +
+#   labs(fill="Action Choice") +
+#   
+#   geom_text(family = "Times", size=4.2,
+#             aes( label = scales::percent(test$perc),
+#                  y= test$perc ),
+#             stat= "identity",
+#             vjust = -.5,
+#             position = position_dodge(.9),
+#             fontface='plain'
+#             )+
+#   #theme_apa() +
+#   theme_bw() +
+#   theme(plot.title=element_text(family="Times",
+#                                 size=12
+#                                 ),
+#         legend.text=element_text(family="Times",
+#                                  size=8
+#                                  ),
+#           legend.title=element_text(family="Times",
+#                                     size=10
+#                                     ),
+#           axis.text=element_text(family="Times",
+#                                  colour = "black",
+#                                  size=10
+#                                  ),
+#           axis.ticks.x = element_blank(),
+#           axis.title=element_text(family="Times",
+#                                   size=12
+#                                   ),
+#           strip.text=element_text(family = "Times",
+#                                   size = 12
+#                                   ),
+#           strip.background = element_rect(fill = "white"),
+#           legend.position="right")
 
 ```
-
-
-
-## Other Variables of Interest
-
-## Judgment
-### Difference Test
-```{r, include = TRUE, echo = TRUE}
-tapply(x$judgment, x$scenario, descriptives)
-summary(aov(judgment ~ scenario, x))
-```
-
-### Equivalence Test
-```{r, include = TRUE, echo = TRUE}
-k1 <- x$judgment[which(x$scenario=="wave")]
-k2 <- x$judgment[which(x$scenario=="beckon")]
-equivalence_means_test(k1,k2,d)
-```
-
-
-## Confidence
-### Difference Test
-```{r, include = TRUE, echo = TRUE}
-tapply(x$confidence, x$scenario, descriptives)
-summary(aov(confidence ~ scenario, x))
-```
-
-### Equivalence Test
-```{r, include = TRUE, echo = TRUE}
-k1 <- x$confidence[which(x$scenario=="wave")]
-k2 <- x$confidence[which(x$scenario=="beckon")]
-equivalence_means_test(k1,k2,d)
-```
-
-## Trust
-### Friend
-#### Difference Test
-```{r, include = TRUE, echo = TRUE}
-tapply(x$trust_friend, x$scenario, descriptives)
-summary(aov(trust_friend ~ scenario, x))
-```
-
-#### Equivalence Test
-```{r, include = TRUE, echo = TRUE}
-k1 <- x$trust_friend[which(x$scenario=="wave")]
-k2 <- x$trust_friend[which(x$scenario=="beckon")]
-equivalence_means_test(k1,k2,d)
-```
-
-
-### Romantic Partner
-#### Difference Test
-```{r, include = TRUE, echo = TRUE}
-tapply(x$trust_partner, x$scenario, descriptives)
-summary(aov(trust_partner ~ scenario, x))
-```
-
-#### Equivalence Test
-```{r, include = TRUE, echo = TRUE}
-k1 <- x$trust_partner[which(x$scenario=="wave")]
-k2 <- x$trust_partner[which(x$scenario=="beckon")]
-equivalence_means_test(k1,k2,d)
-```
-
-### Politician
-#### Difference Test
-```{r, include = TRUE, echo = TRUE}
-tapply(x$trust_politician, x$scenario, descriptives)
-summary(aov(trust_politician ~ scenario, x))
-```
-
-#### Equivalence Test
-```{r, include = TRUE, echo = TRUE}
-k1 <- x$trust_politician[which(x$scenario=="wave")]
-k2 <- x$trust_politician[which(x$scenario=="beckon")]
-equivalence_means_test(k1,k2,d)
-```
-
-
-# Side-Effect
-
-```{r, include = TRUE, echo = TRUE}
-x <- full_long[which(full_long$means=="side-effect"),]
-```
-
-## Action Choice
-
-### Scenario
-
-```{r, include = TRUE, echo = TRUE}
-table(x$scenario,x$action_choice)
-chisq.test(table(x$scenario,x$action_choice))
-```
-
-
-```{r, include = TRUE, echo = TRUE}
-g1 <- x$action_choice[which(x$scenario=="wave")]
-g2 <- x$action_choice[which(x$scenario=="beckon")]
-```
-
-
-```{r, include = TRUE, echo = TRUE}
-equivalence_means_test(g1,g2,d)
-
-```
-
-
-## Other Variables of Interest
-
-
-## Judgment
-### Difference Test
-```{r, include = TRUE, echo = TRUE}
-tapply(x$judgment, x$scenario, descriptives)
-summary(aov(judgment ~ scenario, x))
-```
-
-### Equivalence Test
-```{r, include = TRUE, echo = TRUE}
-k1 <- x$judgment[which(x$scenario=="wave")]
-k2 <- x$judgment[which(x$scenario=="beckon")]
-equivalence_means_test(k1,k2,d)
-```
-
-
-## Confidence
-### Difference Test
-```{r, include = TRUE, echo = TRUE}
-tapply(x$confidence, x$scenario, descriptives)
-summary(aov(confidence ~ scenario, x))
-```
-
-### Equivalence Test
-```{r, include = TRUE, echo = TRUE}
-k1 <- x$confidence[which(x$scenario=="wave")]
-k2 <- x$confidence[which(x$scenario=="beckon")]
-equivalence_means_test(k1,k2,d)
-```
-
-## Trust
-### Friend
-#### Difference Test
-```{r, include = TRUE, echo = TRUE}
-tapply(x$trust_friend, x$scenario, descriptives)
-summary(aov(trust_friend ~ scenario, x))
-```
-
-#### Equivalence Test
-```{r, include = TRUE, echo = TRUE}
-k1 <- x$trust_friend[which(x$scenario=="wave")]
-k2 <- x$trust_friend[which(x$scenario=="beckon")]
-equivalence_means_test(k1,k2,d)
-```
-
-
-### Romantic Partner
-#### Difference Test
-```{r, include = TRUE, echo = TRUE}
-tapply(x$trust_partner, x$scenario, descriptives)
-summary(aov(trust_partner ~ scenario, x))
-```
-
-#### Equivalence Test
-```{r, include = TRUE, echo = TRUE}
-k1 <- x$trust_partner[which(x$scenario=="wave")]
-k2 <- x$trust_partner[which(x$scenario=="beckon")]
-equivalence_means_test(k1,k2,d)
-```
-
-### Politician
-#### Difference Test
-```{r, include = TRUE, echo = TRUE}
-tapply(x$trust_politician, x$scenario, descriptives)
-summary(aov(trust_politician ~ scenario, x))
-```
-
-#### Equivalence Test
-```{r, include = TRUE, echo = TRUE}
-k1 <- x$trust_politician[which(x$scenario=="wave")]
-k2 <- x$trust_politician[which(x$scenario=="beckon")]
-equivalence_means_test(k1,k2,d)
-```
-
-
-# Hypothesis Testing
-
-
-```{r, include = TRUE, echo = TRUE}
-x <- full_long
-```
-
-This is a rough draft of the test we could run. I'm open to suggestions. Also I'm not massively familiar with the inclusion of participants as random effects. Happy to take guidance on it.
-
-## Using `nlme`
-
-```{r, include = TRUE, echo = TRUE}
-m1 <- lme(action_choice ~ 
-            means 
-          + scenario 
-          + means*scenario
-          +judgment
-          + confidence
-          + trust_friend
-          + trust_partner
-          + trust_politician
-          + age
-          + gender
-          ,data = x, random = ~ 1 | ResponseId)
-summary(m1)
-```
-
-# References
-
-
-
-
 
