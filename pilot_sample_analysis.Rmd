@@ -178,10 +178,6 @@ t_paired_paragraph2(M3$Diagnostic,M3$`Non-Diagnostic`, "moral Perception")
 ```
 
 
-```{r include=TRUE}
-ez::ezANOVA(data=x,dv=.(M_1),wid=.(ResponseId),within=.(scenario_abb),type=3)
-```
-
 ```{r, include=TRUE}
 
 ggplot(M4,aes(x=condition,y=M1))+
@@ -197,6 +193,10 @@ ggplot(M4,aes(x=condition,y=M1))+
 
 ```
 
+
+```{r include=TRUE}
+ez::ezANOVA(data=x,dv=.(M_1),wid=.(ResponseId),within=.(scenario_abb),type=3)
+```
 
 ```{r include=TRUE}
 
@@ -216,43 +216,6 @@ ggplot(x,aes(x=scenario_abb,y=M_1))+
 
 
 ## Differences in MPS
-
-```{r}
-M1 <- x %>% 
-  select("ResponseId","condition","scenario_abb","MPS") %>% 
-  pivot_wider(names_from = scenario_abb, values_from = MPS)
-
-M1$M1 <- NA
-
-D <- M1[which(M1$condition=="Diagnostic"),]
-ND <- M1[which(M1$condition=="Non-Diagnostic"),]
-
-#D$M1 <- 
-D$M1 <- D %>% select("Sam","Francis","Alex","Robin") %>% rowMeans()
-ND$M1 <- ND %>% select("Charlie","Jackie") %>% rowMeans()
-
-M2 <- rbind(D,ND)
-M3 <- M2 %>% 
-  select("ResponseId","condition","M1") %>% 
-  pivot_wider(names_from = condition, values_from = M1)
-
-M4 <- 
-M3 %>% pivot_longer(
-  cols = c("Diagnostic","Non-Diagnostic"),
-  names_to = "condition",
-  values_to = "M1"
-)
-
-t <- t.test(M3$Diagnostic,M3$`Non-Diagnostic`,paired = T)
-lsr::cohensD(M3$Diagnostic,M3$`Non-Diagnostic`,method = "paired")
-
-
-```
-
-```{r include=TRUE}
-t_paired_paragraph2(M3$Diagnostic,M3$`Non-Diagnostic`, "moral Perception")
-```
-
 
 
 ```{r}
