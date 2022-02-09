@@ -177,7 +177,7 @@ ggplot(x,aes(x=scenario,y=M1))+
 
 
 library(nlme)
-m1 <- nlme::lme(M1 ~ 
+m1 <- nlme::lme(R_tot ~ 
                   condition*scenario
                 , random=~1|ResponseId
                 , data=x)
