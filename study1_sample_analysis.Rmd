@@ -7,7 +7,7 @@ csl: "resources/bib/apa.csl"
 output:
   bookdown::html_document2:
     fig_caption: yes
-    toc: false
+    toc: true
     toc_float:
       toc_collapsed: false
     toc_depth: 4
