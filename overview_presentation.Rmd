@@ -1,0 +1,886 @@
+---
+title: "Moral Dilution Overview"
+subtitle: "Presentation the SOCOUL Lab"
+author: "Cillian McHugh, Eric R. Igou"
+date: "21 February 2022"
+bibliography: "resources/bib/My Library.bib"
+csl: resources/bib/apa.csl
+output: 
+  ioslides_presentation:
+    transition: faster
+    css: resources/css/shiny_slides_mjac.css
+    fullscreen: yes
+    widescreen: yes
+    logo: resources/images/ul_new_logo_dark.png
+    incremental: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Overview
+
+> <div id="footer"> <font size=2>Cillian McHugh - 21/2/22</font size></div>
+
+
+- Background
+- Pilot Study
+- Study 1
+- Next Steps
+
+# Background
+
+## The Dilution Effect
+
+> <div id="footer"> <font size=2>Cillian McHugh - 21/2/22</font size></div>
+
+
+- Eric presented on this last year
+- Diagnostic information about a target is ‘diluted’ by non-diagnostic information about a target (Nisbett, Zukier, & Lemley, 1981; Zukier, 1982; Igou & Bless, 2007; Kemmelmeier, 2007; Tetlock & Boettger, 1989)
+
+## Examples:
+
+> <div id="footer"> <font size=2>Cillian McHugh - 21/2/22</font size></div>
+
+**Example 1:**
+
+- Task: Predict the GPA of a student (from Zukier, 1982)
+  - Diagnostic information: “He quite often starts things he doesn’t finish”
+  - Non-diagnostic information: “A few times a year he is bothered by bad dreams”
+
+**Example 2:**
+
+- Task: Predict if a coffee machine would be sold (from Igou & Bless, 2007)
+  - Diagnostic information: “It has an automatic off switch”
+  - Non-diagnostic information: “It has three buttons”
+
+## Dilution of Heroes:
+
+> <div id="footer"> <font size=2>Cillian McHugh - 21/2/22</font size></div>
+
+<img src="resources/images/ghandi.jpeg" align="left" width="350px" class="img-frame"/>
+
+Gandhi was a campaigner for freedom and human rights.
+
+## Dilution of Heroes:
+
+> <div id="footer"> <font size=2>Cillian McHugh - 21/2/22</font size></div>
+
+<img src="resources/images/ghandi_paper.jpeg" align="left" width="350px" class="img-frame"/>
+
+Gandhi was a campaigner for freedom and human rights, and he regularly read the newspaper.
+
+
+## Dilution of Heroes:
+
+> <div id="footer"> <font size=2>Cillian McHugh - 21/2/22</font size></div>
+
+**Example 3:**
+
+- DV: Hero perception
+  - Diagnostic information: They have shown bravery, selflessness, and altruism throughout their life.
+  - Non-diagnostic information: They are left-handed, drink tea in the morning, and have two older siblings and one younger sibling.
+
+>- *Eric had lovely results for this*
+
+## Explaining the Dilution Effect
+
+> <div id="footer"> <font size=2>Cillian McHugh - 21/2/22</font size></div>
+
+- Representativeness heuristic and Category Typicality
+
+- In categorization:
+  - ***furniture***: *chair* vs *bookend*
+
+- Dilution and typicality
+  - **Diagnostic information only**: Very representative (or typical)
+  - **Non-Diagnostic information included**:   Very less representative (or less typical)
+
+- One prediction of MJAC is that moral categorizations should vary in typicality
+  - Specifically, MJAC "predicts differences in typicality ratings when controlling for severity" (McHugh et al., 2022, p. 143)
+
+## Moral Dilution
+
+> <div id="footer"> <font size=2>Cillian McHugh - 21/2/22</font size></div>
+
+- 2 studies
+- Both Pre-registered
+- Dilution effect should be observed for judgments of moral Character
+
+# Pilot Study
+
+## Pilot Study
+
+> <div id="footer"> <font size=2>Cillian McHugh - 21/2/22</font size></div>
+
+
+```{r, include = FALSE, results = "hide"}
+
+rm(list = ls())
+# devtools::install_github("cillianmiltown/R_desnum")
+#install.packages("PowerTOST")
+library(desnum)
+library(psych)
+library(corx)
+library(nlme)
+library(lme4)
+library(TOSTER)
+library(scales)
+#install.packages("ez")
+suppressMessages(library(tidyverse))
+suppressMessages(library(car))
+# library("PowerTOST")
+```
+
+
+```{r, include = FALSE}
+
+source("pilot_set_up_data.R")
+#source("pilot_simulating_data.R")
+# create functions
+#source("create_functions.R")
+
+x <- full_long
+x <- full_long_clean
+length(x$gender)/6
+
+sum(x$gender=="Female",na.rm = T)
+
+```
+
+
+
+- Developing materials
+
+- 6 descriptions:
+  - 4 morally relevant (diagnostic)
+  - 2 neutral (non-diagnostic)
+
+- MTurk sample, *N* = `r length(x$gender)/6`, (female = `r sum(x$gender=="Female",na.rm = T)/6`, male = `r sum(x$gender=="Male",na.rm = T)/6`, non-binary = `r sum(x$gender=="Non-binary / third gender",na.rm = T)/6`, prefer not to say = `r sum(x$gender=="Prefer not to say",na.rm = T)/6`, *M~age~* = `r round(mean(x$age,na.rm = T),digits=1)`, *SD* = `r round(sd(x$age,na.rm = T),digits=1)`).
+
+
+## Materials: Moral Descriptions
+
+> <div id="footer"> <font size=2>Cillian McHugh - 21/2/22</font size></div>
+
+- Imagine a person named Sam. Throughout their life they have been known to be cruel, act unfairly, and to betray their own group.
+
+- Imagine a person named Robin. Throughout their life they have been known to physically hurt others, treat some people differently to others, and show lack of loyalty.
+
+- Imagine a person named Francis.
+Throughout their life they have been known to violate the standards of purity and decency, show lack of respect for authority, and treat people unequally.
+
+- Imagine a person named Alex.
+Throughout their life they have been known to cause others to suffer emotionally, to deny others their rights, and to cause chaos or disorder.
+
+
+(adapted from Grizzard et al., 2020)
+
+## Materials: Non-Diagnostic
+
+> <div id="footer"> <font size=2>Cillian McHugh - 21/2/22</font size></div>
+
+
+- Imagine a person named Jackie. They have red hair, play tennis four times a month, and have one older sibling and one younger sibling.
+
+- Imagine a person named Charlie. They are left-handed, drink tea in the morning, and have two older siblings and one younger sibling.
+
+
+## Measures:
+
+> <div id="footer"> <font size=2>Cillian McHugh - 21/2/22</font size></div>
+
+```{r, include=FALSE}
+MPS <- x %>% 
+  select(MP_R1,MP_R2,MP_R3,MP_R4)
+
+alpha1 <- ltm::cronbach.alpha(MPS)
+
+```
+
+- DV1: Moral perceptions scale (Walker et al., 2021):
+  - 7-point Likert
+  - 4 items: Bad-Good, Moral-Immoral, Violent-Peaceful, Merciless-Empathetic
+  - Cronbach's alpha = `r round(alpha1$alpha, digits=2)`
+
+- DV2: Single item of moral perception (Walker et al., 2021).
+  - 0-100 slider scale
+  - Very Immoral-Very Moral
+
+## Results (Single Item): Scenario
+
+> <div id="footer"> <font size=2>Cillian McHugh - 21/2/22</font size></div>
+
+
+```{r include=TRUE}
+x$ResponseId_factor <- as.factor(x$ResponseId)
+
+ez::ezANOVA(data=x,dv=.(M_1),wid=.(ResponseId_factor),within=.(scenario_abb),type=3)
+
+```
+
+
+## Results (Single Item): Scenario
+
+> <div id="footer"> <font size=2>Cillian McHugh - 21/2/22</font size></div>
+
+
+```{r include=TRUE}
+
+ggplot(x,aes(x=scenario_abb,y=M_1))+
+  geom_violin() +
+  stat_summary(fun=mean, geom="point", shape=23, size=.5)+
+  geom_boxplot(width=0.1)+
+  #geom_dotplot(binaxis='y', stackdir='center', dotsize=.5)+
+# violin plot with jittered points
+# 0.2 : degree of jitter in x direction
+  geom_jitter(shape=16, position=position_jitter(0.15), size = .3, color="dark grey")
+# violin plot with median points
+#p + stat_summary(fun.y=median, geom="point", size=.2, color="red")
+
+```
+
+
+## Results (Single Item): Condition
+
+> <div id="footer"> <font size=2>Cillian McHugh - 21/2/22</font size></div>
+
+
+```{r}
+M1 <- x %>% 
+  select("ResponseId","condition","scenario_abb","M_1") %>% 
+  pivot_wider(names_from = scenario_abb, values_from = M_1)
+
+M1$M1 <- NA
+
+D <- M1[which(M1$condition=="Diagnostic"),]
+ND <- M1[which(M1$condition=="Non-Diagnostic"),]
+
+#D$M1 <- 
+D$M1 <- D %>% select("Sam","Francis","Alex","Robin") %>% rowMeans()
+ND$M1 <- ND %>% select("Charlie","Jackie") %>% rowMeans()
+
+M2 <- rbind(D,ND)
+M3 <- M2 %>% 
+  select("ResponseId","condition","M1") %>% 
+  pivot_wider(names_from = condition, values_from = M1)
+
+M4 <- 
+M3 %>% pivot_longer(
+  cols = c("Diagnostic","Non-Diagnostic"),
+  names_to = "condition",
+  values_to = "M1"
+)
+
+t <- t.test(M3$Diagnostic,M3$`Non-Diagnostic`,paired = T)
+
+t_paired_paragraph2 <- function (x, y, measure) 
+{
+  t <- t.test(x, y, paired = TRUE)
+  d <- lsr::cohensD(x,y,method = "paired")
+  d <- round(d,digits = 2)
+  labels <- measure
+  tsl <- as.vector(t$statistic)
+  ts <- round(tsl, digits = 3)
+  tpl <- as.vector(t$p.value)
+  tp <- round(tpl, digits = 3)
+  d_fl <- as.vector(t$parameter)
+  d_f <- round(d_fl, digits = 2)
+  mxl <- as.vector(mean(x))
+  mx <- round(mxl, digits = 2)
+  myl <- as.vector(mean(y))
+  my <- round(myl, digits = 2)
+  sdxl <- as.vector(sd(x))
+  sdx <- round(sdxl, digits = 2)
+  sdyl <- as.vector(sd(y))
+  sdy <- round(sdyl, digits = 2)
+  if (tp < 0.05) 
+    print(paste0("A paired samples t-test revealed a significant difference in ", 
+                 measure, " between the Diagnostic Condition, (M = ", mx, ", SD = ", 
+                 sdx, "), and the Non-Diagnostic condition, (M =", my, ", SD = ", sdy, 
+                 "), t(", d_f, ") = ", ts, ", p = ", tp, ", d = ", d, "."), quote = FALSE)
+  if (tp > 0.05) 
+    print(paste0("A paired samples t-test revealed no difference in ", 
+                 measure, " between the Diagnostic Condition, (M = ", mx, ", SD = ", 
+                 sdx, "), and the Non-Diagnostic Condition, (M =", my, ", SD = ", sdy, 
+                 "), t(", d_f, ") = ", ts, ", p = ", tp, ", d = ", d, "."), quote = FALSE)
+}
+test <- print(t_paired_paragraph2(M3$Diagnostic,M3$`Non-Diagnostic`, "moral Perception"))
+
+```
+
+
+A paired samples t-test revealed a significant difference in moral Perception between the Diagnostic Condition, (*M* = 56.54, *SD* = 28.56), and the Non-Diagnostic condition, (*M* =72.97, *SD* = 13.89), *t*(211) = -8.735, *p* < .001, *d* = 0.6.
+
+## Results (Single Item): Condition
+
+> <div id="footer"> <font size=2>Cillian McHugh - 21/2/22</font size></div>
+
+```{r, include=TRUE}
+
+ggplot(M4,aes(x=condition,y=M1))+
+  geom_violin() +
+  stat_summary(fun=mean, geom="point", shape=23, size=2)+
+  geom_boxplot(width=0.1)+
+#  geom_dotplot(binaxis='y', stackdir='center', dotsize=.05)+
+# violin plot with jittered points
+# 0.2 : degree of jitter in x direction
+  geom_jitter(shape=16, position=position_jitter(0.15), size=.8, color="dark grey")
+# violin plot with median points
+#p + stat_summary(fun.y=median, geom="point", size=.2, color="red")
+
+```
+
+
+## Combined (Single Item - Condition & Scenario)
+
+> <div id="footer"> <font size=2>Cillian McHugh - 21/2/22</font size></div>
+
+
+```{r include=FALSE}
+
+# 
+# 
+# model1 <- lme4::lmer(M_1 ~
+#                   condition+
+#                     scenario_abb
+#                 + (1|ResponseId)
+#                 , data = x
+#                # , family=gaussian
+#             )
+# 
+# model2 <- lme4::lmer(M_1 ~
+#                   scenario_abb+condition
+#                 + (1|ResponseId)
+#                 , data = x
+#                # , family=gaussian
+#             )
+# summary(model1)
+# summary(model2)
+# 
+# 
+# anova(model1,model2)
+# 
+# 
+# m0 <- nlme::lme(M_1 ~ 
+#                   1
+#                 , random=~1|ResponseId
+#                 , data=x
+#                 , method = "ML")
+# m1 <- nlme::lme(M_1 ~ 
+#                   condition 
+#                   + scenario_abb
+#                 , random=~1|ResponseId
+#                 , data=x
+#                 , method = "ML")
+# 
+# summary(m1)
+# anova(m1)
+# 
+
+test.aov <- with(x,
+                   aov(M_1 ~ condition + scenario_abb + #(condition * scenario) +
+                       Error(ResponseId / (condition * scenario_abb)))
+)
+
+```
+
+```{r include=TRUE}
+
+summary(test.aov)
+
+
+```
+
+
+
+## Results (Scale): Scenario
+
+> <div id="footer"> <font size=2>Cillian McHugh - 21/2/22</font size></div>
+
+```{r}
+
+x$MPS <- 
+  x %>% 
+  select(MP_R1,MP_R2,MP_R3,MP_R4) %>% 
+  rowMeans()
+
+```
+
+
+```{r include=TRUE}
+
+ez::ezANOVA(data=x,dv=.(MPS),wid=.(ResponseId_factor),within=.(scenario_abb),type=3)
+
+```
+
+
+
+## Results (Scale): Scenario
+
+> <div id="footer"> <font size=2>Cillian McHugh - 21/2/22</font size></div>
+
+
+```{r include=TRUE}
+
+ggplot(x,aes(x=scenario_abb,y=MPS))+
+  geom_violin() +
+  stat_summary(fun=mean, geom="point", shape=23, size=.5)+
+  geom_boxplot(width=0.1)+
+  #geom_dotplot(binaxis='y', stackdir='center', dotsize=.5)+
+# violin plot with jittered points
+# 0.2 : degree of jitter in x direction
+  geom_jitter(shape=16, position=position_jitter(0.15), size = .3, color="dark grey")
+# violin plot with median points
+#p + stat_summary(fun.y=median, geom="point", size=.2, color="red")
+
+```
+
+
+## Results (Scale): Condition
+
+> <div id="footer"> <font size=2>Cillian McHugh - 21/2/22</font size></div>
+
+
+```{r, include=FALSE}
+M1 <- x %>% 
+  select("ResponseId","condition","scenario_abb","MPS") %>% 
+  pivot_wider(names_from = scenario_abb, values_from = MPS)
+
+M1$M1 <- NA
+
+D <- M1[which(M1$condition=="Diagnostic"),]
+ND <- M1[which(M1$condition=="Non-Diagnostic"),]
+
+#D$M1 <- 
+D$M1 <- D %>% select("Sam","Francis","Alex","Robin") %>% rowMeans()
+ND$M1 <- ND %>% select("Charlie","Jackie") %>% rowMeans()
+
+M2 <- rbind(D,ND)
+M3 <- M2 %>% 
+  select("ResponseId","condition","M1") %>% 
+  pivot_wider(names_from = condition, values_from = M1)
+
+M4 <- 
+M3 %>% pivot_longer(
+  cols = c("Diagnostic","Non-Diagnostic"),
+  names_to = "condition",
+  values_to = "M1"
+)
+
+t <- t.test(M3$Diagnostic,M3$`Non-Diagnostic`,paired = T)
+
+t_paired_paragraph2 <- function (x, y, measure) 
+{
+  t <- t.test(x, y, paired = TRUE)
+  d <- lsr::cohensD(x,y,method = "paired")
+  d <- round(d,digits = 2)
+  labels <- measure
+  tsl <- as.vector(t$statistic)
+  ts <- round(tsl, digits = 3)
+  tpl <- as.vector(t$p.value)
+  tp <- round(tpl, digits = 3)
+  d_fl <- as.vector(t$parameter)
+  d_f <- round(d_fl, digits = 2)
+  mxl <- as.vector(mean(x))
+  mx <- round(mxl, digits = 2)
+  myl <- as.vector(mean(y))
+  my <- round(myl, digits = 2)
+  sdxl <- as.vector(sd(x))
+  sdx <- round(sdxl, digits = 2)
+  sdyl <- as.vector(sd(y))
+  sdy <- round(sdyl, digits = 2)
+  if (tp < 0.05) 
+    print(paste0("A paired samples t-test revealed a significant difference in ", 
+                 measure, " between the Diagnostic Condition, (M = ", mx, ", SD = ", 
+                 sdx, "), and the Non-Diagnostic condition, (M =", my, ", SD = ", sdy, 
+                 "), t(", d_f, ") = ", ts, ", p = ", tp, ", d = ", d, "."), quote = FALSE)
+  if (tp > 0.05) 
+    print(paste0("A paired samples t-test revealed no difference in ", 
+                 measure, " between the Diagnostic Condition, (M = ", mx, ", SD = ", 
+                 sdx, "), and the Non-Diagnostic Condition, (M =", my, ", SD = ", sdy, 
+                 "), t(", d_f, ") = ", ts, ", p = ", tp, ", d = ", d, "."), quote = FALSE)
+}
+test <- print(t_paired_paragraph2(M3$Diagnostic,M3$`Non-Diagnostic`, "moral Perception"))
+
+```
+
+
+A paired samples t-test revealed a significant difference in moral Perception between the Diagnostic Condition, (*M* = 4.4, *SD* = 175), and the Non-Diagnostic condition, (*M* = 5.39, *SD* = .98), *t*(211) = -8.655, *p* < .001, *d* = 0.59.
+
+## Results (Scale): Condition
+
+> <div id="footer"> <font size=2>Cillian McHugh - 21/2/22</font size></div>
+
+```{r, include=TRUE}
+
+ggplot(x,aes(x=condition,y=MPS))+
+  geom_violin() +
+  stat_summary(fun=mean, geom="point", shape=23, size=2)+
+  geom_boxplot(width=0.1)+
+#  geom_dotplot(binaxis='y', stackdir='center', dotsize=.05)+
+# violin plot with jittered points
+# 0.2 : degree of jitter in x direction
+  geom_jitter(shape=16, position=position_jitter(0.15), size=.8, color="dark grey")
+# violin plot with median points
+#p + stat_summary(fun.y=median, geom="point", size=.2, color="red")
+
+```
+
+
+## Combined (Scale - Condition & Scenario)
+
+> <div id="footer"> <font size=2>Cillian McHugh - 21/2/22</font size></div>
+
+
+```{r include=FALSE}
+
+# 
+# 
+# model1 <- lme4::lmer(M_1 ~
+#                   condition+
+#                     scenario_abb
+#                 + (1|ResponseId)
+#                 , data = x
+#                # , family=gaussian
+#             )
+# 
+# model2 <- lme4::lmer(M_1 ~
+#                   scenario_abb+condition
+#                 + (1|ResponseId)
+#                 , data = x
+#                # , family=gaussian
+#             )
+# summary(model1)
+# summary(model2)
+# 
+# 
+# anova(model1,model2)
+# 
+# 
+# m0 <- nlme::lme(M_1 ~ 
+#                   1
+#                 , random=~1|ResponseId
+#                 , data=x
+#                 , method = "ML")
+# m1 <- nlme::lme(M_1 ~ 
+#                   condition 
+#                   + scenario_abb
+#                 , random=~1|ResponseId
+#                 , data=x
+#                 , method = "ML")
+# 
+# summary(m1)
+# anova(m1)
+# 
+
+test.aov <- with(x,
+                   aov(MPS ~ condition + scenario_abb + #(condition * scenario) +
+                       Error(ResponseId / (condition * scenario_abb)))
+)
+
+```
+
+```{r include=TRUE}
+
+summary(test.aov)
+
+
+```
+
+# Study 1
+
+
+```{r, echo=FALSE}
+## Run Script to set up Data
+
+source("study1_set_up_data.R")
+
+write.csv(df_wide_clean, file = "study_1_wide_clean.csv")
+write.csv(df_long_clean, file = "study_1_long_clean.csv")
+
+#source("pilot_simulating_data.R")
+# create functions
+#source("create_functions.R")
+
+x <- df_long
+x <- df_long_clean
+
+
+sum(x$gender=="1",na.rm = T)/4
+
+```
+
+
+## Study 1
+
+> <div id="footer"> <font size=2>Cillian McHugh - 21/2/22</font size></div>
+
+
+
+## Study 1: Design
+
+- Within subjects design
+  - IV: Diagnostic information (present/absent)
+  - 4 descriptions
+  - Randomly assigned to contain diagnostic information vs not
+
+
+- Imagine a person named Sam. Throughout their life they have been known to be cruel, act unfairly, and to betray their own group.
+- Imagine a person named Sam. Throughout their life they have been known to be cruel, act unfairly, and to betray their own group. *They are left-handed, drink tea in the morning, and have two older siblings and one younger sibling.*
+
+
+
+## Materials: Moral Descriptions
+
+> <div id="footer"> <font size=2>Cillian McHugh - 21/2/22</font size></div>
+
+- Imagine a person named Sam. Throughout their life they have been known to be cruel, act unfairly, and to betray their own group.
+
+- Imagine a person named Robin. Throughout their life they have been known to physically hurt others, treat some people differently to others, and show lack of loyalty.
+
+- Imagine a person named Francis.
+Throughout their life they have been known to violate the standards of purity and decency, show lack of respect for authority, and treat people unequally.
+
+- Imagine a person named Alex.
+Throughout their life they have been known to cause others to suffer emotionally, to deny others their rights, and to cause chaos or disorder.
+
+
+
+## Materials: Non-Diagnostic
+
+> <div id="footer"> <font size=2>Cillian McHugh - 21/2/22</font size></div>
+
+
+- They have red hair, play tennis four times a month, and have one older sibling and one younger sibling.
+
+- They are left-handed, drink tea in the morning, and have two older siblings and one younger sibling.
+
+
+```{r include=FALSE}
+## Measures
+
+
+MPS <- x %>% 
+  select(R1,R2,R3,R4)
+
+alpha1 <- ltm::cronbach.alpha(MPS)
+
+alpha1
+
+```
+
+```{r inculde=FALSE}
+# length(x$gender)/4
+# sum(x$gender=="1")/4
+# sum(x$gender=="2")/4
+# sum(x$gender=="3")/4
+# sum(x$gender=="4")/4
+# sum(x$gender=="5")/4
+# 
+# # 1 = male
+# # 2 = female
+# # 3 = non-binary
+# # 4 = prefer to self describe
+# # 5 = prefer not to say
+# 
+# round(mean(x$age),digits=1)
+
+```
+
+
+```{r include=FALSE}
+## Measures
+
+
+MPS <- x %>% 
+  select(R1,R2,R3,R4)
+
+alpha1 <- ltm::cronbach.alpha(MPS)
+
+alpha1
+
+```
+
+## Study 1
+
+> <div id="footer"> <font size=2>Cillian McHugh - 21/2/22</font size></div>
+
+- DV1: Moral perceptions scale (Walker et al., 2021):
+  - 7-point Likert
+  - 4 items: Bad-Good, Moral-Immoral, Violent-Peaceful, Merciless-Empathetic
+  - Cronbach's alpha = `r round(alpha1$alpha, digits=2)`
+
+- DV2: Single item of moral perception (Walker et al., 2021).
+  - 0-100 slider scale
+  - Very Immoral-Very Moral
+
+UL Students with a total sample of *N* = `r length(x$gender)/4`, (female = `r sum(x$gender=="2")/4`, male = `r sum(x$gender=="1")/4`, non-binary/other = `r sum(x$gender=="3")/4 + sum(x$gender=="5")/4`, prefer not to say `r sum(x$gender=="5")/4`, *M~age~* = `r round(mean(x$age),digits=1)`, *SD* = `r round(sd(x$age),digits=1)`).
+
+## Results: Single Item Measure
+
+> <div id="footer"> <font size=2>Cillian McHugh - 21/2/22</font size></div>
+
+```{r include=FALSE}
+
+model1 <- lme4::lmer(M1 ~
+                  condition+scenario
+                + (1|ResponseId)
+                , data = x
+               # , family=gaussian
+            )
+summary(model1)
+anova(model1)
+
+
+library(nlme)
+
+m0 <- nlme::lme(M1 ~ 
+                  1
+                , random=~1|ResponseId
+                , data=x
+                , method = "ML")
+m1 <- nlme::lme(M1 ~ 
+                  condition*scenario
+                , random=~1|ResponseId
+                , data=x
+                , method = "ML")
+summary(m1)
+
+
+anova(m0,m1)
+```
+
+```{r include=TRUE}
+
+anova(m1)
+
+```
+
+
+## Main Effect for Condition (single item)
+
+> <div id="footer"> <font size=2>Cillian McHugh - 21/2/22</font size></div>
+
+
+```{r, include=TRUE}
+
+ggplot(x,aes(x=condition,y=M1))+
+  geom_violin() +
+  stat_summary(fun=mean, geom="point", shape=23, size=2)+
+  geom_boxplot(width=0.1)+
+#  geom_dotplot(binaxis='y', stackdir='center', dotsize=.05)+
+# violin plot with jittered points
+# 0.2 : degree of jitter in x direction
+  geom_jitter(shape=16, position=position_jitter(0.15), size=.3, color="dark grey")
+# violin plot with median points
+#p + stat_summary(fun.y=median, geom="point", size=.2, color="red")
+
+```
+
+## Main Effect for Scenario (single item)
+
+> <div id="footer"> <font size=2>Cillian McHugh - 21/2/22</font size></div>
+
+
+```{r include=TRUE}
+
+ggplot(x,aes(x=scenario,y=M1))+
+  geom_violin() +
+  stat_summary(fun=mean, geom="point", shape=23, size=.5)+
+  geom_boxplot(width=0.1)+
+  #geom_dotplot(binaxis='y', stackdir='center', dotsize=.5)+
+# violin plot with jittered points
+# 0.2 : degree of jitter in x direction
+  geom_jitter(shape=16, position=position_jitter(0.15), size = .3, color="dark grey")
+# violin plot with median points
+#p + stat_summary(fun.y=median, geom="point", size=.2, color="red")
+
+```
+
+
+## Results: Scale
+
+> <div id="footer"> <font size=2>Cillian McHugh - 21/2/22</font size></div>
+
+
+```{r include=FALSE}
+
+# model1 <- lme4::lmer(R_tot ~ 
+#                   condition+scenario
+#                 + (1|ResponseId)
+#                 , data = x
+#                # , family=gaussian
+#             )
+# anova(model1)
+
+
+library(nlme)
+m1 <- nlme::lme(R_tot ~ 
+                  condition*scenario
+                , random=~1|ResponseId
+                , data=x)
+summary(m1)
+
+```
+
+```{r include=TRUE}
+
+anova(m1)
+
+```
+
+## Main Effect for Condition (scale)
+
+> <div id="footer"> <font size=2>Cillian McHugh - 21/2/22</font size></div>
+
+
+```{r, include=TRUE}
+
+ggplot(x,aes(x=condition,y=R_tot))+
+  geom_violin() +
+  stat_summary(fun=mean, geom="point", shape=23, size=2)+
+  geom_boxplot(width=0.1)+
+#  geom_dotplot(binaxis='y', stackdir='center', dotsize=.05)+
+# violin plot with jittered points
+# 0.2 : degree of jitter in x direction
+  geom_jitter(shape=16, position=position_jitter(0.15), size=.3, color="dark grey")
+# violin plot with median points
+#p + stat_summary(fun.y=median, geom="point", size=.2, color="red")
+
+```
+
+## Main Effect for Scenario (scale)
+
+> <div id="footer"> <font size=2>Cillian McHugh - 21/2/22</font size></div>
+
+
+```{r include=TRUE}
+
+ggplot(x,aes(x=scenario,y=R_tot))+
+  geom_violin() +
+  stat_summary(fun=mean, geom="point", shape=23, size=.5)+
+  geom_boxplot(width=0.1)+
+  #geom_dotplot(binaxis='y', stackdir='center', dotsize=.5)+
+# violin plot with jittered points
+# 0.2 : degree of jitter in x direction
+  geom_jitter(shape=16, position=position_jitter(0.15), size = .3, color="dark grey")
+# violin plot with median points
+#p + stat_summary(fun.y=median, geom="point", size=.2, color="red")
+
+```
+
+# Next Steps
+
+## Next Steps
+
+> <div id="footer"> <font size=2>Cillian McHugh - 21/2/22</font size></div>
+
+- Thinking Styles Questionnaire?
+  - Actively Open-minded Thinking
+  - Close-Minded Thinking
+  - Preference for Intuitive Thinking
+  - Preference for Effortful Thinking

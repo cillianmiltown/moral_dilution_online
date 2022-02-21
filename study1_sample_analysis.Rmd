@@ -53,6 +53,10 @@ suppressMessages(library(car))
 ## Run Script to set up Data
 
 source("study1_set_up_data.R")
+
+write.csv(df_wide_clean, file = "study_1_wide_clean.csv")
+write.csv(df_long_clean, file = "study_1_long_clean.csv")
+
 #source("pilot_simulating_data.R")
 # create functions
 #source("create_functions.R")
@@ -103,28 +107,71 @@ Below is a sample analysis for a moral dilution study, with a total sample of *N
 ## Differences in M1
 
 ```{r include=TRUE}
-# 
-# model1 <- lme4::lmer(M1 ~ 
-#                   condition+scenario
-#                 + (1|ResponseId)
-#                 , data = x
-#                # , family=gaussian
-#             )
-# anova(model1)
+
+model1 <- lme4::lmer(M1 ~
+                  condition+scenario
+                + (1|ResponseId)
+                , data = x
+               # , family=gaussian
+            )
+summary(model1)
+anova(model1)
 
 
 library(nlme)
+
+m0 <- nlme::lme(M1 ~ 
+                  1
+                , random=~1|ResponseId
+                , data=x
+                , method = "ML")
 m1 <- nlme::lme(M1 ~ 
                   condition*scenario
                 , random=~1|ResponseId
-                , data=x)
+                , data=x
+                , method = "ML")
 summary(m1)
 
 
-
+anova(m0,m1)
 anova(m1)
 
 ```
+
+```{r}
+library(rstatix)
+x$ResponseId_factor <- as.factor(x$ResponseId)
+res.aov <- anova_test(
+  data = x, dv = M1, wid = ResponseId,
+  within = c(condition)
+  )
+get_anova_table(res.aov)
+
+test.aov <- with(x,
+                   aov(M1 ~ condition + scenario + (condition * scenario) +
+                       Error(ResponseId / (condition * scenario)))
+)
+
+summary(test.aov)
+
+library(ez)
+ezANOVA(data = x, dv = .(M1), wid = .(ResponseId),
+        within = .(scenario), detailed = FALSE, type = 2)
+
+
+model1 <- lme(M1 ~ condition*scenario, random = ~1|ResponseId, data = x, method = "ML")
+
+baseline <- lme(M1 ~ 1, random = ~1|ResponseId, data = x, method = "ML")
+
+postHocs<- multcomp::glht(model1, linfct = multcomp::mcp(c(condition*scenario) = "Tukey"))
+summary(postHocs)
+
+anova(baseline,model1)
+
+summary(model1)
+
+```
+
 
 ### Main Effect for Condition
 
