@@ -51,7 +51,7 @@ suppressMessages(library(car))
 ## Run Script to set up Data
 ```{r, echo=TRUE}
 
-source("pilot_set_up_data.R")
+source("pilot_2_set_up_data.R")
 #source("pilot_simulating_data.R")
 # create functions
 #source("create_functions.R")

@@ -599,8 +599,8 @@ summary(test.aov)
 
 source("study1_set_up_data.R")
 
-write.csv(df_wide_clean, file = "study_1_wide_clean.csv")
-write.csv(df_long_clean, file = "study_1_long_clean.csv")
+write.csv(df_wide_clean, file = "data/study_1_wide_clean.csv")
+write.csv(df_long_clean, file = "data/study_1_long_clean.csv")
 
 #source("pilot_simulating_data.R")
 # create functions

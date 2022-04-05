@@ -4,7 +4,7 @@ library(tidyverse)
 # source("../local_analysis/pilot_pre_processing.R")
 
 # read the data file
-df <- suppressMessages(read_csv("data/pilot_data.csv"))
+df <- suppressMessages(read_csv("../data/pilot_data_2.csv"))
 x <- df
 # check variable names
 variable.names(df)
@@ -156,9 +156,9 @@ as.data.frame(x)
 head(as.data.frame(x))
 
 
-write.csv(full_wide, "data/pilot_data_wide.csv", row.names = FALSE)
-write.csv(full_long, "data/pilot_data_long.csv", row.names = FALSE)
-write.csv(full_long_clean, "data/pilot_data_long_clean.csv", row.names = FALSE)
+write.csv(full_wide, "data/pilot_2_data_wide.csv", row.names = FALSE)
+write.csv(full_long, "data/pilot_2_data_long.csv", row.names = FALSE)
+write.csv(full_long_clean, "data/pilot_2_data_long_clean.csv", row.names = FALSE)
 
 
 rm(df,M1,R1,R2,R3,R4,x,y)

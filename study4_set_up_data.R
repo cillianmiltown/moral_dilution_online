@@ -4,8 +4,11 @@ library(tidyverse)
 # source("../local_analysis/pilot_pre_processing.R")
 
 # read the data file
-df <- suppressMessages(read_csv("data/study_1.csv"))
-df <- suppressMessages(read_csv("data/study_4.csv"))
+
+dfa <- suppressMessages(read_csv("data/study_4a.csv"))
+dfb <- suppressMessages(read_csv("data/study_4b.csv"))
+
+df <- rbind(dfa,dfb)
 
 # check variable names
 variable.names(df)
@@ -240,8 +243,8 @@ alex <- rbind.data.frame(ND1, ND2, M)
 
 x <- rbind.data.frame(sam, robin, francis, alex)
 
-x <- x %>% left_join(df %>% select("ResponseId", "age","gender",
-                                   "attn_chk_1Q","attn_chk_2_Q"
+x <- x %>% left_join(df %>% select("ResponseId", "age","gender","Sample"
+                                   ,"attn_chk_1Q","attn_chk_2_Q"
                                    ),
                 by = "ResponseId")#
 
@@ -298,14 +301,14 @@ names(francis)[2:10] <- paste0("francis_", names(francis)[2:10] )
 names(alex)[2:10] <- paste0("alex_", names(alex)[2:10] )
 
 
-x <- x %>% left_join(df %>% select("ResponseId", "age","gender"),
+x <- x %>% left_join(df %>% select("ResponseId", "age","gender", "Sample"),
                      by = "ResponseId")#
 
 
 df_wide <- left_join(sam,robin, by="ResponseId") %>%
   left_join(francis, by="ResponseId") %>%
   left_join(alex, by="ResponseId")%>%
-  left_join(df %>% select("ResponseId", "age","gender"
+  left_join(df %>% select("ResponseId", "age","gender", "Sample"
                           , "attn_chk_1Q", "attn_chk_2_Q"),
                                                 by = "ResponseId")
 
