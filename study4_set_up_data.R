@@ -15,15 +15,16 @@ variable.names(df)
 #View(df)
 
 #df <-
-y <- df[which(df$age==29012004),]
-df1 <- df[which(df$age!=29012004),]
+y <- df[which(df$age==1983),]
+df1 <- df[which(df$age!=1983),]
 df2 <- df[which(is.na(df$age)==TRUE),]
 
 
 y <- y %>%
   mutate(age=
            dplyr::recode(age
-                         , "29012004" = "18"
+#                         , "29012004" = "18"
+                         , "1983" = "39"
                          ))
 
 df <- rbind(df1,df2,y)
