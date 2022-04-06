@@ -62,7 +62,7 @@ source("study1_set_up_data.R")
 #source("create_functions.R")
 
 x <- df_long
-#x <- df_long_clean
+x <- df_long_clean
 
 
 sum(x$gender=="1",na.rm = T)/4

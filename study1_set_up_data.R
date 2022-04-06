@@ -5,7 +5,7 @@ library(tidyverse)
 
 # read the data file
 df <- suppressMessages(read_csv("data/study_1.csv"))
-df <- suppressMessages(read_csv("data/study_4.csv"))
+#df <- suppressMessages(read_csv("data/study_4.csv"))
 
 # check variable names
 variable.names(df)
