@@ -1,0 +1,276 @@
+---
+title: "Sample Analysis Study 3"
+author: "Cillian McHugh"
+date: "12th April 2022"
+bibliography: "resources/bib/My Library.bib"
+csl: "resources/bib/apa.csl"
+output:
+  bookdown::html_document2:
+    fig_caption: yes
+    toc: true
+    toc_float:
+      toc_collapsed: false
+    toc_depth: 4
+    number_sections: false
+editor_options: 
+  chunk_output_type: console
+---
+
+# Study 3
+
+Below is the analysis for positive moral dilution study.
+
+```{r setup, include=FALSE}
+# Setting Up
+
+knitr::opts_chunk$set(echo = FALSE)
+#knitr::opts_chunk$set(eval = TRUE, echo = TRUE)
+knitr::opts_chunk$set(include = FALSE)
+```
+
+
+```{r, results = "hide"}
+## Load Libraries
+
+rm(list = ls())
+# devtools::install_github("cillianmiltown/R_desnum")
+#install.packages("PowerTOST")
+library(desnum)
+library(psych)
+library(corx)
+library(nlme)
+library(lme4)
+library(TOSTER)
+library(scales)
+#install.packages("ez")
+suppressMessages(library(tidyverse))
+suppressMessages(library(car))
+# library("PowerTOST")
+```
+
+
+```{r, echo=TRUE}
+## Run Script to set up Data
+
+source("study5_set_up_data.R")
+# 
+# write.csv(df_wide_clean, file = "data/study_1_wide_clean.csv")
+# write.csv(df_long_clean, file = "data/study_1_long_clean.csv")
+
+#source("pilot_simulating_data.R")
+# create functions
+#source("create_functions.R")
+
+x <- df_long
+x <- df_long_clean
+
+
+sum(x$gender=="1",na.rm = T)/4
+
+```
+
+```{r include=TRUE}
+## Measures
+
+
+MPS <- x %>% 
+  select(R1,R2,R3,R4)
+
+alpha1 <- ltm::cronbach.alpha(MPS)
+
+alpha1
+
+```
+
+```{r}
+length(x$gender)/4
+sum(x$gender=="1")/4
+sum(x$gender=="2")/4
+sum(x$gender=="3")/4
+sum(x$gender=="4")/4
+sum(x$gender=="5")/4
+
+# 1 = male
+# 2 = female
+# 3 = non-binary
+# 4 = prefer to self describe
+# 5 = prefer not to say
+
+round(mean(x$age),digits=1)
+
+```
+# Overview
+## Sample
+Below is a sample analysis for a moral dilution study, with a total sample of *N* = `r length(x$gender)/4`, (female = `r sum(x$gender=="2")/4`, male = `r sum(x$gender=="1")/4`, non-binary/other = `r sum(x$gender=="3")/4 + sum(x$gender=="5")/4`, prefer not to say `r sum(x$gender=="5")/4`, *M~age~* = `r round(mean(x$age),digits=1)`, *SD* = `r round(sd(x$age),digits=1)`).
+
+```{r}
+x <- df_long
+```
+
+## Differences in M1
+
+```{r include=TRUE}
+
+model1 <- lme4::lmer(M1 ~
+                  condition+scenario
+                + (1|ResponseId)
+                , data = x
+               # , family=gaussian
+            )
+summary(model1)
+anova(model1)
+
+
+library(nlme)
+
+m0 <- nlme::lme(M1 ~ 
+                  1
+                , random=~1|ResponseId
+                , data=x
+                , method = "ML")
+m1 <- nlme::lme(M1 ~ 
+                  condition*valence
+                , random=~1|ResponseId
+                , data=x
+                , method = "ML")
+summary(m1)
+
+
+anova(m0,m1)
+anova(m1)
+
+```
+
+```{r}
+# library(rstatix)
+# x$ResponseId_factor <- as.factor(x$ResponseId)
+# res.aov <- anova_test(
+#   data = x, dv = M1, wid = ResponseId,
+#   within = c(condition)
+#   )
+# get_anova_table(res.aov)
+# 
+# test.aov <- with(x,
+#                    aov(M1 ~ condition + scenario + (condition * scenario) +
+#                        Error(ResponseId / (condition * scenario)))
+# )
+# 
+# summary(test.aov)
+# 
+# library(ez)
+# ezANOVA(data = x, dv = .(M1), wid = .(ResponseId),
+#         within = .(scenario), detailed = FALSE, type = 2)
+# 
+# 
+# model1 <- lme(M1 ~ condition*scenario, random = ~1|ResponseId, data = x, method = "ML")
+# 
+# baseline <- lme(M1 ~ 1, random = ~1|ResponseId, data = x, method = "ML")
+# 
+# #postHocs<- multcomp::glht(model1, linfct = multcomp::mcp(c(condition*scenario) = "Tukey"))
+# #summary(postHocs)
+# 
+# anova(baseline,model1)
+# 
+# summary(model1)
+
+```
+
+
+### Main Effect for Condition
+
+```{r, include=TRUE}
+
+ggplot(x,aes(x=factor(condition),y=M1))+
+  geom_violin() +
+  stat_summary(fun=mean, geom="point", shape=23, size=2)+
+  geom_boxplot(width=0.1)+
+#  geom_dotplot(binaxis='y', stackdir='center', dotsize=.05)+
+# violin plot with jittered points
+# 0.2 : degree of jitter in x direction
+  geom_jitter(shape=16, position=position_jitter(0.15), size=.3, color="dark grey")+
+  facet_grid(cols = vars(valence))
+# violin plot with median points
+#p + stat_summary(fun.y=median, geom="point", size=.2, color="red")
+
+```
+
+### Main Effect for Scenario
+
+```{r include=TRUE}
+
+ggplot(x,aes(x=scenario,y=M1))+
+  geom_violin() +
+  stat_summary(fun=mean, geom="point", shape=23, size=.5)+
+  geom_boxplot(width=0.1)+
+  #geom_dotplot(binaxis='y', stackdir='center', dotsize=.5)+
+# violin plot with jittered points
+# 0.2 : degree of jitter in x direction
+  geom_jitter(shape=16, position=position_jitter(0.15), size = .3, color="dark grey")
+# violin plot with median points
+#p + stat_summary(fun.y=median, geom="point", size=.2, color="red")
+
+```
+
+
+
+
+## Differences in four item Measure
+
+```{r include=TRUE}
+
+# model1 <- lme4::lmer(R_tot ~ 
+#                   condition+scenario
+#                 + (1|ResponseId)
+#                 , data = x
+#                # , family=gaussian
+#             )
+# anova(model1)
+
+
+library(nlme)
+m1 <- nlme::lme(R_tot ~ 
+                  condition*valence
+                , random=~1|ResponseId
+                , data=x)
+summary(m1)
+
+anova(m1)
+
+```
+
+### Main Effect for Condition
+
+```{r, include=TRUE}
+
+ggplot(x,aes(x=condition,y=R_tot))+
+  geom_violin() +
+  stat_summary(fun=mean, geom="point", shape=23, size=2)+
+  geom_boxplot(width=0.1)+
+#  geom_dotplot(binaxis='y', stackdir='center', dotsize=.05)+
+# violin plot with jittered points
+# 0.2 : degree of jitter in x direction
+  geom_jitter(shape=16, position=position_jitter(0.15), size=.3, color="dark grey")+
+  facet_grid(cols = vars(valence))
+# violin plot with median points
+#p + stat_summary(fun.y=median, geom="point", size=.2, color="red")
+
+```
+
+### Main Effect for Scenario
+
+```{r include=TRUE}
+
+ggplot(x,aes(x=scenario,y=R_tot))+
+  geom_violin() +
+  stat_summary(fun=mean, geom="point", shape=23, size=.5)+
+  geom_boxplot(width=0.1)+
+  #geom_dotplot(binaxis='y', stackdir='center', dotsize=.5)+
+# violin plot with jittered points
+# 0.2 : degree of jitter in x direction
+  geom_jitter(shape=16, position=position_jitter(0.15), size = .3, color="dark grey")
+# violin plot with median points
+#p + stat_summary(fun.y=median, geom="point", size=.2, color="red")
+
+```
+
+
