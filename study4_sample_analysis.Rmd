@@ -42,6 +42,8 @@ library(nlme)
 library(lme4)
 library(TOSTER)
 library(scales)
+library(ez)
+
 #install.packages("ez")
 suppressMessages(library(tidyverse))
 suppressMessages(library(car))
@@ -154,6 +156,14 @@ anova(m1)
 
 ```
 
+
+```{r, include=TRUE}
+ezANOVA(data = x, dv = .(M1), wid = .(ResponseId),
+        within = .(condition), detailed = FALSE, type = 2)
+```
+
+
+
 ```{r}
 # library(rstatix)
 # x$ResponseId_factor <- as.factor(x$ResponseId)
@@ -249,6 +259,13 @@ summary(m1)
 anova(m1)
 
 ```
+
+
+```{r, include=TRUE}
+ezANOVA(data = x, dv = .(R_tot), wid = .(ResponseId),
+        within = .(condition), detailed = FALSE, type = 2)
+```
+
 
 ### Main Effect for Condition
 

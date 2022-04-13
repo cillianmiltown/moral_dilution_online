@@ -42,6 +42,8 @@ library(nlme)
 library(lme4)
 library(TOSTER)
 library(scales)
+library(ez)
+
 #install.packages("ez")
 suppressMessages(library(tidyverse))
 suppressMessages(library(car))
@@ -107,9 +109,81 @@ Below is a sample analysis for a moral dilution study, with a total sample of *N
 x <- df_long
 ```
 
-## Differences in M1
+## Testing for Interaction Effect
+
+
+
+## Four item Measure
+
+```{r include=FALSE}
+
+# model1 <- lme4::lmer(R_tot ~ 
+#                   condition+scenario
+#                 + (1|ResponseId)
+#                 , data = x
+#                # , family=gaussian
+#             )
+# anova(model1)
+
+
+library(nlme)
+m1 <- nlme::lme(R_tot ~ 
+                  condition*valence
+                , random=~1|ResponseId
+                , data=x)
+summary(m1)
+
+anova(m1)
+
+```
+
+
+```{r, include=TRUE}
+ezANOVA(data = x, dv = .(R_tot), wid = .(ResponseId),
+        within = .(condition,valence), detailed = FALSE, type = 2)
+```
+
+
+### Condition vs Valence
+
+```{r, include=TRUE}
+
+ggplot(x,aes(x=condition,y=R_tot))+
+  geom_violin() +
+  stat_summary(fun=mean, geom="point", shape=23, size=2)+
+  geom_boxplot(width=0.1)+
+#  geom_dotplot(binaxis='y', stackdir='center', dotsize=.05)+
+# violin plot with jittered points
+# 0.2 : degree of jitter in x direction
+  geom_jitter(shape=16, position=position_jitter(0.15), size=.3, color="dark grey")+
+  facet_grid(cols = vars(valence))
+# violin plot with median points
+#p + stat_summary(fun.y=median, geom="point", size=.2, color="red")
+
+```
+
+### Differences between Scenarios
 
 ```{r include=TRUE}
+
+ggplot(x,aes(x=scenario,y=R_tot))+
+  geom_violin() +
+  stat_summary(fun=mean, geom="point", shape=23, size=.5)+
+  geom_boxplot(width=0.1)+
+  #geom_dotplot(binaxis='y', stackdir='center', dotsize=.5)+
+# violin plot with jittered points
+# 0.2 : degree of jitter in x direction
+  geom_jitter(shape=16, position=position_jitter(0.15), size = .3, color="dark grey")
+# violin plot with median points
+#p + stat_summary(fun.y=median, geom="point", size=.2, color="red")
+
+```
+
+
+
+### Single Item Measure
+
+```{r include=FALSE}
 
 model1 <- lme4::lmer(M1 ~
                   condition+scenario
@@ -141,6 +215,13 @@ anova(m1)
 
 ```
 
+
+```{r, include=TRUE}
+ezANOVA(data = x, dv = .(M1), wid = .(ResponseId),
+        within = .(condition,valence), detailed = FALSE, type = 2)
+```
+
+
 ```{r}
 # library(rstatix)
 # x$ResponseId_factor <- as.factor(x$ResponseId)
@@ -156,11 +237,10 @@ anova(m1)
 # )
 # 
 # summary(test.aov)
-# 
-# library(ez)
+# # 
 # ezANOVA(data = x, dv = .(M1), wid = .(ResponseId),
-#         within = .(scenario), detailed = FALSE, type = 2)
-# 
+#         within = .(condition,valence), detailed = FALSE, type = 2)
+
 # 
 # model1 <- lme(M1 ~ condition*scenario, random = ~1|ResponseId, data = x, method = "ML")
 # 
@@ -176,7 +256,7 @@ anova(m1)
 ```
 
 
-### Main Effect for Condition
+### Condition vs Valence
 
 ```{r, include=TRUE}
 
@@ -194,7 +274,7 @@ ggplot(x,aes(x=factor(condition),y=M1))+
 
 ```
 
-### Main Effect for Scenario
+### Differences between Scenarios
 
 ```{r include=TRUE}
 
@@ -213,64 +293,156 @@ ggplot(x,aes(x=scenario,y=M1))+
 
 
 
+## Testing Good and Bad Separately
 
-## Differences in four item Measure
+### Bad
 
-```{r include=TRUE}
+#### Four Item Measure
 
-# model1 <- lme4::lmer(R_tot ~ 
-#                   condition+scenario
-#                 + (1|ResponseId)
-#                 , data = x
-#                # , family=gaussian
-#             )
-# anova(model1)
+```{r, include=TRUE}
+
+df <- df_long_clean
 
 
-library(nlme)
+x <- df[which(df$valence=="bad"),]
+
+tapply(x$R_tot, x$condition, descriptives)
+
 m1 <- nlme::lme(R_tot ~ 
-                  condition*valence
+                  condition
                 , random=~1|ResponseId
                 , data=x)
 summary(m1)
 
 anova(m1)
 
+ezANOVA(data = x, dv = .(R_tot), wid = .(ResponseId),
+        within = .(condition), detailed = FALSE, type = 2)
+
 ```
 
-### Main Effect for Condition
+#### Single Item Measure
 
 ```{r, include=TRUE}
 
-ggplot(x,aes(x=condition,y=R_tot))+
-  geom_violin() +
-  stat_summary(fun=mean, geom="point", shape=23, size=2)+
-  geom_boxplot(width=0.1)+
-#  geom_dotplot(binaxis='y', stackdir='center', dotsize=.05)+
-# violin plot with jittered points
-# 0.2 : degree of jitter in x direction
-  geom_jitter(shape=16, position=position_jitter(0.15), size=.3, color="dark grey")+
-  facet_grid(cols = vars(valence))
-# violin plot with median points
-#p + stat_summary(fun.y=median, geom="point", size=.2, color="red")
+df <- df_long_clean
+
+
+x <- df[which(df$valence=="bad"),]
+
+tapply(x$M1, x$condition, descriptives)
+
+m1 <- nlme::lme(M1 ~ 
+                  condition
+                , random=~1|ResponseId
+                , data=x)
+summary(m1)
+
+anova(m1)
+
+ezANOVA(data = x, dv = .(M1), wid = .(ResponseId),
+        within = .(condition), detailed = FALSE, type = 2)
 
 ```
 
-### Main Effect for Scenario
+### Good
 
-```{r include=TRUE}
+#### Four Item Measure
 
-ggplot(x,aes(x=scenario,y=R_tot))+
-  geom_violin() +
-  stat_summary(fun=mean, geom="point", shape=23, size=.5)+
-  geom_boxplot(width=0.1)+
-  #geom_dotplot(binaxis='y', stackdir='center', dotsize=.5)+
-# violin plot with jittered points
-# 0.2 : degree of jitter in x direction
-  geom_jitter(shape=16, position=position_jitter(0.15), size = .3, color="dark grey")
-# violin plot with median points
-#p + stat_summary(fun.y=median, geom="point", size=.2, color="red")
+```{r, include=TRUE}
+
+df <- df_long_clean
+
+
+x <- df[which(df$valence=="good"),]
+
+
+tapply(x$R_tot, x$condition, descriptives)
+
+m1 <- nlme::lme(R_tot ~ 
+                  condition
+                , random=~1|ResponseId
+                , data=x)
+summary(m1)
+
+anova(m1)
+
+ezANOVA(data = x, dv = .(R_tot), wid = .(ResponseId),
+        within = .(condition), detailed = FALSE, type = 2)
+
+```
+
+#### Single Item Measure
+
+```{r, include=TRUE}
+
+df <- df_long_clean
+
+
+x <- df[which(df$valence=="good"),]
+
+
+tapply(x$M1, x$condition, descriptives)
+
+m1 <- nlme::lme(M1 ~ 
+                  condition
+                , random=~1|ResponseId
+                , data=x)
+summary(m1)
+
+anova(m1)
+
+ezANOVA(data = x, dv = .(M1), wid = .(ResponseId),
+        within = .(condition), detailed = FALSE, type = 2)
+
+```
+
+## Recoded Test
+The above analyses showed an interaction between valence and condition showing an effect for condition in both "good" and "bad" scenarios, and this effect was in opposite directions (as would be expected based on the measures used). Below we have recoded a new variable "strength of judgement" to test if the strength of the effect of condition is different depending on valence.
+
+```{r}
+
+df <- df_long_clean
+
+df$R_tot_strength <- rep(NA)
+df$M1_strength <- rep(NA)
+
+good <- df[which(df$valence=="good"),]
+
+bad <- df[which(df$valence=="bad"),]
+
+good$R_tot_strength <- good$R_tot
+good$M1_strength <- good$M1
+
+
+bad$R_tot_strength <- 7 - bad$R_tot
+bad$M1_strength <- 100 - bad$M1
+
+x <- rbind(good,bad)
 
 ```
 
 
+
+## Testing for Interaction Effect
+
+
+
+## Four item Measure
+
+
+```{r, include=TRUE}
+ezANOVA(data = x, dv = .(R_tot_strength), wid = .(ResponseId),
+        within = .(condition,valence), detailed = FALSE, type = 2)
+```
+
+
+
+
+### Single Item Measure
+
+
+```{r, include=TRUE}
+ezANOVA(data = x, dv = .(M1_strength), wid = .(ResponseId),
+        within = .(condition,valence), detailed = FALSE, type = 2)
+```
