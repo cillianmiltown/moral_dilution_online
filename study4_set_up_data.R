@@ -5,8 +5,8 @@ library(tidyverse)
 
 # read the data file
 
-dfa <- suppressMessages(read_csv("data/study_4a.csv"))
-dfb <- suppressMessages(read_csv("data/study_4b.csv"))
+dfa <- suppressMessages(read_csv("../data/study_4a.csv"))
+dfb <- suppressMessages(read_csv("../data/study_4b.csv"))
 
 df <- rbind(dfa,dfb)
 
@@ -489,9 +489,10 @@ df_wide_clean <- attention_fun(df_wide_clean)
 # head(as.data.frame(x))
 #
 #
-# write.csv(full_wide, "data/pilot_data_wide.csv", row.names = FALSE)
-# write.csv(full_long, "data/pilot_data_long.csv", row.names = FALSE)
-# write.csv(full_long_clean, "data/pilot_data_long_clean.csv", row.names = FALSE)
+write.csv(df_wide, "data/study4_data_wide.csv", row.names = FALSE)
+write.csv(df_wide_clean, "data/study4_data_wide_clean.csv", row.names = FALSE)
+write.csv(df_long, "data/study4_data_long.csv", row.names = FALSE)
+write.csv(df_long_clean, "data/study4_data_long_clean.csv", row.names = FALSE)
 #
 #
 rm(df,M,ND1, ND2,x, alex, francis, robin, sam)

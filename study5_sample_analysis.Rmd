@@ -106,7 +106,7 @@ round(mean(x$age),digits=1)
 Below is a sample analysis for a moral dilution study, with a total sample of *N* = `r length(x$gender)/4`, (female = `r sum(x$gender=="2")/4`, male = `r sum(x$gender=="1")/4`, non-binary/other = `r sum(x$gender=="3")/4 + sum(x$gender=="5")/4`, prefer not to say `r sum(x$gender=="5")/4`, *M~age~* = `r round(mean(x$age),digits=1)`, *SD* = `r round(sd(x$age),digits=1)`).
 
 ```{r}
-x <- df_long
+x <- df_long_clean
 ```
 
 ## Testing for Interaction Effect

@@ -4,7 +4,7 @@ library(tidyverse)
 # source("../local_analysis/pilot_pre_processing.R")
 
 # read the data file
-df <- suppressMessages(read_csv("data/pilot_data.csv"))
+df <- suppressMessages(read_csv("../data/pilot_data.csv"))
 x <- df
 # check variable names
 variable.names(df)

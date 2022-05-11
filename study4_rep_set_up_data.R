@@ -5,46 +5,21 @@ library(tidyverse)
 
 # read the data file
 
-df <- suppressMessages(read_csv("../data/study_5.csv"))
+df <- suppressMessages(read_csv("../data/study_4_rep.csv"))
+
+
 
 
 # check variable names
 variable.names(df)
 #View(df)
 
-#df <-
-y <- df[which(df$age==7708),]
-y <- y %>%
-  mutate(age=
-           dplyr::recode(age
-                         , "7708" = "45"
-                         ))
-y1 <- y
-y <- df[which(df$age==47906),]
-y <- y %>%
-  mutate(age=
-           dplyr::recode(age
-                         , "47906" = "47"
-           ))
-y2 <- y
-y <- df[which(df$age==3),]
-y <- y %>%
-  mutate(age=
-           dplyr::recode(age
-                         , "3" = "30"
-           ))
-y3 <- y
 
-z <- df
-z <- z[which(z$age!=7708),]
-z <- z[which(z$age!=47906),]
-z <- z[which(z$age!=3),]
-
-df <- rbind(z,y1,y2,y3)
 
 df$age <- as.numeric(df$age)
-
-rm(x,y,y1,y2,y3,z)
+df <- df[which(df$age != 17),]
+# df$age[which(df$age > 17)]
+# df$age
 x <- df
 ##### create the dataframe #####
 
@@ -62,7 +37,6 @@ x <- df
 x$scenario <- rep(NA)
 x$condition <- rep(NA)
 x$diagnostic12 <- rep(NA)
-x$valence <- rep(NA)
 
 # x$R1 <- rep(NA)
 # x$R2 <- rep(NA)
@@ -75,12 +49,10 @@ sam <- x %>%
   select(
     "ResponseId"
     , starts_with("S_")
-    , "scenario","condition","diagnostic12","valence"
+    , "scenario","condition","diagnostic12"
   )
 
-
-
-ND1 <- sam[which(is.na(sam$S_G_ND1_R_1)==FALSE),]
+ND1 <- sam[which(is.na(sam$S_ND1_R_1)==FALSE),]
 ND1$scenario <- rep("sam")
 
 ND1$condition <- rep("non-diagnostic")
@@ -88,10 +60,10 @@ ND1$diagnostic12 <- rep("ND1")
 ND1 <- Filter(function(x)!all(is.na(x)), ND1)
 ND1 <- `colnames<-`(ND1,
              c("ResponseId", "R1","R2","R3","R4","M1",
-               "scenario","condition","diagnostic12","valence"))
+               "scenario","condition","diagnostic12"))
 
 
-ND2 <- sam[which(is.na(sam$S_G_ND2_R_1)==FALSE),]
+ND2 <- sam[which(is.na(sam$S_ND2_R_1)==FALSE),]
 ND2$scenario <- rep("sam")
 
 ND2$condition <- rep("non-diagnostic")
@@ -99,11 +71,11 @@ ND2$diagnostic12 <- rep("ND2")
 ND2 <- Filter(function(x)!all(is.na(x)), ND2)
 ND2 <- `colnames<-`(ND2,
              c("ResponseId", "R1","R2","R3","R4","M1",
-               "scenario","condition","diagnostic12","valence"))
+               "scenario","condition","diagnostic12"))
 
 
 
-M <- sam[which(is.na(sam$S_G_M_M_1)==FALSE),]
+M <- sam[which(is.na(sam$S_M_R_1)==FALSE),]
 M$scenario <- rep("sam")
 
 M$condition <- rep("diagnostic")
@@ -111,10 +83,11 @@ M$diagnostic12 <- rep("NA")
 M <- Filter(function(x)!all(is.na(x)), M)
 M <- `colnames<-`(M,
              c("ResponseId", "R1","R2","R3","R4","M1",
-               "scenario","condition","diagnostic12","valence"))
+               "scenario","condition","diagnostic12"))
+
 
 sam <- rbind.data.frame(ND1, ND2, M)
-sam$valence <- rep("good")
+
 
 
 #### Robin ####
@@ -122,10 +95,10 @@ robin <- x %>%
   select(
     "ResponseId"
     , starts_with("R_")
-    , "scenario","condition","diagnostic12","valence"
+    , "scenario","condition","diagnostic12"
   )
 
-ND1 <- robin[which(is.na(robin$R_G_ND1_R_1)==FALSE),]
+ND1 <- robin[which(is.na(robin$R_ND1_R_1)==FALSE),]
 ND1$scenario <- rep("robin")
 
 ND1$condition <- rep("non-diagnostic")
@@ -133,10 +106,10 @@ ND1$diagnostic12 <- rep("ND1")
 ND1 <- Filter(function(x)!all(is.na(x)), ND1)
 ND1 <- `colnames<-`(ND1,
                     c("ResponseId", "R1","R2","R3","R4","M1",
-                      "scenario","condition","diagnostic12","valence"))
+                      "scenario","condition","diagnostic12"))
 
 
-ND2 <- robin[which(is.na(robin$R_G_ND2_R_1)==FALSE),]
+ND2 <- robin[which(is.na(robin$R_ND2_R_1)==FALSE),]
 ND2$scenario <- rep("robin")
 
 ND2$condition <- rep("non-diagnostic")
@@ -144,11 +117,11 @@ ND2$diagnostic12 <- rep("ND2")
 ND2 <- Filter(function(x)!all(is.na(x)), ND2)
 ND2 <- `colnames<-`(ND2,
                     c("ResponseId", "R1","R2","R3","R4","M1",
-                      "scenario","condition","diagnostic12","valence"))
+                      "scenario","condition","diagnostic12"))
 
 
 
-M <- robin[which(is.na(robin$R_G_M_R_1)==FALSE),]
+M <- robin[which(is.na(robin$R_M_R_1)==FALSE),]
 M$scenario <- rep("robin")
 
 M$condition <- rep("diagnostic")
@@ -156,11 +129,10 @@ M$diagnostic12 <- rep("NA")
 M <- Filter(function(x)!all(is.na(x)), M)
 M <- `colnames<-`(M,
                   c("ResponseId", "R1","R2","R3","R4","M1",
-                    "scenario","condition","diagnostic12","valence"))
+                    "scenario","condition","diagnostic12"))
 
 
 robin <- rbind.data.frame(ND1, ND2, M)
-robin$valence <- rep("good")
 
 
 #### Francis ####
@@ -168,10 +140,10 @@ francis <- x %>%
   select(
     "ResponseId"
     , starts_with("F_")
-    , "scenario","condition","diagnostic12","valence"
+    , "scenario","condition","diagnostic12"
   )
 
-ND1 <- francis[which(is.na(francis$F_B_ND1_R_1)==FALSE),]
+ND1 <- francis[which(is.na(francis$F_ND1_R_1)==FALSE),]
 ND1$scenario <- rep("francis")
 
 ND1$condition <- rep("non-diagnostic")
@@ -179,10 +151,10 @@ ND1$diagnostic12 <- rep("ND1")
 ND1 <- Filter(function(x)!all(is.na(x)), ND1)
 ND1 <- `colnames<-`(ND1,
                     c("ResponseId", "R1","R2","R3","R4","M1",
-                      "scenario","condition","diagnostic12","valence"))
+                      "scenario","condition","diagnostic12"))
 
 
-ND2 <- francis[which(is.na(francis$F_B_ND2_R_1)==FALSE),]
+ND2 <- francis[which(is.na(francis$F_ND2_R_1)==FALSE),]
 ND2$scenario <- rep("francis")
 
 ND2$condition <- rep("non-diagnostic")
@@ -190,11 +162,11 @@ ND2$diagnostic12 <- rep("ND2")
 ND2 <- Filter(function(x)!all(is.na(x)), ND2)
 ND2 <- `colnames<-`(ND2,
                     c("ResponseId", "R1","R2","R3","R4","M1",
-                      "scenario","condition","diagnostic12","valence"))
+                      "scenario","condition","diagnostic12"))
 
 
 
-M <- francis[which(is.na(francis$F_B_M_R_1)==FALSE),]
+M <- francis[which(is.na(francis$F_M_R_1)==FALSE),]
 M$scenario <- rep("francis")
 
 M$condition <- rep("diagnostic")
@@ -202,11 +174,11 @@ M$diagnostic12 <- rep("NA")
 M <- Filter(function(x)!all(is.na(x)), M)
 M <- `colnames<-`(M,
                   c("ResponseId", "R1","R2","R3","R4","M1",
-                    "scenario","condition","diagnostic12","valence"))
+                    "scenario","condition","diagnostic12"))
 
 
 francis <- rbind.data.frame(ND1, ND2, M)
-francis$valence <- rep("bad")
+
 
 
 #### Alex ####
@@ -214,10 +186,10 @@ alex <- x %>%
   select(
     "ResponseId"
     , starts_with("A_")
-    , "scenario","condition","diagnostic12","valence"
+    , "scenario","condition","diagnostic12"
   )
 
-ND1 <- alex[which(is.na(alex$A_B_ND1_R_1)==FALSE),]
+ND1 <- alex[which(is.na(alex$A_ND1_R_1)==FALSE),]
 ND1$scenario <- rep("alex")
 
 ND1$condition <- rep("non-diagnostic")
@@ -225,10 +197,10 @@ ND1$diagnostic12 <- rep("ND1")
 ND1 <- Filter(function(x)!all(is.na(x)), ND1)
 ND1 <- `colnames<-`(ND1,
                     c("ResponseId", "R1","R2","R3","R4","M1",
-                      "scenario","condition","diagnostic12","valence"))
+                      "scenario","condition","diagnostic12"))
 
 
-ND2 <- alex[which(is.na(alex$A_B_ND2_R_1)==FALSE),]
+ND2 <- alex[which(is.na(alex$A_ND2_R_1)==FALSE),]
 ND2$scenario <- rep("alex")
 
 ND2$condition <- rep("non-diagnostic")
@@ -236,11 +208,11 @@ ND2$diagnostic12 <- rep("ND2")
 ND2 <- Filter(function(x)!all(is.na(x)), ND2)
 ND2 <- `colnames<-`(ND2,
                     c("ResponseId", "R1","R2","R3","R4","M1",
-                      "scenario","condition","diagnostic12","valence"))
+                      "scenario","condition","diagnostic12"))
 
 
 
-M <- alex[which(is.na(alex$A_B_M_R_1)==FALSE),]
+M <- alex[which(is.na(alex$A_M_R_1)==FALSE),]
 M$scenario <- rep("alex")
 
 M$condition <- rep("diagnostic")
@@ -248,18 +220,18 @@ M$diagnostic12 <- rep("NA")
 M <- Filter(function(x)!all(is.na(x)), M)
 M <- `colnames<-`(M,
                   c("ResponseId", "R1","R2","R3","R4","M1",
-                    "scenario","condition","diagnostic12","valence"))
+                    "scenario","condition","diagnostic12"))
 
 
 alex <- rbind.data.frame(ND1, ND2, M)
-alex$valence <- rep("bad")
+
 
 
 ##### Merge them all #####
 
 x <- rbind.data.frame(sam, robin, francis, alex)
 
-x <- x %>% left_join(df %>% select("ResponseId", "age","gender"#,"Sample"
+x <- x %>% left_join(df %>% select("ResponseId", "age","gender","Sample"
                                    ,"attn_chk_1Q","attn_chk_2_Q"
                                    ),
                 by = "ResponseId")#
@@ -268,7 +240,6 @@ x <- x %>% left_join(df %>% select("ResponseId", "age","gender"#,"Sample"
 x$scenario     <- as.factor(x$scenario)
 x$condition    <- as.factor(x$condition)
 x$diagnostic12 <- as.factor(x$diagnostic12)
-x$valence      <- as.factor(x$valence)
 
 
 x$R_tot <- rowMeans(
@@ -318,14 +289,14 @@ names(francis)[2:10] <- paste0("francis_", names(francis)[2:10] )
 names(alex)[2:10] <- paste0("alex_", names(alex)[2:10] )
 
 
-x <- x %>% left_join(df %>% select("ResponseId", "age","gender"),
+x <- x %>% left_join(df %>% select("ResponseId", "age","gender", "Sample"),
                      by = "ResponseId")#
 
 
 df_wide <- left_join(sam,robin, by="ResponseId") %>%
   left_join(francis, by="ResponseId") %>%
   left_join(alex, by="ResponseId")%>%
-  left_join(df %>% select("ResponseId", "age","gender"
+  left_join(df %>% select("ResponseId", "age","gender", "Sample"
                           , "attn_chk_1Q", "attn_chk_2_Q"),
                                                 by = "ResponseId")
 
@@ -505,9 +476,10 @@ df_wide_clean <- attention_fun(df_wide_clean)
 # head(as.data.frame(x))
 #
 #
-# write.csv(full_wide, "data/pilot_data_wide.csv", row.names = FALSE)
-# write.csv(full_long, "data/pilot_data_long.csv", row.names = FALSE)
-# write.csv(full_long_clean, "data/pilot_data_long_clean.csv", row.names = FALSE)
+write.csv(df_wide, "data/study4_rep_data_wide.csv", row.names = FALSE)
+write.csv(df_wide_clean, "data/study4_rep_data_wide_clean.csv", row.names = FALSE)
+write.csv(df_long, "data/study4_rep_data_long.csv", row.names = FALSE)
+write.csv(df_long_clean, "data/study4_rep_data_long_clean.csv", row.names = FALSE)
 #
 #
 rm(df,M,ND1, ND2,x, alex, francis, robin, sam)

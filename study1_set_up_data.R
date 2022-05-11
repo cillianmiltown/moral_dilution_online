@@ -4,7 +4,7 @@ library(tidyverse)
 # source("../local_analysis/pilot_pre_processing.R")
 
 # read the data file
-df <- suppressMessages(read_csv("data/study_1.csv"))
+df <- suppressMessages(read_csv("../data/study_1.csv"))
 #df <- suppressMessages(read_csv("data/study_4.csv"))
 
 # check variable names
@@ -485,9 +485,10 @@ df_wide_clean <- attention_fun(df_wide_clean)
 # head(as.data.frame(x))
 #
 #
-# write.csv(full_wide, "data/pilot_data_wide.csv", row.names = FALSE)
-# write.csv(full_long, "data/pilot_data_long.csv", row.names = FALSE)
-# write.csv(full_long_clean, "data/pilot_data_long_clean.csv", row.names = FALSE)
+write.csv(df_wide, "data/study1_data_wide.csv", row.names = FALSE)
+write.csv(df_wide_clean, "data/study1_data_wide_clean.csv", row.names = FALSE)
+write.csv(df_long, "data/study1_data_long.csv", row.names = FALSE)
+write.csv(df_long_clean, "data/study1_data_long_clean.csv", row.names = FALSE)
 #
 #
 rm(df,M,ND1, ND2,x, alex, francis, robin, sam)

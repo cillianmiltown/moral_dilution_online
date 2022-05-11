@@ -16,7 +16,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Study 2
+# Study 2 (Replication)
 
 Below is the analysis for positive moral dilution study.
 
@@ -54,7 +54,7 @@ suppressMessages(library(car))
 ```{r, echo=TRUE}
 ## Run Script to set up Data
 
-source("study4_set_up_data.R")
+source("study4_rep_set_up_data.R")
 # 
 # write.csv(df_wide_clean, file = "data/study_1_wide_clean.csv")
 # write.csv(df_long_clean, file = "data/study_1_long_clean.csv")
@@ -66,13 +66,13 @@ source("study4_set_up_data.R")
 x <- df_long
 x <- df_long_clean
 
-x <- x[which(x$Sample=="MTurk"),]
-df_long_clean <- x
-
-sam <- x[which(x$scenario=="sam"),]
-francis <- x[which(x$scenario=="francis"),]
-alex <- x[which(x$scenario=="alex"),]
-robin <- x[which(x$scenario=="robin"),]
+# x <- x[which(x$Sample=="MTurk"),]
+# df_long_clean <- x
+# 
+# sam <- x[which(x$scenario=="sam"),]
+# francis <- x[which(x$scenario=="francis"),]
+# alex <- x[which(x$scenario=="alex"),]
+# robin <- x[which(x$scenario=="robin"),]
 
 
 
@@ -122,19 +122,7 @@ round(mean(x$age),digits=1)
 # Overview
 ## Sample
 Below is a sample analysis for a moral dilution study, with a total sample of *N* = `r length(x$gender)/4`, (female = `r sum(x$gender=="2")/4`, male = `r sum(x$gender=="1")/4`, non-binary/other = `r sum(x$gender=="3")/4 + sum(x$gender=="5")/4`, prefer not to say `r sum(x$gender=="5")/4`, *M~age~* = `r round(mean(x$age),digits=1)`, *SD* = `r round(sd(x$age),digits=1)`).
-```{r}
-x <- df_long_clean
-x <- x[which(x$Sample=="student"),]
-```
-### Student Sample
-The majority of participants were from the student body: *n* = `r length(x$gender)/4`, (female = `r sum(x$gender=="2")/4`, male = `r sum(x$gender=="1")/4`, non-binary/other = `r sum(x$gender=="3")/4 + sum(x$gender=="5")/4`, prefer not to say `r sum(x$gender=="5")/4`, *M~age~* = `r round(mean(x$age),digits=1)`, *SD* = `r round(sd(x$age),digits=1)`).
 
-```{r}
-x <- df_long_clean
-x <- x[which(x$Sample=="MTurk"),]
-```
-### MTurk
-In order to reach our pre-registered target sample size we recruited additional participants from MTurk: *n* = `r length(x$gender)/4`, (female = `r sum(x$gender=="2")/4`, male = `r sum(x$gender=="1")/4`, non-binary/other = `r sum(x$gender=="3")/4 + sum(x$gender=="5")/4`, prefer not to say `r sum(x$gender=="5")/4`, *M~age~* = `r round(mean(x$age),digits=1)`, *SD* = `r round(sd(x$age),digits=1)`).
 
 ```{r}
 x <- df_long_clean
@@ -271,6 +259,17 @@ ggplot(x,aes(x=scenario,y=M1))+
 #                # , family=gaussian
 #             )
 # anova(model1)
+
+tapply(x$M1, x$condition, descriptives)
+
+model1 <- lmerTest::lmer(R_tot ~
+                  condition+scenario
+                + (1|ResponseId)
+                , data = x
+               # , family=gaussian
+            )
+summary(model1)
+anova(model1)
 
 tapply(x$R_tot, x$condition, descriptives)
 
