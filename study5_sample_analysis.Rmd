@@ -116,31 +116,34 @@ x <- df_long_clean
 ## Four item Measure
 
 ```{r include=FALSE}
-
-# model1 <- lme4::lmer(R_tot ~ 
-#                   condition+scenario
-#                 + (1|ResponseId)
-#                 , data = x
-#                # , family=gaussian
-#             )
-# anova(model1)
+x$ResponseId <- as.factor(x$ResponseId)
+model1 <- lmerTest::lmer(R_tot ~
+                  condition+valence
+                + (1|ResponseId)
+                , data = x
+               # , family=gaussian
+            )
+anova(model1)
+summary(model1)
 
 
 library(nlme)
+
 m1 <- nlme::lme(R_tot ~ 
                   condition*valence
                 , random=~1|ResponseId
                 , data=x)
 summary(m1)
-
 anova(m1)
 
 ```
 
 
 ```{r, include=TRUE}
-ezANOVA(data = x, dv = .(R_tot), wid = .(ResponseId),
-        within = .(condition,valence), detailed = FALSE, type = 2)
+ezANOVA(data = x, dv = .(R_tot)
+        , wid = .(ResponseId)
+        , within = .(condition,valence)
+        , detailed = TRUE, type = 2)
 ```
 
 
@@ -434,6 +437,28 @@ x <- rbind(good,bad)
 ```{r, include=TRUE}
 ezANOVA(data = x, dv = .(R_tot_strength), wid = .(ResponseId),
         within = .(condition,valence), detailed = FALSE, type = 2)
+
+y <- x[which(x$diagnostic12!="NA"),]
+y$diagnostic12 <- droplevels(y$diagnostic12)
+ezANOVA(data = y, dv = .(R_tot), wid = .(ResponseId),
+        within = .(diagnostic12,valence), detailed = FALSE, type = 2)
+
+y$valence
+good <- y[which(y$valence=="good"),]
+bad <- y[which(y$valence=="bad"),]
+
+ezANOVA(data = good, dv = .(R_tot), wid = .(ResponseId),
+        within = .(diagnostic12), detailed = FALSE, type = 2)
+
+t.test(good$R_tot~good$diagnostic12)
+tapply(good$R_tot, good$diagnostic12, descriptives)
+t.test(good$M1~good$diagnostic12)
+tapply(good$M1, good$diagnostic12, descriptives)
+
+t.test(bad$R_tot~ bad$diagnostic12)
+tapply(bad$R_tot, bad$diagnostic12, descriptives)
+t.test(bad$M1 ~   bad$diagnostic12)
+tapply(bad$M1,    bad$diagnostic12, descriptives)
 ```
 
 
