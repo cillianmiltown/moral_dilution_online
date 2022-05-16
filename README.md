@@ -32,3 +32,16 @@ Data and analyses for study of the dilution effect in the moral domain.
 ## Seventh Study (Study 5)
 - A between-subjects replication of Study 3
 - All relevant files have prefix `study6`
+
+
+----
+
+
+- Pilot 1 ([results](https://cillianmiltown.github.io/moral_dilution_online/pilot_sample_analysis.html))
+- Study 1: bad characters ([results](https://cillianmiltown.github.io/moral_dilution_online/study1_sample_analysis.html))
+- Pilot 2 ([results](https://cillianmiltown.github.io/moral_dilution_online/pilot_2_sample_analysis.html))
+- Study 2: good characters ([results](https://cillianmiltown.github.io/moral_dilution_online/study4_sample_analysis.html))
+- Study 3: both good and bad ([results](https://cillianmiltown.github.io/moral_dilution_online/study5_sample_analysis.html))
+- Study 4: good characters ([results](https://cillianmiltown.github.io/moral_dilution_online/study4_rep_sample_analysis.html))
+- Study 5: both good and bad (between subjects) ([results](https://cillianmiltown.github.io/moral_dilution_online/study5_sample_analysis.html))
+- Overview of results [here](https://cillianmiltown.github.io/moral_dilution_online/update_presentation_scroll.html) (or as slides [here](https://cillianmiltown.github.io/moral_dilution_online/update_presentation_scroll.html))

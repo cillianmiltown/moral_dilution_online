@@ -22,16 +22,14 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Overview
 
-
-
-
-- Recap Pilot 1
-- Recap Study 1: bad characters
-- Pilot 2
-- Study 2: good characters
-- Study 3: both good and bad
-- Study 4: good characters
-- Study 5: both good and bad (between subjects)
+- Recap Pilot 1 ([results](https://cillianmiltown.github.io/moral_dilution_online/pilot_sample_analysis.html))
+- Recap Study 1: bad characters ([results](https://cillianmiltown.github.io/moral_dilution_online/study1_sample_analysis.html))
+- Pilot 2 ([results](https://cillianmiltown.github.io/moral_dilution_online/pilot_2_sample_analysis.html))
+- Study 2: good characters ([results](https://cillianmiltown.github.io/moral_dilution_online/study4_sample_analysis.html))
+- Study 3: both good and bad ([results](https://cillianmiltown.github.io/moral_dilution_online/study5_sample_analysis.html))
+- Study 4: good characters ([results](https://cillianmiltown.github.io/moral_dilution_online/study4_rep_sample_analysis.html))
+- Study 5: both good and bad (between subjects) ([results](https://cillianmiltown.github.io/moral_dilution_online/study5_sample_analysis.html))
+- Overview of results [here](https://cillianmiltown.github.io/moral_dilution_online/update_presentation_scroll.html) (or as slides [here](https://cillianmiltown.github.io/moral_dilution_online/update_presentation_scroll.html))
 
 # Pilot Study 1 (Recap)
 
@@ -1724,12 +1722,27 @@ ggplot(x,aes(x=scenario,y=M1))+
 
 ```{r include=FALSE}
 
-# model1 <- lme4::lmer(R_tot ~ 
-#                   condition+scenario
+# class(x$scenario)
+# class(x$condition)
+# class(x$valence)
+# x$ResponseId <- as.factor(x$ResponseId)
+# 
+# x$condition_num <- as.numeric(x$condition)-1
+# x$valence_num <- as.numeric(x$valence)-1
+# 
+# x$condition_num_f <- as.factor(as.numeric(x$condition)-1)
+# x$valence_num_f <- as.factor(as.numeric(x$valence)-1)
+# 
+# x$condition_ch <- as.character(x$condition)
+# class(x$R_tot)
+# model1 <- lmerTest::lmer(R_tot ~
+#                   condition*valence
 #                 + (1|ResponseId)
 #                 , data = x
+#                 , contrasts = list(condition = contr.sum  , valence = contr.sum)
 #                # , family=gaussian
 #             )
+# summary(model1)
 # anova(model1)
 
 

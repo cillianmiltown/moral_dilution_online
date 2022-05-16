@@ -1,5 +1,5 @@
 ---
-title: "Sample Analysis Study 2"
+title: "Sample Analysis Study 4"
 author: "Cillian McHugh"
 date: "5th April 2022"
 bibliography: "resources/bib/My Library.bib"
@@ -16,7 +16,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Study 2 (Replication)
+# Study 4 (Replication of Study 2)
 
 Below is the analysis for positive moral dilution study.
 
