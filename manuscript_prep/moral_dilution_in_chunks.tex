@@ -3,7 +3,7 @@
 \PassOptionsToPackage{hyphens}{url}
 %
 \documentclass[
-  american,
+  english,
   man,floatsintext]{apa7}
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
@@ -39,7 +39,7 @@
 \hypersetup{
   pdftitle={The Moral Dilution Effect: Irrelevant Information Influences Judgments of Moral Character},
   pdfauthor={Cillian McHugh1 \& Eric R. Igou1},
-  pdflang={en-US},
+  pdflang={en},
   pdfkeywords={keywords},
   hidelinks,
   pdfcreator={LaTeX via pandoc}}
@@ -85,9 +85,9 @@
 
 % Create new environments so endfloat can handle them
 % \newenvironment{ltable}
-%   {\begin{landscape}\begin{center}\begin{threeparttable}}
-%   {\end{threeparttable}\end{center}\end{landscape}}
-\newenvironment{lltable}{\begin{landscape}\begin{center}\begin{ThreePartTable}}{\end{ThreePartTable}\end{center}\end{landscape}}
+%   {\begin{landscape}\centering\begin{threeparttable}}
+%   {\end{threeparttable}\end{landscape}}
+\newenvironment{lltable}{\begin{landscape}\centering\begin{ThreePartTable}}{\end{ThreePartTable}\end{landscape}}
 
 % Enables adjusting longtable caption width to table width
 % Solution found at http://golatex.de/longtable-mit-caption-so-breit-wie-die-tabelle-t15767.html
@@ -125,15 +125,24 @@
   {\section*{\protect\normalfont{\@title}}}
   {}{\typeout{Failed to patch title.}}
 \makeatother
+
+\usepackage{xpatch}
+\makeatletter
+\xapptocmd\appendix
+  {\xapptocmd\section
+    {\addcontentsline{toc}{section}{\appendixname\ifoneappendix\else~\theappendix\fi\\: #1}}
+    {}{\InnerPatchFailed}%
+  }
+{}{\PatchFailed}
 \keywords{keywords\newline\indent Word count: TBC}
 \usepackage{csquotes}
 \raggedbottom
 \ifxetex
   % Load polyglossia as late as possible: uses bidi with RTL langages (e.g. Hebrew, Arabic)
   \usepackage{polyglossia}
-  \setmainlanguage[variant=american]{english}
+  \setmainlanguage[]{english}
 \else
-  \usepackage[main=american]{babel}
+  \usepackage[main=english]{babel}
 % get rid of language-specific shorthands (see #6817):
 \let\LanguageShortHands\languageshorthands
 \def\languageshorthands#1{}
@@ -177,7 +186,7 @@ Correspondence concerning this article should be addressed to Cillian McHugh, Un
 
 \affiliation{\vspace{0.5cm}\textsuperscript{1} University of Limerick}
 
-\abstract{
+\abstract{%
 Across five studies we investigated the moral dilution effect
 }
 
@@ -256,7 +265,7 @@ Overall, the model significantly predicted participants responses, and provided 
 \caption{\label{fig:pilot1bothconditionplot}Pilot Study 1: Differences in moral perception depending on condition}
 \end{figure}
 
-We conducted a linear-mixed-effects model to test if condition influenced MM-1 responses. Our outcome measure was MM-1, our predictor variable was condition; we allowed intercepts and the effect of condition to vary across participants. Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model, \(\chi\)\textsuperscript{2}(2) = 924.82, \emph{p} \textless{} .001. Condition was a significant predictor in the model \(b\) = -8.22, \emph{t}(210.98) = -8.60, \emph{p} \textless{} .001, with the nnon-diagnostic (neutral) descriptions being rated as more moral than the diagnostic (morally relevant) descriptions, see Figure~\ref{fig:pilot1bothconditionplot}.
+We conducted a linear-mixed-effects model to test if condition influenced MM-1 responses. Our outcome measure was MM-1, our predictor variable was condition; we allowed intercepts and the effect of condition to vary across participants. Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model, \(\chi\)\textsuperscript{2}(2) = 924.82, \emph{p} \textless{} .001. Condition was a significant predictor in the model \(b\) = -8.22, \emph{t}(210.98) = -8.60, \emph{p} \textless{} .001, with the non-diagnostic (neutral) descriptions being rated as more moral than the diagnostic (morally relevant) descriptions, see Figure~\ref{fig:pilot1bothconditionplot}.
 
 \hypertarget{study-1}{%
 \section{Study 1}\label{study-1}}
@@ -312,7 +321,7 @@ Overall, the model significantly predicted participants responses, and provided 
 \caption{\label{fig:S1bothconditionplot}Study 1: Differences in moral perception depending on condition}
 \end{figure}
 
-We conducted a linear-mixed-effects model to test if condition influenced MM-1 responses. Our outcome measure was MM-1, our predictor variable was condition; we allowed intercepts and the effect of condition to vary across participants. Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model, \(\chi\)\textsuperscript{2}(8) = 475.52, \emph{p} \textless{} .001. Condition significantly predicted MM-1 responses \emph{F}(1, 799.71) = 44.39, \emph{p} \textless{} .001, and when controlling for scenario was a significant predictor in the model \(b\) = -1.05, \emph{t}(2,444.33) = -2.56, \emph{p} = .010, with the nnon-diagnostic (neutral) descriptions being rated as more moral than the diagnostic (morally relevant) descriptions, see Figure~\ref{fig:S1bothconditionplot}.
+We conducted a linear-mixed-effects model to test if condition influenced MM-1 responses. Our outcome measure was MM-1, our predictor variable was condition; we allowed intercepts and the effect of condition to vary across participants. Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model, \(\chi\)\textsuperscript{2}(8) = 475.52, \emph{p} \textless{} .001. Condition significantly predicted MM-1 responses \emph{F}(1, 799.71) = 44.39, \emph{p} \textless{} .001, and when controlling for scenario was a significant predictor in the model \(b\) = -1.05, \emph{t}(2,444.33) = -2.56, \emph{p} = .010, with the non-diagnostic (neutral) descriptions being rated as more moral than the diagnostic (morally relevant) descriptions, see Figure~\ref{fig:S1bothconditionplot}.
 
 In the supplementary analyses we report the effect of condition on moral perception for each description individually.
 

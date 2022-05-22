@@ -41,9 +41,9 @@ editor_options:
 
 ```{r setup, include=FALSE}
 library("rmdfiltr")
-add_citeproc_filter(args = NULL)
-add_replace_ampersands_filter(add_citeproc_filter(args = NULL))
-knitr::opts_chunk$set(echo = FALSE, include = FALSE)
+# add_citeproc_filter(args = NULL)
+# add_replace_ampersands_filter(add_citeproc_filter(args = NULL))
+# knitr::opts_chunk$set(echo = FALSE, include = FALSE)
 # knitr::opts_chunk$set(eval = TRUE, echo = TRUE)
 #knitr::opts_chunk$set(include = FALSE)
 ```
@@ -51,14 +51,11 @@ knitr::opts_chunk$set(echo = FALSE, include = FALSE)
 
 ```{r load_libraries_cogload}
 rm(list = ls())
-#devtools::install_github("crsh/citr")
-#install.packages("car")
 library(citr)
 #install.packages("sjstats")
 library(plyr)
 library(foreign)
 library(car)
-#devtools::install_github("cillianmiltown/R_desnum")
 library(desnum)
 library(ggplot2)
 library(extrafont)
@@ -66,31 +63,24 @@ library(extrafont)
 #devtools::install_github("crsh/papaja")
 library(papaja)
 #library("dplyr")
-#install.packages("afex")
 library("afex")
 library("tibble")
 library(scales)
 #install.packages("metap")
-#install.packages("metap")
 library(metap)
-#install.packages("pwr")
 library(pwr)
-#install.packages("lsr")
 library(lsr)
 #install.packages("sjstats")
 library(sjstats)
-#install.packages("DescTools")
 library(DescTools)
 #inatall.packages("ggstatsplot")
 #library(ggstatsplot)
-#install.packages("VGAM")
 library(VGAM)
 library(nnet)
-#install.packages("mlogit")
 library(mlogit)
 library(reshape2)
 #install.packages("powerMediation")
-#library("powerMediation")
+library("powerMediation")
 
 
 #source("load_all_data.R")
@@ -105,28 +95,12 @@ getwd()
 
 
 
-```{r child = 'Introduction.Rmd'}
-```
-
-
-```{r child = 'pilot_1.Rmd'}
-```
-
-```{r child = 'Study_1.Rmd'}
-```
-
-
-```{r child = 'pilot_2.Rmd'}
-```
-
 
 ```{r child = 'Study_2.Rmd'}
 ```
 
 \newpage
 
-```{r child = 'Discussion.Rmd'}
-```
 
 # Accessibility Statement
 All data and analysis code are publicly available on this project's OSF page at \color{blue}[https://osf.io/mdnpv/?view_only=77883e3fbc3d45f1a35fe92d5318cb67](https://osf.io/mdnpv/?view_only=77883e3fbc3d45f1a35fe92d5318cb67)\color{black}.
