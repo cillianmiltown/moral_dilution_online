@@ -140,6 +140,18 @@ x <- y
 x$scenario_abb <- as.factor(x$scenario_abb)
 x$condition <- as.factor(x$condition)
 
+x$R_tot <-
+  x %>%
+  select(MP_R1
+         ,MP_R2
+         ,MP_R3
+         ,MP_R4) %>%
+  rowMeans()
+x$M1 <- x$M_1
+
+x$M1R_tot <- scale(scale(x$R_tot)+scale(x$M1))
+mean(scale(scale(x$R_tot)+scale(x$M1)))
+sd(scale(scale(x$R_tot)+scale(x$M1)))
 
 table(x$scenario_abb)
 

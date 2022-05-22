@@ -1405,6 +1405,16 @@ model1 <- lme4::lmer(M1 ~
                 , data = x
                # , family=gaussian
             )
+
+model1 <- lmerTest::lmer(M1 ~
+                  condition+scenario
+                + (1|ResponseId)
+                + (1|ResponseId:condition)
+             #   + (1|ResponseId:scenario)
+               # + (1|ResponseId:condition:scenario)
+                , data = x
+               # , family=gaussian
+            )
 summary(model1)
 anova(model1)
 
@@ -1640,14 +1650,14 @@ x <- df_long_clean
 
 
 ```{r include=FALSE}
-# 
-# model1 <- lme4::lmer(R_tot ~
-#                   condition+scenario
-#                 + (1|ResponseId)
-#                 , data = x
-#                 , family=gaussian
-#             )
-# anova(model1)
+
+model1 <- lme4::lmer(R_tot ~
+                  condition+scenario
+                + (1|ResponseId)
+                , data = x
+               # , family=gaussian
+            )
+anova(model1)
 
 
 library(nlme)
@@ -1658,6 +1668,8 @@ m1 <- nlme::lme(M1 ~
 summary(m1)
 
 anova(m1)
+
+car::Anova(m1, type="3")
 
 ```
 
@@ -1722,38 +1734,51 @@ ggplot(x,aes(x=scenario,y=M1))+
 
 ```{r include=FALSE}
 
-# class(x$scenario)
-# class(x$condition)
-# class(x$valence)
-# x$ResponseId <- as.factor(x$ResponseId)
-# 
-# x$condition_num <- as.numeric(x$condition)-1
-# x$valence_num <- as.numeric(x$valence)-1
-# 
-# x$condition_num_f <- as.factor(as.numeric(x$condition)-1)
-# x$valence_num_f <- as.factor(as.numeric(x$valence)-1)
-# 
-# x$condition_ch <- as.character(x$condition)
-# class(x$R_tot)
-# model1 <- lmerTest::lmer(R_tot ~
-#                   condition*valence
-#                 + (1|ResponseId)
-#                 , data = x
-#                 , contrasts = list(condition = contr.sum  , valence = contr.sum)
-#                # , family=gaussian
-#             )
-# summary(model1)
-# anova(model1)
+class(x$scenario)
+class(x$condition)
+class(x$valence)
+x$ResponseId <- as.factor(x$ResponseId)
+
+x$condition_num <- as.numeric(x$condition)-1
+x$valence_num <- as.numeric(x$valence)-1
+
+x$condition_num_f <- as.factor(as.numeric(x$condition)-1)
+x$valence_num_f <- as.factor(as.numeric(x$valence)-1)
+
+x$condition_ch <- as.character(x$condition)
+class(x$R_tot)
+
+model1 <- lmerTest::lmer(R_tot ~
+                  condition*valence
+                + (1|ResponseId)
+                + (1|ResponseId:condition)
+                + (1|ResponseId:valence)
+                , data = x
+            )
+model1 <- lmerTest::lmer(R_tot ~
+                  condition*valence
+                + (1|ResponseId)
+                + (1|ResponseId:condition)
+                + (1|ResponseId:valence)
+                + (1|condition:valence)
+                , data = x
+            )
+summary(model1)
+anova(model1)
 
 
 library(nlme)
 m1 <- nlme::lme(R_tot ~ 
                   condition*valence
                 , random=~1|ResponseId
-                , data=x)
+                , data=x
+                #, contrasts = list(condition = contr.sum  , valence = contr.sum)
+                )
 summary(m1)
 
 anova(m1)
+car::Anova(model1, type="3")
+
 
 ```
 
@@ -1762,7 +1787,7 @@ anova(m1)
 
 anova(m1)
 ezANOVA(data = x, dv = .(R_tot), wid = .(ResponseId),
-        within = .(condition,valence), detailed = FALSE, type = 2)
+        within = .(condition,valence), detailed = TRUE, type = 2)
 ```
 
 

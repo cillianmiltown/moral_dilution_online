@@ -1,0 +1,930 @@
+---
+title             : "Supplementary Materials: Moral Dilution"
+shorttitle        : "Moral Dilution"
+author:
+  - name          : "Blinded"
+    affiliation   : "1"
+    corresponding : yes    # Define only one corresponding author
+    address       : "Blinded"
+    email         : "Blinded"
+  - name          : "Blinded"
+    affiliation   : "2"
+  - name          : "Blinded"
+    affiliation   : "1"
+  - name          : "Blinded"
+    affiliation   : "1"
+affiliation:
+  - id            : "1"
+    institution   : "Blinded"
+  - id            : "2"
+    institution   : "Blinded"
+author_note: >
+  n/a
+abstract: >
+  n/a
+keywords          : "keywords"
+wordcount         : "TBC"
+bibliography: "../resources/bib/My Library.bib"
+csl: "../resources/bib/apa6.csl"
+figsintext        : yes
+floatsintext      : no
+figurelist        : yes
+tablelist         : yes
+footnotelist      : no
+lineno            : no
+toc               : false
+lang              : "en-US"
+documentclass     : "apa7"
+output:
+  papaja::apa6_pdf
+header-includes:
+- \raggedbottom
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+
+```{r S6setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, include = FALSE)
+# knitr::opts_chunk$set(eval = TRUE, echo = TRUE)
+#knitr::opts_chunk$set(include = FALSE)
+```
+
+
+
+
+# Supplementary Analyses
+
+# Pilot Study 1
+
+```{r}
+library(tidyverse)
+library(desnum)
+```
+
+
+```{r}
+df1 <- read.csv("../data/pilot_data_long.csv")
+df3 <- read.csv("../data/pilot_data_long_clean.csv")
+table(df3$gender)
+att_both <- (length(df1$gender)/6)-(length(df3$gender)/6)
+x <- df3
+```
+
+
+```{r}
+sam <- x[which(x$scenario_abb=="Sam"),]
+francis <- x[which(x$scenario_abb=="Francis"),]
+alex <- x[which(x$scenario_abb=="Alex"),]
+robin <- x[which(x$scenario_abb=="Robin"),]
+jackie <- x[which(x$scenario_abb=="Jackie"),]
+charlie <- x[which(x$scenario_abb=="Charlie"),]
+
+```
+## Pilot: 1: Differences Between Moral Descriptions
+
+We developed a combined moral perception measure by calculating the mean of the combined mean-centered scores for MPS-4 and MM-1, and mean-centering this result. Below we report the analyses for this combined measure.
+
+```{r}
+x <- df3
+bad <- x[which(x$condition=="Diagnostic"),]
+good <- x[which(x$condition=="Non-Diagnostic"),]
+#good$scenario_abb <- droplevels(good$scenario_abb)
+
+x <- bad
+aov_full <- rstatix::anova_test(
+  data=x
+  , dv=M1R_tot
+  , wid = ResponseId
+  , within = scenario_abb)
+aov1 <- rstatix::get_anova_table(aov_full)
+aov1
+aov1$DFd
+
+pwc <- x %>%
+  rstatix::pairwise_t_test(
+    M1R_tot ~ scenario_abb, paired = TRUE,
+    p.adjust.method = "bonferroni"
+    )
+pwc$p
+
+
+d1 <- lsr::cohensD(M1R_tot~scenario_abb,good,method="paired")
+t.test(M1R_tot~scenario_abb,good,paired=TRUE)
+t1 <- t.test(good$M1R_tot~good$scenario_abb,paired=TRUE)
+d1
+
+```
+
+The standardized means and standard deviations for the combined measure for each scenario are as follows: 
+*Sam* (moral),
+*M* = `r mean(sam$M1R_tot)`, *SD* = `r sd(sam$M1R_tot)`;
+*Francis* (moral),
+*M* = `r mean(francis$M1R_tot)`, *SD* = `r sd(francis$M1R_tot)`;
+*Alex* (moral),
+*M* = `r mean(alex$M1R_tot)`, *SD* = `r sd(alex$M1R_tot)`;
+*Robin* (moral),
+*M* = `r mean(robin$M1R_tot)`, *SD* = `r sd(robin$M1R_tot)`;
+*Jackie* (neutral),
+*M* = `r mean(jackie$M1R_tot)`, *SD* = `r sd(jackie$M1R_tot)`;
+*Charlie* (neutral),
+*M* = `r mean(charlie$M1R_tot)`, *SD* = `r sd(charlie$M1R_tot)`. For the moral descriptions, we observed significant variation depending on the description, *F*(`r aov1$DFd`, `r aov1$DFn`) = `r aov1$F`, *p* `r paste(p_report(aov1$p))`, partial $\eta$^2^ = `r paste(aov1$ges)`. When correcting for multiple comparisons, pairwise comparisons did not reveal significant differences between descriptions. We note that without correction, *Francis* appeared to be rated as more moral than both *Robin* (*p* `r paste(p_report(pwc$p[4]))`), and *Sam* (*p* `r paste(p_report(pwc$p[5]))`). For the neutral descriptions there was no significant difference in ratings depending on description, *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`.
+
+
+
+## Pilot 1: Testing Moral vs Neutral
+```{r}
+
+x <- df3
+
+model0 <- lmerTest::lmer(M1R_tot ~ 1
+                #   condition
+                 + (1|ResponseId)
+                # + (1|ResponseId:condition)
+                , data = x
+            )
+
+summary(model0)
+model1 <- lmerTest::lmer(M1R_tot ~
+                  condition
+                + (1|ResponseId)
+                + (1|ResponseId:condition)
+                , data = x
+                , contrasts = list(condition = contr.sum)
+            )
+
+results_anova <- as.data.frame(anova(model0,model1))
+results_anova
+results_anova$Chisq[2]
+results_anova$Df
+p1 <- results_anova$`Pr(>Chisq)`[2]
+p_report(p1)
+#p_report(results_anova$`Pr(>Chisq)`)[2]
+results_anova$AIC
+summary_model1 <- summary(model1)
+
+
+results_coef <- as.data.frame(summary_model1$coefficients)
+
+results_coef$Estimate[2]
+results_coef$`Std. Error`[2]
+results_coef$df[2]
+t1 <- results_coef$`t value`[2]
+p2 <- results_coef$`Pr(>|t|)`[2]
+
+#QuantPsyc::lm.beta(results_coef)
+anova(model1)
+```
+
+Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model $\chi$^2^(`r results_anova$Df[2]`) = `r results_anova$Chisq[2]`, *p* `r paste(p_report(p1))`, and condition was a significant predictor in the model $b$ = `r results_coef$Estimate[2]`, *t*(`r results_coef$df[2]`) = `r t1`, *p* `r paste(p_report(p2))`.
+
+```{r pilot1cobminedconditionplot, fig.cap="Pilot Study 1: Differences in combined measure depending on condition", include=TRUE}
+
+ggplot(x,aes(x=condition,y=M1R_tot))+
+  geom_violin() +
+  stat_summary(fun=mean, geom="point", shape=23, size=2)+
+  geom_boxplot(width=0.1)+
+#  geom_dotplot(binaxis='y', stackdir='center', dotsize=.05)+
+# violin plot with jittered points
+# 0.2 : degree of jitter in x direction
+  geom_jitter(shape=16
+              , position=position_jitter(0.15)
+              , size=.8
+              , color="dark grey") +
+  xlab("Condition") +
+  ylab("Moral Perception (combined)") +
+  theme_bw() +
+  theme(panel.border = element_blank(),
+        axis.line = element_line(size = .2),
+        strip.background  = element_blank(),
+        panel.grid = element_blank(),
+        plot.title=element_text(#family="Times",
+                                size=12
+                                ),
+        legend.text=element_text(#family="Times",
+                                 size=8
+                                 ),
+          legend.title=element_text(#family="Times",
+                                    size=10
+                                    ),
+          axis.text=element_text(#family="Times",
+                                 colour = "black",
+                                 size=8
+                                 ),
+          axis.ticks.x = element_blank(),
+          axis.title=element_text(#family="Times",
+                                  size=12
+                                  ),
+          strip.text=element_text(#family = "Times",
+                                  size = 12
+                                  ),
+         # strip.background = element_rect(fill = "white"),
+          legend.position="right")
+
+
+
+
+```
+
+\newpage
+
+# Study 1
+
+Again, we created a combined measure of moral perception from both DVs.
+```{r}
+df1 <- read.csv("../data/study1_data_long.csv")
+df3 <- read.csv("../data/study1_data_long_clean.csv")
+table(df3$gender)
+length(df1$gender)/6
+length(levels(as.factor(df1$ResponseId)))-length(levels(as.factor(df3$ResponseId)))
+length(df3$gender)/4
+
+att_both <- length(levels(as.factor(df1$ResponseId)))-length(levels(as.factor(df3$ResponseId)))
+```
+
+
+
+
+```{r}
+x <- df3
+sam <- x[which(x$scenario=="sam"),]
+francis <- x[which(x$scenario=="francis"),]
+alex <- x[which(x$scenario=="alex"),]
+robin <- x[which(x$scenario=="robin"),]
+
+```
+
+```{r}
+x <- df3
+# bad <- x[which(x$condition=="diagnostic"),]
+# good <- x[which(x$condition=="non-diagnostic"),]
+#good$scenario_abb <- droplevels(good$scenario_abb)
+
+#x <- bad
+aov_full <- rstatix::anova_test(
+  data=x
+  , dv=M1R_tot
+  , wid = ResponseId
+  , within = scenario)
+aov1 <- rstatix::get_anova_table(aov_full)
+aov1
+aov1$DFd
+
+pwc <- x %>%
+  rstatix::pairwise_t_test(
+    R_tot ~ scenario, paired = TRUE,
+    p.adjust.method = "bonferroni"
+    )
+pwc
+p_report(pwc$p[2])
+
+# d1 <- lsr::cohensD(R_tot~condition,x,method="paired")
+# t.test(R_tot~condition,x,paired=TRUE)
+# t1 <- t.test(x$R_tot~x$scenario,paired=TRUE)
+# d1
+lapply(pwc$p.adj,p_report)
+```
+
+
+The means and standard deviations for the combined measure for each scenario are as follows: 
+*Sam*,
+*M*~MPS-4~ = `r mean(sam$M1R_tot)`, *SD*~MPS-4~ = `r sd(sam$M1R_tot)`,
+*Francis*,
+*M*~MPS-4~ = `r mean(francis$M1R_tot)`, *SD*~MPS-4~ = `r sd(francis$M1R_tot)`,
+*Alex*,
+*M*~MPS-4~ = `r mean(alex$M1R_tot)`, *SD*~MPS-4~ = `r sd(alex$M1R_tot)`,
+*Robin*,
+*M*~MPS-4~ = `r mean(robin$M1R_tot)`, *SD*~MPS-4~ = `r sd(robin$M1R_tot)`. There was significant variation depending on the description, *F*(`r aov1$DFd`, `r aov1$DFn`) = `r aov1$F`, *p* `r paste(p_report(aov1$p))`, partial $\eta$^2^ = `r aov1$ges`. *Francis* appeared to be rated as the most favorable, followed by *Sam*, then *Alex* and finally *Robin* as the least favorable (all *p*s < .001). 
+
+
+
+```{r}
+x <- df3
+model0 <- lmerTest::lmer(M1R_tot ~ 1
+                #   condition
+                 + (1|ResponseId)
+                # + (1|ResponseId:condition)
+                , data = x
+          #      , contrasts = list(condition = contr.sum  , valence = contr.sum)
+            )
+
+summary(model0)
+model1 <- lmerTest::lmer(M1R_tot ~
+                  condition*scenario
+                + (1|ResponseId)
+                + (1|ResponseId:condition)
+                , data = x
+                , contrasts = list(condition = contr.sum  )#, valence = contr.sum)
+            )
+
+results_anova <- as.data.frame(anova(model0,model1))
+results_anova
+results_anova$Chisq[2]
+results_anova$Df
+p1 <- results_anova$`Pr(>Chisq)`[2]
+p_report(p1)
+#p_report(results_anova$`Pr(>Chisq)`)[2]
+results_anova$AIC
+summary_model1 <- summary(model1)
+summary_model1
+results_coef <- as.data.frame(summary_model1$coefficients)
+
+aov1 <- anova(model1)
+f3 <- aov1$`F value`[1]
+p3 <- aov1$`Pr(>F)`[1]
+
+results_coef$Estimate[2]
+results_coef$`Std. Error`[2]
+results_coef$df[2]
+t1 <- results_coef$`t value`[2]
+p2 <- results_coef$`Pr(>|t|)`[2]
+
+#QuantPsyc::lm.beta(results_coef)
+anova(model1)
+```
+
+We conducted a linear-mixed-effects model to test if condition influenced moral perception. Our outcome measure was the combined moral perception measure, our predictor variable was condition; we allowed intercepts and the effect of condition to vary across participants, and scenario was also included in the model.
+Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model, $\chi$^2^(`r results_anova$Df[2]`) = `r results_anova$Chisq[2]`, *p* `r paste(p_report(p1))`. Condition significantly influenced responses to the MPS-4, *F*(`r aov1$NumDF[1]`, `r aov1$DenDF[1]`) = `r f3`, *p* `r paste(p_report(p3))`; and was a significant predictor in the model when controlling for scenario, $b$ = `r results_coef$Estimate[2]`, *t*(`r results_coef$df[2]`) = `r t1`, *p* `r paste(p_report(p2))`, with the non-diagnostic descriptions being rated as more moral than the diagnostic (morally relevant) descriptions of immoral characters Figure\ \@ref(fig:S1combinedconditionplot).
+
+```{r S1combinedconditionplot, fig.cap="Study 1: Differences in combined measure depending on condition", include=TRUE}
+
+ggplot(x,aes(x=condition,y=R_tot))+
+  geom_violin() +
+  stat_summary(fun=mean, geom="point", shape=23, size=2)+
+  geom_boxplot(width=0.1)+
+#  geom_dotplot(binaxis='y', stackdir='center', dotsize=.05)+
+# violin plot with jittered points
+# 0.2 : degree of jitter in x direction
+  geom_jitter(shape=16
+              , position=position_jitter(0.15)
+              , size=.3
+              , color="dark grey") +
+  xlab("Condition") +
+  ylab("Moral Perception Scale (MPS-4)") +
+  theme_bw() +
+  theme(panel.border = element_blank(),
+        axis.line = element_line(size = .2),
+        strip.background  = element_blank(),
+        panel.grid = element_blank(),
+        plot.title=element_text(#family="Times",
+                                size=12
+                                ),
+        legend.text=element_text(#family="Times",
+                                 size=8
+                                 ),
+          legend.title=element_text(#family="Times",
+                                    size=10
+                                    ),
+          axis.text=element_text(#family="Times",
+                                 colour = "black",
+                                 size=8
+                                 ),
+          axis.ticks.x = element_blank(),
+          axis.title=element_text(#family="Times",
+                                  size=12
+                                  ),
+          strip.text=element_text(#family = "Times",
+                                  size = 12
+                                  ),
+         # strip.background = element_rect(fill = "white"),
+          legend.position="right")
+
+
+```
+
+```{r}
+
+x <- sam
+d1 <- lsr::cohensD(R_tot~condition,x)
+t1 <- t.test(R_tot~condition,x,paired=FALSE)
+t1$parameter
+t1$statistic
+t1$p.value
+
+d2 <- lsr::cohensD(M1~condition,x)
+t2 <- t.test(M1~condition,x,paired=FALSE)
+
+
+d3 <- lsr::cohensD(M1R_tot~condition,x)
+t3 <- t.test(M1R_tot~condition,x,paired=FALSE)
+
+xd <- x[which(x$condition=="diagnostic"),]
+xnond <- x[which(x$condition=="non-diagnostic"),]
+```
+
+For *Sam*, MPS-4 scores were significantly higher for the non-diagnostic condition (*M* = `r mean(xnond$R_tot)`, *SD* = `r sd(xnond$R_tot)`), than in the diagnostic condition (*M* = `r mean(xd$R_tot)`, *SD* = `r sd(xd$R_tot)`), *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`; MM-1 ratings were higher in the non-diagnostic condition (*M* = `r mean(xnond$M1)`, *SD* = `r sd(xnond$M1)`), than in the diagnostic condition (*M* = `r mean(xd$M1)`, *SD* = `r sd(xd$M1)`), *t*(`r t2$parameter`) = `r t2$statistic`, *p* `r paste(p_report(t2$p.value))`, *d* = `r d2`. For the combined measure ratings were also higher in the non-diagnostic condition (*M* = `r mean(xnond$M1R_tot)`, *SD* = `r sd(xnond$M1R_tot)`), than in the diagnostic condition (*M* = `r mean(xd$M1R_tot)`, *SD* = `r sd(xd$M1R_tot)`), *t*(`r t3$parameter`) = `r t3$statistic`, *p* `r paste(p_report(t3$p.value))`, *d* = `r d3`.
+
+
+
+```{r}
+
+x <- robin
+d1 <- lsr::cohensD(R_tot~condition,x)
+t1 <- t.test(R_tot~condition,x,paired=FALSE)
+t1$parameter
+t1$statistic
+t1$p.value
+
+d2 <- lsr::cohensD(M1~condition,x)
+t2 <- t.test(M1~condition,x,paired=FALSE)
+
+
+d3 <- lsr::cohensD(M1R_tot~condition,x)
+t3 <- t.test(M1R_tot~condition,x,paired=FALSE)
+
+xd <- x[which(x$condition=="diagnostic"),]
+xnond <- x[which(x$condition=="non-diagnostic"),]
+```
+
+For *Robin*, MPS-4 scores were not significantly different for the non-diagnostic condition (*M* = `r mean(xnond$R_tot)`, *SD* = `r sd(xnond$R_tot)`), than in the diagnostic condition (*M* = `r mean(xd$R_tot)`, *SD* = `r sd(xd$R_tot)`), *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`; MM-1 ratings were similar in the non-diagnostic condition (*M* = `r mean(xnond$M1)`, *SD* = `r sd(xnond$M1)`), and in the diagnostic condition (*M* = `r mean(xd$M1)`, *SD* = `r sd(xd$M1)`), *t*(`r t2$parameter`) = `r t2$statistic`, *p* `r paste(p_report(t2$p.value))`, *d* = `r d2`. For the combined measure ratings were also similar in the non-diagnostic condition (*M* = `r mean(xnond$M1R_tot)`, *SD* = `r sd(xnond$M1R_tot)`), than in the diagnostic condition (*M* = `r mean(xd$M1R_tot)`, *SD* = `r sd(xd$M1R_tot)`), *t*(`r t3$parameter`) = `r t3$statistic`, *p* `r paste(p_report(t3$p.value))`, *d* = `r d3`.
+
+
+```{r}
+
+x <- alex
+d1 <- lsr::cohensD(R_tot~condition,x)
+t1 <- t.test(R_tot~condition,x,paired=FALSE)
+t1$parameter
+t1$statistic
+t1$p.value
+
+d2 <- lsr::cohensD(M1~condition,x)
+t2 <- t.test(M1~condition,x,paired=FALSE)
+
+
+d3 <- lsr::cohensD(M1R_tot~condition,x)
+t3 <- t.test(M1R_tot~condition,x,paired=FALSE)
+
+xd <- x[which(x$condition=="diagnostic"),]
+xnond <- x[which(x$condition=="non-diagnostic"),]
+```
+
+For *Alex*, MPS-4 scores were significantly higher for the non-diagnostic condition (*M* = `r mean(xnond$R_tot)`, *SD* = `r sd(xnond$R_tot)`), than in the diagnostic condition (*M* = `r mean(xd$R_tot)`, *SD* = `r sd(xd$R_tot)`), *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`; MM-1 ratings were higher in the non-diagnostic condition (*M* = `r mean(xnond$M1)`, *SD* = `r sd(xnond$M1)`), than in the diagnostic condition (*M* = `r mean(xd$M1)`, *SD* = `r sd(xd$M1)`), *t*(`r t2$parameter`) = `r t2$statistic`, *p* `r paste(p_report(t2$p.value))`, *d* = `r d2`. For the combined measure ratings were also higher in the non-diagnostic condition (*M* = `r mean(xnond$M1R_tot)`, *SD* = `r sd(xnond$M1R_tot)`), than in the diagnostic condition (*M* = `r mean(xd$M1R_tot)`, *SD* = `r sd(xd$M1R_tot)`), *t*(`r t3$parameter`) = `r t3$statistic`, *p* `r paste(p_report(t3$p.value))`, *d* = `r d3`.
+
+
+```{r}
+
+x <- francis
+d1 <- lsr::cohensD(R_tot~condition,x)
+t1 <- t.test(R_tot~condition,x,paired=FALSE)
+t1$parameter
+t1$statistic
+t1$p.value
+
+d2 <- lsr::cohensD(M1~condition,x)
+t2 <- t.test(M1~condition,x,paired=FALSE)
+
+
+d3 <- lsr::cohensD(M1R_tot~condition,x)
+t3 <- t.test(M1R_tot~condition,x,paired=FALSE)
+
+xd <- x[which(x$condition=="diagnostic"),]
+xnond <- x[which(x$condition=="non-diagnostic"),]
+```
+
+For *Francis*, MPS-4 scores were significantly higher for the non-diagnostic condition (*M* = `r mean(xnond$R_tot)`, *SD* = `r sd(xnond$R_tot)`), than in the diagnostic condition (*M* = `r mean(xd$R_tot)`, *SD* = `r sd(xd$R_tot)`), *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`; MM-1 ratings were not significantly different in the non-diagnostic condition (*M* = `r mean(xnond$M1)`, *SD* = `r sd(xnond$M1)`), than in the diagnostic condition (*M* = `r mean(xd$M1)`, *SD* = `r sd(xd$M1)`), *t*(`r t2$parameter`) = `r t2$statistic`, *p* `r paste(p_report(t2$p.value))`, *d* = `r d2`. For the combined measure ratings were also similar in the non-diagnostic condition (*M* = `r mean(xnond$M1R_tot)`, *SD* = `r sd(xnond$M1R_tot)`), and in the diagnostic condition (*M* = `r mean(xd$M1R_tot)`, *SD* = `r sd(xd$M1R_tot)`), *t*(`r t3$parameter`) = `r t3$statistic`, *p* `r paste(p_report(t3$p.value))`, *d* = `r d3`.
+
+
+
+
+\newpage
+
+# Pilot Study 2
+
+
+
+```{r}
+df1 <- read.csv("../data/pilot_2_data_long.csv")
+df3 <- read.csv("../data/pilot_2_data_long_clean.csv")
+table(df3$gender)
+att_both <- (length(df1$gender)/6)-(length(df3$gender)/6)
+x <- df3
+```
+
+
+```{r}
+sam <- x[which(x$scenario_abb=="Sam"),]
+francis <- x[which(x$scenario_abb=="Francis"),]
+alex <- x[which(x$scenario_abb=="Alex"),]
+robin <- x[which(x$scenario_abb=="Robin"),]
+jackie <- x[which(x$scenario_abb=="Jackie"),]
+charlie <- x[which(x$scenario_abb=="Charlie"),]
+
+```
+## Pilot: 2: Differences Between Moral Descriptions
+
+As in previous studies, we developed a combined moral perception measure by calculating the mean of the combined mean-centered scores for MPS-4 and MM-1, and mean-centering this result. Below we report the analyses for this combined measure.
+
+```{r}
+x <- df3
+bad <- x[which(x$condition=="Diagnostic"),]
+good <- x[which(x$condition=="Non-Diagnostic"),]
+#good$scenario_abb <- droplevels(good$scenario_abb)
+
+x <- bad
+aov_full <- rstatix::anova_test(
+  data=x
+  , dv=M1R_tot
+  , wid = ResponseId
+  , within = scenario_abb)
+aov1 <- rstatix::get_anova_table(aov_full)
+aov1
+aov1$DFd
+
+pwc <- x %>%
+  rstatix::pairwise_t_test(
+    M1R_tot ~ scenario_abb, paired = TRUE,
+    p.adjust.method = "bonferroni"
+    )
+pwc
+
+
+d1 <- lsr::cohensD(M1R_tot~scenario_abb,good,method="paired")
+t.test(M1R_tot~scenario_abb,good,paired=TRUE)
+t1 <- t.test(good$M1R_tot~good$scenario_abb,paired=TRUE)
+d1
+
+```
+
+The standardized means and standard deviations for the combined measure for each scenario are as follows: 
+*Sam* (moral),
+*M* = `r mean(sam$M1R_tot)`, *SD* = `r sd(sam$M1R_tot)`;
+*Francis* (moral),
+*M* = `r mean(francis$M1R_tot)`, *SD* = `r sd(francis$M1R_tot)`;
+*Alex* (moral),
+*M* = `r mean(alex$M1R_tot)`, *SD* = `r sd(alex$M1R_tot)`;
+*Robin* (moral),
+*M* = `r mean(robin$M1R_tot)`, *SD* = `r sd(robin$M1R_tot)`;
+*Jackie* (neutral),
+*M* = `r mean(jackie$M1R_tot)`, *SD* = `r sd(jackie$M1R_tot)`;
+*Charlie* (neutral),
+*M* = `r mean(charlie$M1R_tot)`, *SD* = `r sd(charlie$M1R_tot)`. For the moral descriptions, we observed significant variation depending on the description, *F*(`r aov1$DFd`, `r aov1$DFn`) = `r aov1$F`, *p* `r paste(p_report(aov1$p))`, partial $\eta$^2^ = `r paste(aov1$ges)`*Sam* was viewed significantly more favorably than *Francis* (*p* `r paste(p_report(pwc$p.adj[5]))`). For the neutral descriptions there was no significant difference in ratings depending on description, *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`.
+
+
+
+## Pilot 2: Testing Moral vs Neutral
+```{r}
+
+x <- df3
+
+model0 <- lmerTest::lmer(M1R_tot ~ 1
+                #   condition
+                 + (1|ResponseId)
+                # + (1|ResponseId:condition)
+                , data = x
+            )
+
+summary(model0)
+model1 <- lmerTest::lmer(M1R_tot ~
+                  condition
+                + (1|ResponseId)
+                + (1|ResponseId:condition)
+                , data = x
+                , contrasts = list(condition = contr.sum)
+            )
+
+results_anova <- as.data.frame(anova(model0,model1))
+results_anova
+results_anova$Chisq[2]
+results_anova$Df
+p1 <- results_anova$`Pr(>Chisq)`[2]
+p_report(p1)
+#p_report(results_anova$`Pr(>Chisq)`)[2]
+results_anova$AIC
+summary_model1 <- summary(model1)
+
+
+results_coef <- as.data.frame(summary_model1$coefficients)
+
+results_coef$Estimate[2]
+results_coef$`Std. Error`[2]
+results_coef$df[2]
+t1 <- results_coef$`t value`[2]
+p2 <- results_coef$`Pr(>|t|)`[2]
+
+#QuantPsyc::lm.beta(results_coef)
+anova(model1)
+```
+
+Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model $\chi$^2^(`r results_anova$Df[2]`) = `r results_anova$Chisq[2]`, *p* `r paste(p_report(p1))`, and condition was a significant predictor in the model $b$ = `r results_coef$Estimate[2]`, *t*(`r results_coef$df[2]`) = `r t1`, *p* `r paste(p_report(p2))`.
+
+```{r pilot2cobminedconditionplot, fig.cap="Pilot Study 1: Differences in combined measure depending on condition", include=TRUE}
+
+ggplot(x,aes(x=condition,y=M1R_tot))+
+  geom_violin() +
+  stat_summary(fun=mean, geom="point", shape=23, size=2)+
+  geom_boxplot(width=0.1)+
+#  geom_dotplot(binaxis='y', stackdir='center', dotsize=.05)+
+# violin plot with jittered points
+# 0.2 : degree of jitter in x direction
+  geom_jitter(shape=16
+              , position=position_jitter(0.15)
+              , size=.8
+              , color="dark grey") +
+  xlab("Condition") +
+  ylab("Moral Perception (combined)") +
+  theme_bw() +
+  theme(panel.border = element_blank(),
+        axis.line = element_line(size = .2),
+        strip.background  = element_blank(),
+        panel.grid = element_blank(),
+        plot.title=element_text(#family="Times",
+                                size=12
+                                ),
+        legend.text=element_text(#family="Times",
+                                 size=8
+                                 ),
+          legend.title=element_text(#family="Times",
+                                    size=10
+                                    ),
+          axis.text=element_text(#family="Times",
+                                 colour = "black",
+                                 size=8
+                                 ),
+          axis.ticks.x = element_blank(),
+          axis.title=element_text(#family="Times",
+                                  size=12
+                                  ),
+          strip.text=element_text(#family = "Times",
+                                  size = 12
+                                  ),
+         # strip.background = element_rect(fill = "white"),
+          legend.position="right")
+
+
+
+
+```
+
+\newpage
+
+# Study 2
+
+Below we report the results for the combined measure of moral perception from both DVs. We additionally report the effect of condition on responses to each description individually
+
+```{r}
+df1 <- read.csv("../data/study4_data_long.csv")
+df3 <- read.csv("../data/study4_data_long_clean.csv")
+table(df3$gender)
+length(df1$gender)/6
+length(levels(as.factor(df1$ResponseId)))-length(levels(as.factor(df3$ResponseId)))
+length(df3$gender)/4
+
+att_both <- length(levels(as.factor(df1$ResponseId)))-length(levels(as.factor(df3$ResponseId)))
+```
+
+
+
+
+```{r}
+x <- df3
+sam <- x[which(x$scenario=="sam"),]
+francis <- x[which(x$scenario=="francis"),]
+alex <- x[which(x$scenario=="alex"),]
+robin <- x[which(x$scenario=="robin"),]
+
+```
+
+```{r}
+x <- df3
+# bad <- x[which(x$condition=="diagnostic"),]
+# good <- x[which(x$condition=="non-diagnostic"),]
+#good$scenario_abb <- droplevels(good$scenario_abb)
+
+#x <- bad
+aov_full <- rstatix::anova_test(
+  data=x
+  , dv=M1R_tot
+  , wid = ResponseId
+  , within = scenario)
+aov1 <- rstatix::get_anova_table(aov_full)
+aov1
+aov1$DFd
+
+pwc <- x %>%
+  rstatix::pairwise_t_test(
+    R_tot ~ scenario, paired = TRUE,
+    p.adjust.method = "bonferroni"
+    )
+pwc
+p_report(pwc$p[2])
+
+# d1 <- lsr::cohensD(R_tot~condition,x,method="paired")
+# t.test(R_tot~condition,x,paired=TRUE)
+# t1 <- t.test(x$R_tot~x$scenario,paired=TRUE)
+# d1
+lapply(pwc$p.adj,p_report)
+```
+
+
+The means and standard deviations for the combined measure for each scenario are as follows: 
+*Sam*,
+*M*~MPS-4~ = `r mean(sam$M1R_tot)`, *SD*~MPS-4~ = `r sd(sam$M1R_tot)`,
+*Francis*,
+*M*~MPS-4~ = `r mean(francis$M1R_tot)`, *SD*~MPS-4~ = `r sd(francis$M1R_tot)`,
+*Alex*,
+*M*~MPS-4~ = `r mean(alex$M1R_tot)`, *SD*~MPS-4~ = `r sd(alex$M1R_tot)`,
+*Robin*,
+*M*~MPS-4~ = `r mean(robin$M1R_tot)`, *SD*~MPS-4~ = `r sd(robin$M1R_tot)`. There was significant variation depending on the description, *F*(`r aov1$DFd`, `r aov1$DFn`) = `r aov1$F`, *p* `r paste(p_report(aov1$p))`, partial $\eta$^2^ = `r aov1$ges`. *Francis* appeared to be rated as the less favorable than all other characters (all *p*s < .001). 
+
+
+
+```{r}
+x <- df3
+model0 <- lmerTest::lmer(M1R_tot ~ 1
+                #   condition
+                 + (1|ResponseId)
+                # + (1|ResponseId:condition)
+                , data = x
+          #      , contrasts = list(condition = contr.sum  , valence = contr.sum)
+            )
+
+summary(model0)
+model1 <- lmerTest::lmer(M1R_tot ~
+                  condition*scenario
+                + (1|ResponseId)
+                + (1|ResponseId:condition)
+                , data = x
+                , contrasts = list(condition = contr.sum  )#, valence = contr.sum)
+            )
+
+results_anova <- as.data.frame(anova(model0,model1))
+results_anova
+results_anova$Chisq[2]
+results_anova$Df
+p1 <- results_anova$`Pr(>Chisq)`[2]
+p_report(p1)
+#p_report(results_anova$`Pr(>Chisq)`)[2]
+results_anova$AIC
+summary_model1 <- summary(model1)
+summary_model1
+results_coef <- as.data.frame(summary_model1$coefficients)
+
+aov1 <- anova(model1)
+f3 <- aov1$`F value`[1]
+p3 <- aov1$`Pr(>F)`[1]
+
+results_coef$Estimate[2]
+results_coef$`Std. Error`[2]
+results_coef$df[2]
+t1 <- results_coef$`t value`[2]
+p2 <- results_coef$`Pr(>|t|)`[2]
+
+#QuantPsyc::lm.beta(results_coef)
+anova(model1)
+```
+
+We conducted a linear-mixed-effects model to test if condition influenced moral perception. Our outcome measure was the combined moral perception measure, our predictor variable was condition; we allowed intercepts and the effect of condition to vary across participants, and scenario was also included in the model.
+Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model, $\chi$^2^(`r results_anova$Df[2]`) = `r results_anova$Chisq[2]`, *p* `r paste(p_report(p1))`. Condition did not influence moral perception, *F*(`r aov1$NumDF[1]`, `r aov1$DenDF[1]`) = `r f3`, *p* `r paste(p_report(p3))`; and was not a significant predictor in the model when controlling for scenario, $b$ = `r results_coef$Estimate[2]`, *t*(`r results_coef$df[2]`) = `r t1`, *p* `r paste(p_report(p2))`, see Figure\ \@ref(fig:S1combinedconditionplot).
+
+```{r S2combinedconditionplot, fig.cap="Study 1: Differences in combined measure depending on condition", include=TRUE}
+
+ggplot(x,aes(x=condition,y=R_tot))+
+  geom_violin() +
+  stat_summary(fun=mean, geom="point", shape=23, size=2)+
+  geom_boxplot(width=0.1)+
+#  geom_dotplot(binaxis='y', stackdir='center', dotsize=.05)+
+# violin plot with jittered points
+# 0.2 : degree of jitter in x direction
+  geom_jitter(shape=16
+              , position=position_jitter(0.15)
+              , size=.3
+              , color="dark grey") +
+  xlab("Condition") +
+  ylab("Moral Perception Scale (MPS-4)") +
+  theme_bw() +
+  theme(panel.border = element_blank(),
+        axis.line = element_line(size = .2),
+        strip.background  = element_blank(),
+        panel.grid = element_blank(),
+        plot.title=element_text(#family="Times",
+                                size=12
+                                ),
+        legend.text=element_text(#family="Times",
+                                 size=8
+                                 ),
+          legend.title=element_text(#family="Times",
+                                    size=10
+                                    ),
+          axis.text=element_text(#family="Times",
+                                 colour = "black",
+                                 size=8
+                                 ),
+          axis.ticks.x = element_blank(),
+          axis.title=element_text(#family="Times",
+                                  size=12
+                                  ),
+          strip.text=element_text(#family = "Times",
+                                  size = 12
+                                  ),
+         # strip.background = element_rect(fill = "white"),
+          legend.position="right")
+
+
+```
+
+```{r}
+
+x <- sam
+d1 <- lsr::cohensD(R_tot~condition,x)
+t1 <- t.test(R_tot~condition,x,paired=FALSE)
+t1$parameter
+t1$statistic
+t1$p.value
+
+d2 <- lsr::cohensD(M1~condition,x)
+t2 <- t.test(M1~condition,x,paired=FALSE)
+
+
+d3 <- lsr::cohensD(M1R_tot~condition,x)
+t3 <- t.test(M1R_tot~condition,x,paired=FALSE)
+
+xd <- x[which(x$condition=="diagnostic"),]
+xnond <- x[which(x$condition=="non-diagnostic"),]
+```
+
+\newpage
+
+For *Sam*, MPS-4 scores were not significantly different in the non-diagnostic condition (*M* = `r mean(xnond$R_tot)`, *SD* = `r sd(xnond$R_tot)`), than in the diagnostic condition (*M* = `r mean(xd$R_tot)`, *SD* = `r sd(xd$R_tot)`), *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`; MM-1 ratings were similar in the non-diagnostic condition (*M* = `r mean(xnond$M1)`, *SD* = `r sd(xnond$M1)`), than in the diagnostic condition (*M* = `r mean(xd$M1)`, *SD* = `r sd(xd$M1)`), *t*(`r t2$parameter`) = `r t2$statistic`, *p* `r paste(p_report(t2$p.value))`, *d* = `r d2`. For the combined measure ratings were also similar in the non-diagnostic condition (*M* = `r mean(xnond$M1R_tot)`, *SD* = `r sd(xnond$M1R_tot)`), than in the diagnostic condition (*M* = `r mean(xd$M1R_tot)`, *SD* = `r sd(xd$M1R_tot)`), *t*(`r t3$parameter`) = `r t3$statistic`, *p* `r paste(p_report(t3$p.value))`, *d* = `r d3`.
+
+
+
+```{r}
+
+x <- robin
+d1 <- lsr::cohensD(R_tot~condition,x)
+t1 <- t.test(R_tot~condition,x,paired=FALSE)
+t1$parameter
+t1$statistic
+t1$p.value
+
+d2 <- lsr::cohensD(M1~condition,x)
+t2 <- t.test(M1~condition,x,paired=FALSE)
+
+
+d3 <- lsr::cohensD(M1R_tot~condition,x)
+t3 <- t.test(M1R_tot~condition,x,paired=FALSE)
+
+xd <- x[which(x$condition=="diagnostic"),]
+xnond <- x[which(x$condition=="non-diagnostic"),]
+```
+
+For *Robin*, MPS-4 scores were not significantly different for the non-diagnostic condition (*M* = `r mean(xnond$R_tot)`, *SD* = `r sd(xnond$R_tot)`), than in the diagnostic condition (*M* = `r mean(xd$R_tot)`, *SD* = `r sd(xd$R_tot)`), *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`; MM-1 ratings were similar in the non-diagnostic condition (*M* = `r mean(xnond$M1)`, *SD* = `r sd(xnond$M1)`), and in the diagnostic condition (*M* = `r mean(xd$M1)`, *SD* = `r sd(xd$M1)`), *t*(`r t2$parameter`) = `r t2$statistic`, *p* `r paste(p_report(t2$p.value))`, *d* = `r d2`. For the combined measure ratings were also similar in the non-diagnostic condition (*M* = `r mean(xnond$M1R_tot)`, *SD* = `r sd(xnond$M1R_tot)`), than in the diagnostic condition (*M* = `r mean(xd$M1R_tot)`, *SD* = `r sd(xd$M1R_tot)`), *t*(`r t3$parameter`) = `r t3$statistic`, *p* `r paste(p_report(t3$p.value))`, *d* = `r d3`.
+
+
+```{r}
+
+x <- alex
+d1 <- lsr::cohensD(R_tot~condition,x)
+t1 <- t.test(R_tot~condition,x,paired=FALSE)
+t1$parameter
+t1$statistic
+t1$p.value
+
+d2 <- lsr::cohensD(M1~condition,x)
+t2 <- t.test(M1~condition,x,paired=FALSE)
+
+
+d3 <- lsr::cohensD(M1R_tot~condition,x)
+t3 <- t.test(M1R_tot~condition,x,paired=FALSE)
+
+xd <- x[which(x$condition=="diagnostic"),]
+xnond <- x[which(x$condition=="non-diagnostic"),]
+```
+
+For *Alex*, MPS-4 scores were not significantly different for the non-diagnostic condition (*M* = `r mean(xnond$R_tot)`, *SD* = `r sd(xnond$R_tot)`), than in the diagnostic condition (*M* = `r mean(xd$R_tot)`, *SD* = `r sd(xd$R_tot)`), *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`; MM-1 ratings were similar in the non-diagnostic condition (*M* = `r mean(xnond$M1)`, *SD* = `r sd(xnond$M1)`), than in the diagnostic condition (*M* = `r mean(xd$M1)`, *SD* = `r sd(xd$M1)`), *t*(`r t2$parameter`) = `r t2$statistic`, *p* `r paste(p_report(t2$p.value))`, *d* = `r d2`. For the combined measure ratings were also similar in the non-diagnostic condition (*M* = `r mean(xnond$M1R_tot)`, *SD* = `r sd(xnond$M1R_tot)`), than in the diagnostic condition (*M* = `r mean(xd$M1R_tot)`, *SD* = `r sd(xd$M1R_tot)`), *t*(`r t3$parameter`) = `r t3$statistic`, *p* `r paste(p_report(t3$p.value))`, *d* = `r d3`.
+
+
+```{r}
+
+x <- francis
+d1 <- lsr::cohensD(R_tot~condition,x)
+t1 <- t.test(R_tot~condition,x,paired=FALSE)
+t1$parameter
+t1$statistic
+t1$p.value
+
+d2 <- lsr::cohensD(M1~condition,x)
+t2 <- t.test(M1~condition,x,paired=FALSE)
+
+
+d3 <- lsr::cohensD(M1R_tot~condition,x)
+t3 <- t.test(M1R_tot~condition,x,paired=FALSE)
+
+xd <- x[which(x$condition=="diagnostic"),]
+xnond <- x[which(x$condition=="non-diagnostic"),]
+```
+
+For *Francis*, MPS-4 scores were not significantly different for the non-diagnostic condition (*M* = `r mean(xnond$R_tot)`, *SD* = `r sd(xnond$R_tot)`), than in the diagnostic condition (*M* = `r mean(xd$R_tot)`, *SD* = `r sd(xd$R_tot)`), *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`; MM-1 ratings were not significantly different in the non-diagnostic condition (*M* = `r mean(xnond$M1)`, *SD* = `r sd(xnond$M1)`), than in the diagnostic condition (*M* = `r mean(xd$M1)`, *SD* = `r sd(xd$M1)`), *t*(`r t2$parameter`) = `r t2$statistic`, *p* `r paste(p_report(t2$p.value))`, *d* = `r d2`. For the combined measure ratings were also similar in the non-diagnostic condition (*M* = `r mean(xnond$M1R_tot)`, *SD* = `r sd(xnond$M1R_tot)`), and in the diagnostic condition (*M* = `r mean(xd$M1R_tot)`, *SD* = `r sd(xd$M1R_tot)`), *t*(`r t3$parameter`) = `r t3$statistic`, *p* `r paste(p_report(t3$p.value))`, *d* = `r d3`.
+
+
+
+
+
+
+
+
+
+

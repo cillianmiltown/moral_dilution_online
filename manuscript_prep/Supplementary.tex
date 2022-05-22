@@ -1,0 +1,463 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  american,
+  man,floatsintext]{apa7}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Supplement: Moral Dilution},
+  pdfauthor={Cillian McHugh1 \& Eric R. Igou1},
+  pdflang={en-US},
+  pdfkeywords={keywords},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+% Make \paragraph and \subparagraph free-standing
+\ifx\paragraph\undefined\else
+  \let\oldparagraph\paragraph
+  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+  \let\oldsubparagraph\subparagraph
+  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+% Manuscript styling
+\usepackage{upgreek}
+\captionsetup{font=singlespacing,justification=justified}
+
+% Table formatting
+\usepackage{longtable}
+\usepackage{lscape}
+% \usepackage[counterclockwise]{rotating}   % Landscape page setup for large tables
+\usepackage{multirow}		% Table styling
+\usepackage{tabularx}		% Control Column width
+\usepackage[flushleft]{threeparttable}	% Allows for three part tables with a specified notes section
+\usepackage{threeparttablex}            % Lets threeparttable work with longtable
+
+% Create new environments so endfloat can handle them
+% \newenvironment{ltable}
+%   {\begin{landscape}\begin{center}\begin{threeparttable}}
+%   {\end{threeparttable}\end{center}\end{landscape}}
+\newenvironment{lltable}{\begin{landscape}\begin{center}\begin{ThreePartTable}}{\end{ThreePartTable}\end{center}\end{landscape}}
+
+% Enables adjusting longtable caption width to table width
+% Solution found at http://golatex.de/longtable-mit-caption-so-breit-wie-die-tabelle-t15767.html
+\makeatletter
+\newcommand\LastLTentrywidth{1em}
+\newlength\longtablewidth
+\setlength{\longtablewidth}{1in}
+\newcommand{\getlongtablewidth}{\begingroup \ifcsname LT@\roman{LT@tables}\endcsname \global\longtablewidth=0pt \renewcommand{\LT@entry}[2]{\global\advance\longtablewidth by ##2\relax\gdef\LastLTentrywidth{##2}}\@nameuse{LT@\roman{LT@tables}} \fi \endgroup}
+
+% \setlength{\parindent}{0.5in}
+% \setlength{\parskip}{0pt plus 0pt minus 0pt}
+
+% Overwrite redefinition of paragraph and subparagraph by the default LaTeX template
+% See https://github.com/crsh/papaja/issues/292
+\makeatletter
+\renewcommand{\paragraph}{\@startsection{paragraph}{4}{\parindent}%
+  {0\baselineskip \@plus 0.2ex \@minus 0.2ex}%
+  {-1em}%
+  {\normalfont\normalsize\bfseries\itshape\typesectitle}}
+
+\renewcommand{\subparagraph}[1]{\@startsection{subparagraph}{5}{1em}%
+  {0\baselineskip \@plus 0.2ex \@minus 0.2ex}%
+  {-\z@\relax}%
+  {\normalfont\normalsize\itshape\hspace{\parindent}{#1}\textit{\addperi}}{\relax}}
+\makeatother
+
+% \usepackage{etoolbox}
+\makeatletter
+\patchcmd{\HyOrg@maketitle}
+  {\section{\normalfont\normalsize\abstractname}}
+  {\section*{\normalfont\normalsize\abstractname}}
+  {}{\typeout{Failed to patch abstract.}}
+\patchcmd{\HyOrg@maketitle}
+  {\section{\protect\normalfont{\@title}}}
+  {\section*{\protect\normalfont{\@title}}}
+  {}{\typeout{Failed to patch title.}}
+\makeatother
+\keywords{keywords\newline\indent Word count: TBC}
+\DeclareDelayedFloatFlavor{ThreePartTable}{table}
+\DeclareDelayedFloatFlavor{lltable}{table}
+\DeclareDelayedFloatFlavor*{longtable}{table}
+\makeatletter
+\renewcommand{\efloat@iwrite}[1]{\immediate\expandafter\protected@write\csname efloat@post#1\endcsname{}}
+\makeatother
+\usepackage{csquotes}
+\usepackage[titles]{tocloft}
+\cftpagenumbersoff{figure}
+\renewcommand{\cftfigpresnum}{\itshape\figurename\enspace}
+\renewcommand{\cftfigaftersnum}{.\space}
+\setlength{\cftfigindent}{0pt}
+\setlength{\cftafterloftitleskip}{0pt}
+\settowidth{\cftfignumwidth}{Figure 10.\qquad}
+\cftpagenumbersoff{table}
+\renewcommand{\cfttabpresnum}{\itshape\tablename\enspace}
+\renewcommand{\cfttabaftersnum}{.\space}
+\setlength{\cfttabindent}{0pt}
+\setlength{\cftafterloftitleskip}{0pt}
+\settowidth{\cfttabnumwidth}{Table 10.\qquad}
+\usepackage{float}
+\ifxetex
+  % Load polyglossia as late as possible: uses bidi with RTL langages (e.g. Hebrew, Arabic)
+  \usepackage{polyglossia}
+  \setmainlanguage[variant=american]{english}
+\else
+  \usepackage[main=american]{babel}
+% get rid of language-specific shorthands (see #6817):
+\let\LanguageShortHands\languageshorthands
+\def\languageshorthands#1{}
+\fi
+\ifluatex
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\title{Supplement: Moral Dilution}
+\author{Cillian McHugh\textsuperscript{1} \& Eric R. Igou\textsuperscript{1}}
+\date{}
+
+
+\shorttitle{Moral Dilution}
+
+\authornote{
+
+Correspondence concerning this article should be addressed to Cillian McHugh, University of Limerick, Limerick, Ireland, V94 T9PX. E-mail: \href{mailto:cillian.mchugh@ul.ie}{\nolinkurl{cillian.mchugh@ul.ie}}
+
+}
+
+\affiliation{\vspace{0.5cm}\textsuperscript{1} University of Limerick}
+
+\abstract{
+five studies
+}
+
+
+
+\begin{document}
+\maketitle
+
+\hypertarget{supplemantary-materials}{%
+\section{Supplemantary Materials}\label{supplemantary-materials}}
+
+\newpage
+
+\hypertarget{supplementary-materials}{%
+\section{Supplementary Materials}\label{supplementary-materials}}
+
+\hypertarget{descriptions-pilot-study-1}{%
+\subsection{Descriptions (Pilot Study 1)}\label{descriptions-pilot-study-1}}
+
+\hypertarget{diagnostic-descriptions}{%
+\subsubsection{Diagnostic Descriptions}\label{diagnostic-descriptions}}
+
+Each moral description contains descriptive information relating to three different moral foundations as follows: \emph{Sam}: care, fairness, loyalty; \emph{Robin}: care, fairness, loyalty; \emph{Francis}: purity, authority, fairness; \emph{Alex}: care, fairness, authority.
+
+\hypertarget{sam}{%
+\subsubsection{Sam}\label{sam}}
+
+Imagine a person named Sam.
+Throughout their life they have been known to be cruel, act unfairly, and to betray their own group.
+
+\hypertarget{robin}{%
+\paragraph{Robin}\label{robin}}
+
+Imagine a person named Robin.
+Throughout their life they have been known to physically hurt others, treat some people differently to others, and show lack of loyalty.
+
+\hypertarget{francis}{%
+\subsubsection{Francis}\label{francis}}
+
+Imagine a person named Francis.
+Throughout their life they have been known to violate the standards of purity and decency, show lack of respect for authority, and treat people unequally.
+
+\hypertarget{alex}{%
+\subsubsection{Alex}\label{alex}}
+
+Imagine a person named Alex.
+Throughout their life they have been known to cause others to suffer emotionally, to deny others their rights, and to cause chaos or disorder.
+
+\hypertarget{non-diagnostic-descriptions}{%
+\subsubsection{Non-Diagnostic Descriptions}\label{non-diagnostic-descriptions}}
+
+\hypertarget{jackie}{%
+\subsubsection{Jackie}\label{jackie}}
+
+Imagine a person named Jackie.
+They have red hair, play tennis four times a month, and have one older sibling and one younger sibling.
+
+\hypertarget{charlie}{%
+\subsubsection{Charlie}\label{charlie}}
+
+Imagine a person named Charlie.
+They are left-handed, drink tea in the morning, and have two older siblings and one younger sibling.
+
+\hypertarget{descriptions-pilot-study-2}{%
+\subsection{Descriptions (Pilot Study 2)}\label{descriptions-pilot-study-2}}
+
+\hypertarget{diagnostic-descriptions-1}{%
+\subsubsection{Diagnostic Descriptions}\label{diagnostic-descriptions-1}}
+
+Each moral description contains descriptive information relating to three different moral foundations as follows: \emph{Sam}: care, fairness, loyalty; \emph{Robin}: care, fairness, loyalty; \emph{Francis}: purity, authority, fairness; \emph{Alex}: care, fairness, authority.
+
+\hypertarget{sam-1}{%
+\subsubsection{Sam}\label{sam-1}}
+
+Imagine a person named Sam.
+Throughout their life they have been known to always help and care for others, treat everyone fairly and equally, and show a strong sense of loyalty to others.
+
+\hypertarget{robin-1}{%
+\subsubsection{Robin}\label{robin-1}}
+
+Imagine a person named Robin.
+Throughout their life they have been known to show compassion and empathy for others, act with a sense of fairness and justice, and, never to break their word.
+
+\hypertarget{francis-1}{%
+\subsubsection{Francis}\label{francis-1}}
+
+Imagine a person named Francis.
+Throughout their life they have been known to uphold the standards of purity and decency, show respect for authority, and to always act honestly and fairly.
+
+\hypertarget{alex-1}{%
+\subsubsection{Alex}\label{alex-1}}
+
+Imagine a person named Alex.
+Throughout their life they have been known to protect and provide shelter to the weak and vulnerable, uphold the rights of others, and show respect for authority.
+
+\hypertarget{non-diagnostic}{%
+\subsection{Non-Diagnostic}\label{non-diagnostic}}
+
+\hypertarget{jackie-1}{%
+\subsubsection{Jackie}\label{jackie-1}}
+
+Imagine a person named Jackie.
+They have dark hair, go for a jog twice a week, and their favourite colour is blue.
+
+\hypertarget{charlie-1}{%
+\subsubsection{Charlie}\label{charlie-1}}
+
+Imagine a person named Charlie.
+They have blue eyes, drink coffee in the morning, and their favourite colour is green.
+
+\hypertarget{measures}{%
+\subsection{Measures}\label{measures}}
+
+\hypertarget{four-item-moral-perception-scale-mps-4}{%
+\subsubsection{Four-item Moral Perception Scale (MPS-4)}\label{four-item-moral-perception-scale-mps-4}}
+
+Please rate \_\_\_\_ along the following dimensions:
+
+\begin{figure}
+\centering
+\includegraphics{../resources/images/mps4.png}
+\caption{Screenshot of the MPS-4 items as presented to participants}
+\end{figure}
+
+\hypertarget{four-item-moral-perception-scale-mm1-4}{%
+\subsubsection{Four-item Moral Perception Scale (MM1-4)}\label{four-item-moral-perception-scale-mm1-4}}
+
+Please rate \_\_\_\_ according to immoral or moral you view them:
+
+\begin{figure}
+\centering
+\includegraphics{../resources/images/mm1.png}
+\caption{Screenshot of MM-1 as presented to participants}
+\end{figure}
+
+\newpage
+
+\hypertarget{supplemantary-analyses}{%
+\section{Supplemantary Analyses}\label{supplemantary-analyses}}
+
+\newpage
+
+\hypertarget{supplementary-analyses}{%
+\section{Supplementary Analyses}\label{supplementary-analyses}}
+
+\hypertarget{pilot-study-1}{%
+\section{Pilot Study 1}\label{pilot-study-1}}
+
+\hypertarget{pilot-1-differences-between-moral-descriptions}{%
+\subsection{Pilot: 1: Differences Between Moral Descriptions}\label{pilot-1-differences-between-moral-descriptions}}
+
+We developed a combined moral perception measure by calculating the mean of the combined mean-centered scores for MPS-4 and MM-1, and mean-centering this result. Below we report the analyses for this combined measure.
+
+The standardized means and standard deviations for the combined measure for each scenario are as follows:
+\emph{Sam} (moral),
+\emph{M} = -0.30, \emph{SD} = 1.16;
+\emph{Francis} (moral),
+\emph{M} = -0.22, \emph{SD} = 1.06;
+\emph{Alex} (moral),
+\emph{M} = -0.25, \emph{SD} = 1.10;
+\emph{Robin} (moral),
+\emph{M} = -0.31, \emph{SD} = 1.19;
+\emph{Jackie} (neutral),
+\emph{M} = 0.36, \emph{SD} = 0.55;
+\emph{Charlie} (neutral),
+\emph{M} = 0.35, \emph{SD} = 0.55. For the moral descriptions, we observed significant variation depending on the description, \emph{F}(601.86, 2.85) = 2.67, \emph{p} = .050, partial \(\eta\)\textsuperscript{2} = 0.001. When correcting for multiple comparisons, pairwise comparisons did not reveal significant differences between descriptions. We note that without correction, \emph{Francis} appeared to be rated as more moral than both \emph{Robin} (\emph{p} = .022), and \emph{Sam} (\emph{p} = .021). For the neutral descriptions there was no significant difference in ratings depending on description, \emph{t}(211) = -0.46, \emph{p} = .645, \emph{d} = 0.03.
+
+\hypertarget{pilot-1-testing-moral-vs-neutral}{%
+\subsection{Pilot 1: Testing Moral vs Neutral}\label{pilot-1-testing-moral-vs-neutral}}
+
+Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model \(\chi\)\textsuperscript{2}(2) = 1,035.36, \emph{p} \textless{} .001, and condition was a significant predictor in the model \(b\) = -0.31, \emph{t}(210.99) = -8.74, \emph{p} \textless{} .001.
+
+\begin{figure}[!p]
+\includegraphics{Supplementary_files/figure-latex/pilot1cobminedconditionplot-1} \caption{Pilot Study 1: Differences in combined measure depending on condition}\label{fig:pilot1cobminedconditionplot}
+\end{figure}
+
+\newpage
+
+\hypertarget{study-1}{%
+\section{Study 1}\label{study-1}}
+
+Again, we created a combined measure of moral perception from both DVs.
+
+The means and standard deviations for the combined measure for each scenario are as follows:
+\emph{Sam},
+\emph{M}\textsubscript{MPS-4} = 0.02, \emph{SD}\textsubscript{MPS-4} = 0.89,
+\emph{Francis},
+\emph{M}\textsubscript{MPS-4} = 0.48, \emph{SD}\textsubscript{MPS-4} = 1.00,
+\emph{Alex},
+\emph{M}\textsubscript{MPS-4} = -0.21, \emph{SD}\textsubscript{MPS-4} = 0.92,
+\emph{Robin},
+\emph{M}\textsubscript{MPS-4} = -0.32, \emph{SD}\textsubscript{MPS-4} = 0.94. There was significant variation depending on the description, \emph{F}(2,254.69, 2.82) = 269.01, \emph{p} \textless{} .001, partial \(\eta\)\textsuperscript{2} = 0.10. \emph{Francis} appeared to be rated as the most favorable, followed by \emph{Sam}, then \emph{Alex} and finally \emph{Robin} as the least favorable (all \emph{p}s \textless{} .001).
+
+We conducted a linear-mixed-effects model to test if condition influenced moral perception. Our outcome measure was the combined moral perception measure, our predictor variable was condition; we allowed intercepts and the effect of condition to vary across participants, and scenario was also included in the model.
+Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model, \(\chi\)\textsuperscript{2}(8) = 762.31, \emph{p} \textless{} .001. Condition significantly influenced responses to the MPS-4, \emph{F}(1, 799.66) = 57.93, \emph{p} \textless{} .001; and was a significant predictor in the model when controlling for scenario, \(b\) = -0.08, \emph{t}(2,501.32) = -3.42, \emph{p} \textless{} .001, with the non-diagnostic descriptions being rated as more moral than the diagnostic (morally relevant) descriptions of immoral characters Figure~\ref{fig:S1combinedconditionplot}.
+
+\begin{figure}[!p]
+\includegraphics{Supplementary_files/figure-latex/S1combinedconditionplot-1} \caption{Study 1: Differences in combined measure depending on condition}\label{fig:S1combinedconditionplot}
+\end{figure}
+
+For \emph{Sam}, MPS-4 scores were significantly higher for the non-diagnostic condition (\emph{M} = 2.70, \emph{SD} = 0.82), than in the diagnostic condition (\emph{M} = 2.42, \emph{SD} = 0.87), \emph{t}(798.90) = -4.66, \emph{p} \textless{} .001, \emph{d} = 0.33; MM-1 ratings were higher in the non-diagnostic condition (\emph{M} = 26.55, \emph{SD} = 16.41), than in the diagnostic condition (\emph{M} = 21.50, \emph{SD} = 15.59), \emph{t}(787.84) = -4.45, \emph{p} \textless{} .001, \emph{d} = 0.32. For the combined measure ratings were also higher in the non-diagnostic condition (\emph{M} = 0.18, \emph{SD} = 0.88), than in the diagnostic condition (\emph{M} = -0.13, \emph{SD} = 0.88), \emph{t}(795.41) = -4.98, \emph{p} \textless{} .001, \emph{d} = 0.35.
+
+For \emph{Robin}, MPS-4 scores were not significantly different for the non-diagnostic condition (\emph{M} = 2.16, \emph{SD} = 0.90), than in the diagnostic condition (\emph{M} = 2.09, \emph{SD} = 0.92), \emph{t}(793.94) = -1.09, \emph{p} = .275, \emph{d} = 0.08; MM-1 ratings were similar in the non-diagnostic condition (\emph{M} = 21.29, \emph{SD} = 16.94), and in the diagnostic condition (\emph{M} = 19.87, \emph{SD} = 17.17), \emph{t}(794.97) = -1.18, \emph{p} = .239, \emph{d} = 0.08. For the combined measure ratings were also similar in the non-diagnostic condition (\emph{M} = -0.28, \emph{SD} = 0.94), than in the diagnostic condition (\emph{M} = -0.36, \emph{SD} = 0.94), \emph{t}(796.03) = -1.24, \emph{p} = .217, \emph{d} = 0.09.
+
+For \emph{Alex}, MPS-4 scores were significantly higher for the non-diagnostic condition (\emph{M} = 2.41, \emph{SD} = 0.88), than in the diagnostic condition (\emph{M} = 2.23, \emph{SD} = 0.86), \emph{t}(796.97) = -2.92, \emph{p} = .004, \emph{d} = 0.21; MM-1 ratings were higher in the non-diagnostic condition (\emph{M} = 21.93, \emph{SD} = 16.47), than in the diagnostic condition (\emph{M} = 19.20, \emph{SD} = 16.73), \emph{t}(798.89) = -2.33, \emph{p} = .020, \emph{d} = 0.16. For the combined measure ratings were also higher in the non-diagnostic condition (\emph{M} = -0.12, \emph{SD} = 0.92), than in the diagnostic condition (\emph{M} = -0.30, \emph{SD} = 0.92), \emph{t}(798.40) = -2.82, \emph{p} = .005, \emph{d} = 0.20.
+
+For \emph{Francis}, MPS-4 scores were significantly higher for the non-diagnostic condition (\emph{M} = 3.12, \emph{SD} = 0.95), than in the diagnostic condition (\emph{M} = 2.98, \emph{SD} = 0.97), \emph{t}(796.12) = -1.99, \emph{p} = .047, \emph{d} = 0.14; MM-1 ratings were not significantly different in the non-diagnostic condition (\emph{M} = 30.38, \emph{SD} = 17.17), than in the diagnostic condition (\emph{M} = 29.84, \emph{SD} = 18.56), \emph{t}(788.61) = -0.43, \emph{p} = .668, \emph{d} = 0.03. For the combined measure ratings were also similar in the non-diagnostic condition (\emph{M} = 0.53, \emph{SD} = 0.98), and in the diagnostic condition (\emph{M} = 0.44, \emph{SD} = 1.02), \emph{t}(794.36) = -1.29, \emph{p} = .198, \emph{d} = 0.09.
+
+\newpage
+
+\hypertarget{pilot-study-2}{%
+\section{Pilot Study 2}\label{pilot-study-2}}
+
+\hypertarget{pilot-2-differences-between-moral-descriptions}{%
+\subsection{Pilot: 2: Differences Between Moral Descriptions}\label{pilot-2-differences-between-moral-descriptions}}
+
+As in previous studies, we developed a combined moral perception measure by calculating the mean of the combined mean-centered scores for MPS-4 and MM-1, and mean-centering this result. Below we report the analyses for this combined measure.
+
+The standardized means and standard deviations for the combined measure for each scenario are as follows:
+\emph{Sam} (moral),
+\emph{M} = 0.21, \emph{SD} = 0.91;
+\emph{Francis} (moral),
+\emph{M} = 0.10, \emph{SD} = 0.96;
+\emph{Alex} (moral),
+\emph{M} = 0.18, \emph{SD} = 0.94;
+\emph{Robin} (moral),
+\emph{M} = 0.16, \emph{SD} = 0.93;
+\emph{Jackie} (neutral),
+\emph{M} = -0.24, \emph{SD} = 1.01;
+\emph{Charlie} (neutral),
+\emph{M} = -0.30, \emph{SD} = 1.07. For the moral descriptions, we observed significant variation depending on the description, \emph{F}(587.74, 2.75) = 2.90, \emph{p} = .039, partial \(\eta\)\textsuperscript{2} = 0.002\emph{Sam} was viewed significantly more favorably than \emph{Francis} (\emph{p} = .045). For the neutral descriptions there was no significant difference in ratings depending on description, \emph{t}(214) = -1.46, \emph{p} = .147, \emph{d} = 0.10.
+
+\hypertarget{pilot-2-testing-moral-vs-neutral}{%
+\subsection{Pilot 2: Testing Moral vs Neutral}\label{pilot-2-testing-moral-vs-neutral}}
+
+Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model \(\chi\)\textsuperscript{2}(2) = 564.98, \emph{p} \textless{} .001, and condition was a significant predictor in the model \(b\) = 0.22, \emph{t}(214.32) = 6.60, \emph{p} \textless{} .001.
+
+\begin{figure}[!p]
+\includegraphics{Supplementary_files/figure-latex/pilot2cobminedconditionplot-1} \caption{Pilot Study 1: Differences in combined measure depending on condition}\label{fig:pilot2cobminedconditionplot}
+\end{figure}
+
+\newpage
+
+\hypertarget{study-2}{%
+\section{Study 2}\label{study-2}}
+
+Below we report the results for the combined measure of moral perception from both DVs. We additionally report the effect of condition on responses to each description individually
+
+The means and standard deviations for the combined measure for each scenario are as follows:
+\emph{Sam},
+\emph{M}\textsubscript{MPS-4} = 0.07, \emph{SD}\textsubscript{MPS-4} = 0.97,
+\emph{Francis},
+\emph{M}\textsubscript{MPS-4} = -0.17, \emph{SD}\textsubscript{MPS-4} = 1.06,
+\emph{Alex},
+\emph{M}\textsubscript{MPS-4} = 0.09, \emph{SD}\textsubscript{MPS-4} = 1.02,
+\emph{Robin},
+\emph{M}\textsubscript{MPS-4} = 0.07, \emph{SD}\textsubscript{MPS-4} = 0.96. There was significant variation depending on the description, \emph{F}(2,335.46, 2.85) = 48.01, \emph{p} \textless{} .001, partial \(\eta\)\textsuperscript{2} = 0.01. \emph{Francis} appeared to be rated as the less favorable than all other characters (all \emph{p}s \textless{} .001).
+
+We conducted a linear-mixed-effects model to test if condition influenced moral perception. Our outcome measure was the combined moral perception measure, our predictor variable was condition; we allowed intercepts and the effect of condition to vary across participants, and scenario was also included in the model.
+Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model, \(\chi\)\textsuperscript{2}(8) = 142.42, \emph{p} \textless{} .001. Condition did not influence moral perception, \emph{F}(1, 2,452.92) = 0.88, \emph{p} = .349; and was not a significant predictor in the model when controlling for scenario, \(b\) = -0.01, \emph{t}(2,613.53) = -0.42, \emph{p} = .673, see Figure~\ref{fig:S1combinedconditionplot}.
+
+\begin{figure}[!p]
+\includegraphics{Supplementary_files/figure-latex/S2combinedconditionplot-1} \caption{Study 1: Differences in combined measure depending on condition}\label{fig:S2combinedconditionplot}
+\end{figure}
+
+\newpage
+
+For \emph{Sam}, MPS-4 scores were not significantly different in the non-diagnostic condition (\emph{M} = 6.17, \emph{SD} = 0.89), than in the diagnostic condition (\emph{M} = 6.05, \emph{SD} = 1.06), \emph{t}(680.49) = -1.71, \emph{p} = .088, \emph{d} = 0.12; MM-1 ratings were similar in the non-diagnostic condition (\emph{M} = 84.90, \emph{SD} = 14.26), than in the diagnostic condition (\emph{M} = 84.20, \emph{SD} = 14.76), \emph{t}(744.17) = -0.69, \emph{p} = .490, \emph{d} = 0.05. For the combined measure ratings were also similar in the non-diagnostic condition (\emph{M} = 0.11, \emph{SD} = 0.93), than in the diagnostic condition (\emph{M} = 0.02, \emph{SD} = 1.03), \emph{t}(717.94) = -1.33, \emph{p} = .183, \emph{d} = 0.10.
+
+For \emph{Robin}, MPS-4 scores were not significantly different for the non-diagnostic condition (\emph{M} = 6.08, \emph{SD} = 1.00), than in the diagnostic condition (\emph{M} = 6.13, \emph{SD} = 0.98), \emph{t}(784.04) = 0.73, \emph{p} = .463, \emph{d} = 0.05; MM-1 ratings were similar in the non-diagnostic condition (\emph{M} = 84.12, \emph{SD} = 14.37), and in the diagnostic condition (\emph{M} = 85.98, \emph{SD} = 13.32), \emph{t}(800.09) = 1.92, \emph{p} = .055, \emph{d} = 0.13. For the combined measure ratings were also similar in the non-diagnostic condition (\emph{M} = 0.03, \emph{SD} = 0.98), than in the diagnostic condition (\emph{M} = 0.13, \emph{SD} = 0.95), \emph{t}(788.76) = 1.46, \emph{p} = .145, \emph{d} = 0.10.
+
+For \emph{Alex}, MPS-4 scores were not significantly different for the non-diagnostic condition (\emph{M} = 6.11, \emph{SD} = 1.00), than in the diagnostic condition (\emph{M} = 6.14, \emph{SD} = 0.99), \emph{t}(737.60) = 0.32, \emph{p} = .746, \emph{d} = 0.02; MM-1 ratings were similar in the non-diagnostic condition (\emph{M} = 85.28, \emph{SD} = 14.31), than in the diagnostic condition (\emph{M} = 84.83, \emph{SD} = 15.51), \emph{t}(776.47) = -0.43, \emph{p} = .668, \emph{d} = 0.03. For the combined measure ratings were also similar in the non-diagnostic condition (\emph{M} = 0.09, \emph{SD} = 0.98), than in the diagnostic condition (\emph{M} = 0.09, \emph{SD} = 1.04), \emph{t}(767.89) = -0.06, \emph{p} = .952, \emph{d} = 0.00.
+
+For \emph{Francis}, MPS-4 scores were not significantly different for the non-diagnostic condition (\emph{M} = 5.82, \emph{SD} = 1.05), than in the diagnostic condition (\emph{M} = 5.90, \emph{SD} = 1.08), \emph{t}(794.94) = 1.06, \emph{p} = .290, \emph{d} = 0.07; MM-1 ratings were not significantly different in the non-diagnostic condition (\emph{M} = 81.74, \emph{SD} = 15.67), than in the diagnostic condition (\emph{M} = 82.31, \emph{SD} = 14.90), \emph{t}(771.23) = 0.54, \emph{p} = .591, \emph{d} = 0.04. For the combined measure ratings were also similar in the non-diagnostic condition (\emph{M} = -0.20, \emph{SD} = 1.08), and in the diagnostic condition (\emph{M} = -0.14, \emph{SD} = 1.04), \emph{t}(777.51) = 0.88, \emph{p} = .379, \emph{d} = 0.06.
+
+
+\clearpage
+\renewcommand{\listfigurename}{Figure captions}
+
+\clearpage
+\renewcommand{\listtablename}{Table captions}
+
+
+\end{document}
