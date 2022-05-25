@@ -199,7 +199,7 @@ The means and standard deviations for MPS-4 for each scenario are as follows:
 *Jackie* (non-diagnostic/neutral),
 *M*~MPS-4~ = `r mean(jackie$R_tot)`, *SD*~MPS-4~ = `r sd(jackie$R_tot)`,
 *Charlie* (non-diagnostic/neutral),
-*M*~MPS-4~ = `r mean(charlie$R_tot)`, *SD*~MPS-4~ = `r sd(charlie$R_tot)`. For the diagnostic descriptions, there was significant variation depending on the description, *F*(`r aov1$DFd`, `r aov1$DFn`) = `r aov1$F`, *p* `r paste(p_report(aov1$p))`, partial $\eta$^2^ = `r aov1$ges`, *Sam* was viewed significantly more favorably than *Francis* (*p* `r paste(p_report(pwc$p.adj[5]))`). For the non-diagnostic descriptions there was no significant difference in ratings depending on description, *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`.
+*M*~MPS-4~ = `r mean(charlie$R_tot)`, *SD*~MPS-4~ = `r sd(charlie$R_tot)`. For the diagnostic descriptions, there was significant variation depending on the description, *F*(`r round(aov1$DFn)`,`r round(aov1$DFd)`) = `r aov1$F`, *p* `r paste(p_report(aov1$p))`, partial $\eta$^2^ = `r aov1$ges`, *Sam* was viewed significantly more favorably than *Francis* (*p* `r paste(p_report(pwc$p.adj[5]))`). For the non-diagnostic descriptions there was no significant difference in ratings depending on description, *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`.
 
 
 ```{r}
@@ -245,7 +245,7 @@ The means and standard deviations for MM-1 for each scenario are as follows:
 *Jackie* (non-diagnostic/neutral),
 *M*~MM-1~ = `r mean(jackie$M1)`, *SD*~MM-1~ = `r sd(jackie$M1)`;
 *Charlie* (non-diagnostic/neutral),
-*M*~MM-1~ = `r mean(charlie$M1)`, *SD*~MM-1~ = `r sd(charlie$M1)`. For the diagnostic descriptions, we observed no significant variation depending on the description, *F*(`r aov1$DFd`, `r aov1$DFn`) = `r aov1$F`, *p* `r paste(p_report(aov1$p))`, partial $\eta$^2^ = `r paste(aov1$ges)`. For the non-diagnostic descriptions there was no significant difference in ratings depending on description, *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`.
+*M*~MM-1~ = `r mean(charlie$M1)`, *SD*~MM-1~ = `r sd(charlie$M1)`. For the diagnostic descriptions, we observed no significant variation depending on the description, *F*(`r round(aov1$DFn)`,`r round(aov1$DFd)`) = `r aov1$F`, *p* `r paste(p_report(aov1$p))`, partial $\eta$^2^ = `r paste(aov1$ges)`. For the non-diagnostic descriptions there was no significant difference in ratings depending on description, *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`.
 
 ```{r}
 x <- df3

@@ -75,7 +75,7 @@ library("tibble")
 library(scales)
 #install.packages("metap")
 library(metap)
-install.packages("pwr")
+#install.packages("pwr")
 library(pwr)
 library(lsr)
 #install.packages("sjstats")
@@ -124,7 +124,7 @@ The aim of this pilot study was to develop and test materials that could be used
 
 ## Pilot Study 1: Method
 ### Pilot 1: Participants and design
-The pilot study was a within-subjects design. The independent variable was description type with two levels, *diagnostic* and *non-diagnostic*. We used two dependent variables. The first dependent variable was the four item moral perception scale (MPS-4), participants rated the characters on four dimensions using 7-point bipolar scales. The dimensions and scale endpoints were: Bad-Good, Immoral-Moral, Violent-Peaceful, Merciless-Empathetic, this showed excellent reliability, $\alpha$ = `r round(alpha1$alpha,digits=2)`. The second dependent variable was a single item moral perception measure (MM-1) which consisted of a 100-point slider ranging from 0 = *Very Immoral* to 100 = *Very Moral*. Both dependent variables were taken from @walker_better_2021.
+The pilot study was a within-subjects design. The independent variable was description type with two levels, *diagnostic* and *non-diagnostic*. We used two dependent variables. The first dependent variable was the four item moral perception scale (MPS-4), participants rated the characters on four dimensions using 7-point bipolar scales. The dimensions and scale endpoints were: Bad-Good, Immoral-Moral, Violent-Peaceful, Merciless-Empathetic, this showed excellent reliability, $\alpha$ = `r round(alpha1$alpha,digits=2)`. The second dependent variable was a single item moral perception measure (MM-1) which consisted of a 100-point slider ranging from 0 = *Very Immoral* to 100 = *Very Moral*. Both dependent variables were taken from Walker et al. [-@walker_better_2021].
 
 A total sample of `r length(df3$gender)/6` (`r sum(df3$gender=="Female",na.rm=T)/6` female, `r sum(df3$gender=="Male", na.rm=T)/6` male, `r sum(df3$gender=="Non-binary / third gender", na.rm=T)/6` non-binary, `r sum(df3$gender=="Prefer not to say", na.rm=T)/6` prefer not to say; *M*~age~ = `r round(mean(df3$age, na.rm=T),digits=2)`, min = `r min(df3$age, na.rm=T)`, max = `r max(df3$age, na.rm=T)`, *SD* = `r round(sd(df3$age, na.rm=T),digits=2)`) started the survey.  Participants were recruited from MTurk.
 
@@ -136,7 +136,7 @@ att_both <- (length(df1$gender)/6)-(length(df3$gender)/6)
 ```
 
 
-We removed participants who failed both manipulation checks (*n* = `r att_both`), leaving a total sample of `r length(df3$InCS)/6` participants (`r sum(df3$gender=="Female",na.rm=T)/6` female, `r sum(df3$gender=="Male", na.rm=T)/6` male, `r sum(df3$gender=="Non-binary / third gender", na.rm=T)/6` non-binary, `r sum(df3$gender=="Prefer not to say", na.rm=T)/6` prefer not to say; *M*~age~ = `r round(mean(df3$age, na.rm=T),digits=2)`, min = `r min(df3$age, na.rm=T)`, max = `r max(df3$age, na.rm=T)`, *SD* = `r round(sd(df3$age, na.rm=T),digits=2)`).
+We removed participants who failed both manipulation checks (*n* = `r att_both`), leaving a total sample of `r length(df3$gender)/6` participants (`r sum(df3$gender=="Female",na.rm=T)/6` female, `r sum(df3$gender=="Male", na.rm=T)/6` male, `r sum(df3$gender=="Non-binary / third gender", na.rm=T)/6` non-binary, `r sum(df3$gender=="Prefer not to say", na.rm=T)/6` prefer not to say; *M*~age~ = `r round(mean(df3$age, na.rm=T),digits=2)`, min = `r min(df3$age, na.rm=T)`, max = `r max(df3$age, na.rm=T)`, *SD* = `r round(sd(df3$age, na.rm=T),digits=2)`).
 
 ### Pilot 1: Procedure and materials
 Data were collected using an online questionnaire presented with Qualtrics (www.qualtrics.com).  Participants were presented with descriptions of six characters.
@@ -193,18 +193,18 @@ d1
 
 
 The means and standard deviations for MPS-4 for each scenario are as follows: 
-*Sam* (diagnostic/moral),
+*Sam* (diagnostic),
 *M*~MPS-4~ = `r mean(sam$R_tot)`, *SD*~MPS-4~ = `r sd(sam$R_tot)`,
-*Francis* (diagnostic/moral),
+*Francis* (diagnostic),
 *M*~MPS-4~ = `r mean(francis$R_tot)`, *SD*~MPS-4~ = `r sd(francis$R_tot)`,
-*Alex* (diagnostic/moral),
+*Alex* (diagnostic),
 *M*~MPS-4~ = `r mean(alex$R_tot)`, *SD*~MPS-4~ = `r sd(alex$R_tot)`,
-*Robin* (diagnostic/moral),
+*Robin* (diagnostic),
 *M*~MPS-4~ = `r mean(robin$R_tot)`, *SD*~MPS-4~ = `r sd(robin$R_tot)`,
-*Jackie* (non-diagnostic/neutral),
+*Jackie* (non-diagnostic),
 *M*~MPS-4~ = `r mean(jackie$R_tot)`, *SD*~MPS-4~ = `r sd(jackie$R_tot)`,
-*Charlie* (non-diagnostic/neutral),
-*M*~MPS-4~ = `r mean(charlie$R_tot)`, *SD*~MPS-4~ = `r sd(charlie$R_tot)`. For the diagnostic descriptions, there was no significant variation depending on the description, *F*(`r aov1$DFd`, `r aov1$DFn`) = `r aov1$F`, *p* `r paste(p_report(aov1$p))`, partial $\eta$^2^ = `r aov1$ges`. For the non-diagnostic descriptions there was no significant difference in ratings depending on description, *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`.
+*Charlie* (non-diagnostic),
+*M*~MPS-4~ = `r mean(charlie$R_tot)`, *SD*~MPS-4~ = `r sd(charlie$R_tot)`. For the diagnostic descriptions, there was no significant variation depending on the description, *F*(`r round(aov1$DFn)`,`r round(aov1$DFd)`) = `r aov1$F`, *p* `r paste(p_report(aov1$p))`, partial $\eta$^2^ = `r aov1$ges`. For the non-diagnostic descriptions there was no significant difference in ratings depending on description, *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`.
 
 
 ```{r}
@@ -239,18 +239,18 @@ d1
 ```
 
 The means and standard deviations for MM-1 for each scenario are as follows: 
-*Sam* (diagnostic/moral),
+*Sam* (diagnostic),
 *M*~MM-1~ = `r mean(sam$M1)`, *SD*~MM-1~ = `r sd(sam$M1)`;
-*Francis* (diagnostic/moral),
+*Francis* (diagnostic),
 *M*~MM-1~ = `r mean(francis$M1)`, *SD*~MM-1~ = `r sd(francis$M1)`;
-*Alex* (diagnostic/moral),
+*Alex* (diagnostic),
 *M*~MM-1~ = `r mean(alex$M1)`, *SD*~MM-1~ = `r sd(alex$M1)`;
-*Robin* (diagnostic/moral),
+*Robin* (diagnostic),
 *M*~MM-1~ = `r mean(robin$M1)`, *SD*~MM-1~ = `r sd(robin$M1)`;
-*Jackie* (non-diagnostic/neutral),
+*Jackie* (non-diagnostic),
 *M*~MM-1~ = `r mean(jackie$M1)`, *SD*~MM-1~ = `r sd(jackie$M1)`;
-*Charlie* (non-diagnostic/neutral),
-*M*~MM-1~ = `r mean(charlie$M1)`, *SD*~MM-1~ = `r sd(charlie$M1)`. For the diagnostic descriptions, we observed significant variation depending on the description, *F*(`r aov1$DFd`, `r aov1$DFn`) = `r aov1$F`, *p* `r paste(p_report(aov1$p))`, partial $\eta$^2^ = `r paste(aov1$ges)`. When correcting for multiple comparisons, pairwise comparisons did not reveal significant differences between descriptions. We note that without correction, *Francis* appeared to be rated as more moral than both *Robin* (*p* `r paste(p_report(pwc$p[4]))`), and *Sam* (*p* `r paste(p_report(pwc$p[5]))`). For the non-diagnostic descriptions there was no significant difference in ratings depending on description, *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`.
+*Charlie* (non-diagnostic),
+*M*~MM-1~ = `r mean(charlie$M1)`, *SD*~MM-1~ = `r sd(charlie$M1)`. For the diagnostic descriptions, we observed significant variation depending on the description, *F*(`r round(aov1$DFn)`,`r round(aov1$DFd)`) = `r aov1$F`, *p* `r paste(p_report(aov1$p))`, partial $\eta$^2^ = `r paste(aov1$ges)`. When correcting for multiple comparisons, pairwise comparisons did not reveal significant differences between descriptions. We note that without correction, *Francis* appeared to be rated as more moral than both *Robin* (*p* `r paste(p_report(pwc$p[4]))`), and *Sam* (*p* `r paste(p_report(pwc$p[5]))`). For the non-diagnostic descriptions there was no significant difference in ratings depending on description, *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`.
 
 ```{r}
 x <- df3
@@ -270,7 +270,7 @@ model1 <- lmerTest::lmer(R_tot ~
                 , data = x
                 , contrasts = list(condition = contr.sum  )#, valence = contr.sum)
             )
-
+summary(model1)
 results_anova <- as.data.frame(anova(model0,model1))
 results_anova
 results_anova$Chisq[2]

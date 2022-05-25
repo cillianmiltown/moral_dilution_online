@@ -6,6 +6,7 @@ library(tidyverse)
 # read the data file
 
 df <- suppressMessages(read_csv("../data/study_5.csv"))
+#df <- suppressMessages(read_csv("../../data/study_5.csv"))
 
 
 # check variable names
@@ -44,7 +45,7 @@ df <- rbind(z,y1,y2,y3)
 
 df$age <- as.numeric(df$age)
 
-rm(x,y,y1,y2,y3,z)
+rm(y,y1,y2,y3,z)
 x <- df
 ##### create the dataframe #####
 
@@ -275,6 +276,9 @@ x$R_tot <- rowMeans(
   x[2:5]
 )
 
+x$M1R_tot <- scale(scale(x$R_tot)+scale(x$M1))
+
+
 df_long <- x
 x <- df_long
 
@@ -311,11 +315,11 @@ alex$R_tot <- rowMeans(
 
 
 
-names(sam)[2:10]
-names(sam)[2:10] <- paste0("sam_", names(sam)[2:10] )
-names(robin)[2:10] <- paste0("robin_", names(robin)[2:10] )
-names(francis)[2:10] <- paste0("francis_", names(francis)[2:10] )
-names(alex)[2:10] <- paste0("alex_", names(alex)[2:10] )
+names(sam)[2:11]
+names(sam)[2:11] <- paste0("sam_", names(sam)[2:11] )
+names(robin)[2:11] <- paste0("robin_", names(robin)[2:11] )
+names(francis)[2:11] <- paste0("francis_", names(francis)[2:11] )
+names(alex)[2:11] <- paste0("alex_", names(alex)[2:11] )
 
 
 x <- x %>% left_join(df %>% select("ResponseId", "age","gender"),
@@ -505,10 +509,10 @@ df_wide_clean <- attention_fun(df_wide_clean)
 # head(as.data.frame(x))
 #
 #
-write.csv(df_wide,       "data/study5_pilot_data_wide.csv", row.names = FALSE)
-write.csv(df_long,       "data/study5_pilot_data_long.csv", row.names = FALSE)
-write.csv(df_long_clean, "data/study5_pilot_data_long_clean.csv", row.names = FALSE)
-write.csv(df_wide_clean, "data/study5_pilot_data_wide_clean.csv", row.names = FALSE)
+write.csv(df_wide,       "data/study5_data_wide.csv", row.names = FALSE)
+write.csv(df_long,       "data/study5_data_long.csv", row.names = FALSE)
+write.csv(df_long_clean, "data/study5_data_long_clean.csv", row.names = FALSE)
+write.csv(df_wide_clean, "data/study5_data_wide_clean.csv", row.names = FALSE)
 
 #
 #

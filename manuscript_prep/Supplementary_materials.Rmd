@@ -27,7 +27,7 @@ wordcount         : "TBC"
 bibliography: "../resources/bib/My Library.bib"
 csl: "../resources/bib/apa6.csl"
 figsintext        : yes
-floatsintext      : no
+floatsintext      : yes
 figurelist        : yes
 tablelist         : yes
 footnotelist      : no
@@ -46,7 +46,7 @@ editor_options:
 
 # Supplementary Materials
 
-## Descriptions (Pilot Study 1)
+## Descriptions (Pilot Study 1 & Study 1)
 
 ### Diagnostic Descriptions
 Each moral description contains descriptive information relating to three different moral foundations as follows: *Sam*: care, fairness, loyalty; *Robin*: care, fairness, loyalty; *Francis*: purity, authority, fairness; *Alex*: care, fairness, authority.
@@ -76,7 +76,7 @@ They have red hair, play tennis four times a month, and have one older sibling a
 Imagine a person named Charlie.
 They are left-handed, drink tea in the morning, and have two older siblings and one younger sibling.
 
-## Descriptions (Pilot Study 2)
+## Descriptions (Pilot Study 2, Study 2 & Study 4)
 ### Diagnostic Descriptions
 Each moral description contains descriptive information relating to three different moral foundations as follows: *Sam*: care, fairness, loyalty; *Robin*: care, fairness, loyalty; *Francis*: purity, authority, fairness; *Alex*: care, fairness, authority.
 
@@ -99,12 +99,35 @@ Throughout their life they have been known to protect and provide shelter to the
 ## Non-Diagnostic
 ### Jackie
 Imagine a person named Jackie.
-They have dark hair, go for a jog twice a week, and their favourite colour is blue.
+They have dark hair, go for a jog twice a week, and their favorite color is blue.
 
 ### Charlie
 Imagine a person named Charlie.
-They have blue eyes, drink coffee in the morning, and their favourite colour is green.
+They have blue eyes, drink coffee in the morning, and their favorite color is green.
 
+## Descriptions (Study 3 & Study 5)
+### Diagnostic Descriptions
+#### Sam (good)
+Imagine a person named Sam.
+Throughout their life they have been known to always help and care for others, treat everyone fairly and equally, and show a strong sense of loyalty to others.
+
+#### Robin (good)
+Imagine a person named Robin.
+Throughout their life they have been known to show compassion and empathy for others, act with a sense of fairness and justice, and, never to break their word.
+
+#### Alex (bad)
+Imagine a person named Alex.
+Throughout their life they have been known to be cruel, act unfairly, and to betray their own group.
+
+#### Francis (bad)
+Imagine a person named Francis.
+Throughout their life they have been known to physically hurt others, treat some people differently to others, and show lack of loyalty.
+
+### Non Diagnostic Descriptions
+
+They have red hair, play tennis four times a month, and have one older sibling and one younger sibling.
+
+They are left-handed, drink tea in the morning, and have two older siblings and one younger sibling.
 
 
 ## Measures

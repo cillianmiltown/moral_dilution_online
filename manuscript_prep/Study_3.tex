@@ -1,0 +1,269 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  american,
+  man,floatsintext]{apa7}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Study 3},
+  pdfauthor={Blinded1, Blinded2, Blinded1, \& Blinded1},
+  pdflang={en-US},
+  pdfkeywords={keywords},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+% Make \paragraph and \subparagraph free-standing
+\ifx\paragraph\undefined\else
+  \let\oldparagraph\paragraph
+  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+  \let\oldsubparagraph\subparagraph
+  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+% Manuscript styling
+\usepackage{upgreek}
+\captionsetup{font=singlespacing,justification=justified}
+
+% Table formatting
+\usepackage{longtable}
+\usepackage{lscape}
+% \usepackage[counterclockwise]{rotating}   % Landscape page setup for large tables
+\usepackage{multirow}		% Table styling
+\usepackage{tabularx}		% Control Column width
+\usepackage[flushleft]{threeparttable}	% Allows for three part tables with a specified notes section
+\usepackage{threeparttablex}            % Lets threeparttable work with longtable
+
+% Create new environments so endfloat can handle them
+% \newenvironment{ltable}
+%   {\begin{landscape}\centering\begin{threeparttable}}
+%   {\end{threeparttable}\end{landscape}}
+\newenvironment{lltable}{\begin{landscape}\centering\begin{ThreePartTable}}{\end{ThreePartTable}\end{landscape}}
+
+% Enables adjusting longtable caption width to table width
+% Solution found at http://golatex.de/longtable-mit-caption-so-breit-wie-die-tabelle-t15767.html
+\makeatletter
+\newcommand\LastLTentrywidth{1em}
+\newlength\longtablewidth
+\setlength{\longtablewidth}{1in}
+\newcommand{\getlongtablewidth}{\begingroup \ifcsname LT@\roman{LT@tables}\endcsname \global\longtablewidth=0pt \renewcommand{\LT@entry}[2]{\global\advance\longtablewidth by ##2\relax\gdef\LastLTentrywidth{##2}}\@nameuse{LT@\roman{LT@tables}} \fi \endgroup}
+
+% \setlength{\parindent}{0.5in}
+% \setlength{\parskip}{0pt plus 0pt minus 0pt}
+
+% Overwrite redefinition of paragraph and subparagraph by the default LaTeX template
+% See https://github.com/crsh/papaja/issues/292
+\makeatletter
+\renewcommand{\paragraph}{\@startsection{paragraph}{4}{\parindent}%
+  {0\baselineskip \@plus 0.2ex \@minus 0.2ex}%
+  {-1em}%
+  {\normalfont\normalsize\bfseries\itshape\typesectitle}}
+
+\renewcommand{\subparagraph}[1]{\@startsection{subparagraph}{5}{1em}%
+  {0\baselineskip \@plus 0.2ex \@minus 0.2ex}%
+  {-\z@\relax}%
+  {\normalfont\normalsize\itshape\hspace{\parindent}{#1}\textit{\addperi}}{\relax}}
+\makeatother
+
+% \usepackage{etoolbox}
+\makeatletter
+\patchcmd{\HyOrg@maketitle}
+  {\section{\normalfont\normalsize\abstractname}}
+  {\section*{\normalfont\normalsize\abstractname}}
+  {}{\typeout{Failed to patch abstract.}}
+\patchcmd{\HyOrg@maketitle}
+  {\section{\protect\normalfont{\@title}}}
+  {\section*{\protect\normalfont{\@title}}}
+  {}{\typeout{Failed to patch title.}}
+\makeatother
+
+\usepackage{xpatch}
+\makeatletter
+\xapptocmd\appendix
+  {\xapptocmd\section
+    {\addcontentsline{toc}{section}{\appendixname\ifoneappendix\else~\theappendix\fi\\: #1}}
+    {}{\InnerPatchFailed}%
+  }
+{}{\PatchFailed}
+\keywords{keywords\newline\indent Word count: TBC}
+\usepackage{csquotes}
+\raggedbottom
+\ifxetex
+  % Load polyglossia as late as possible: uses bidi with RTL langages (e.g. Hebrew, Arabic)
+  \usepackage{polyglossia}
+  \setmainlanguage[variant=american]{english}
+\else
+  \usepackage[shorthands=off,main=american]{babel}
+\fi
+
+\title{Study 3}
+\author{Blinded\textsuperscript{1}, Blinded\textsuperscript{2}, Blinded\textsuperscript{1}, \& Blinded\textsuperscript{1}}
+\date{}
+
+
+\shorttitle{Moral Dilution}
+
+\authornote{
+
+Correspondence concerning this article should be addressed to Blinded, Blinded. E-mail: Blinded
+
+}
+
+\affiliation{\vspace{0.5cm}\textsuperscript{1} Blinded\\\textsuperscript{2} Blinded}
+
+\abstract{%
+Six studies etc.
+}
+
+
+
+\begin{document}
+\maketitle
+
+\hypertarget{study-3}{%
+\section{Study 3}\label{study-3}}
+
+In Study 1 we found evidence for the moral dilution effect for judgments of \emph{bad} moral characters. In Study 2 we failed replicate this effect for judgments of \emph{good} moral characters. The aim of Study 3 was to test if valence (good vs.~bad) moderates the moral dilution effect. We hypothesized that valence (good vs bad) would interact with condition in producing a dilution effect, such that the dilution effect would be observed for bad characters but not for good characters. Study 3 was pre-registered at \color{blue}\url{https://aspredicted.org/QDF_XT1}\color{black}.
+
+\hypertarget{study-3-method}{%
+\subsection{Study 3: Method}\label{study-3-method}}
+
+\hypertarget{study-3-participants-and-design}{%
+\subsubsection{Study 3: Participants and design}\label{study-3-participants-and-design}}
+
+Study 3 was a 2 \(\times\) 2 within-subjects factorial design. The first independent variable was condition with two levels, diagnostic and non-diagnostic. The second independent variable was valence of character description, with two levels morally good and morally bad. We used the same two dependent variables as in previous studies, the four item moral perception scale (MPS-4, \(\alpha\) = 0.94), and the single item moral perception measure MM-1.
+
+A total sample of 1095 (700 female, 386 male, 2 non-binary, 0 other; 2 prefer not to say, \emph{M}\textsubscript{age} = 36.42, min = 19, max = 77, \emph{SD} = 10.65) started the survey. Participants were recruited from MTurk and paid \$0.40 for their participation.
+
+Participants who failed both manipulation checks were removed (\emph{n} = 221), leaving a total sample of 874 participants (550 female, 320 male, 0 other, 0 prefer not to say; \emph{M}\textsubscript{age} = 36.37, min = 19, max = 77, \emph{SD} = 10.72).
+
+\hypertarget{study-3-procedure-and-materials}{%
+\subsubsection{Study 3: Procedure and materials}\label{study-3-procedure-and-materials}}
+
+Again, data were collected using an online questionnaire presented with Qualtrics (www.qualtrics.com). Participants were presented with four descriptions of characters taken from Studies 1 and 2. To ensure consistency across character judgments, we selected descriptions that related to the same moral foundations (care, fairness, and loyalty). We used the same four character names as in previous studies. The \emph{good} characters were \emph{Sam} and \emph{Robin}, and the \emph{bad} characters were \emph{Francis} and \emph{Alex}, e.g., \emph{Imagine a person named Robin. Throughout their life they have been known to show compassion and empathy for others, act with a sense of fairness and justice, and, never to break their word.} or, \emph{Imagine a person named Alex. Throughout their life they have been known to be cruel, act unfairly, and to betray their own group.} Full descriptions for each character are in the supplementary materials. One description for each the \emph{good} and \emph{bad} characters was randomly assigned to include non-diagnostic information for each participant thus all participants were exposed to all conditions (see \color{blue}\url{https://osf.io/mdnpv/?view_only=77883e3fbc3d45f1a35fe92d5318cb67}\color{black} for details of the randomization blocks). Study 3 was pre-registered at \color{blue}\url{https://aspredicted.org/QDF_XT1}\color{black}
+
+\hypertarget{study-3-results}{%
+\subsection{Study 3: Results}\label{study-3-results}}
+
+The means and standard deviations for MPS-4 for each scenario are as follows:
+\emph{Sam},
+\emph{M}\textsubscript{MPS-4} = 5.90, \emph{SD}\textsubscript{MPS-4} = 1.03,
+\emph{Francis},
+\emph{M}\textsubscript{MPS-4} = 4.07, \emph{SD}\textsubscript{MPS-4} = 2.07,
+\emph{Alex},
+\emph{M}\textsubscript{MPS-4} = 4.03, \emph{SD}\textsubscript{MPS-4} = 2.03,
+\emph{Robin},
+\emph{M}\textsubscript{MPS-4} = 5.85, \emph{SD}\textsubscript{MPS-4} = 1.05. There was significant variation depending on the description, \emph{F}(1,1080) = 442.71, \emph{p} \textless{} .001, partial \(\eta\)\textsuperscript{2} = 0.24. Both the \emph{good} characters (\emph{Robin} and \emph{Sam}) were rated significantly more favorably than both the \emph{bad} characters (\emph{Alex} and \emph{Francis}; all \emph{p}s \textless{} .001). There were no differences between \emph{Robin} and \emph{Sam} (\emph{good}: \emph{p} = .366) or between \emph{Alex} and \emph{Francis} (\emph{bad}; (\emph{p} = .648)).
+
+The means and standard deviations for MM-1 for each scenario are as follows:
+\emph{Sam} (diagnostic/moral),
+\emph{M}\textsubscript{MM-1} = 81.01, \emph{SD}\textsubscript{MM-1} = 15.23;
+\emph{Francis} (diagnostic/moral),
+\emph{M}\textsubscript{MM-1} = 51.49, \emph{SD}\textsubscript{MM-1} = 33.18;
+\emph{Alex} (diagnostic/moral),
+\emph{M}\textsubscript{MM-1} = 50.89, \emph{SD}\textsubscript{MM-1} = 32.14;
+\emph{Robin} (diagnostic/moral),
+\emph{M}\textsubscript{MM-1} = 80.81, \emph{SD}\textsubscript{MM-1} = 15.16. There was significant variation depending on the description, \emph{F}(1,1080) = 458.92, \emph{p} \textless{} .001, partial \(\eta\)\textsuperscript{2} = 0.254. Again, the \emph{good} characters (\emph{Robin} and \emph{Sam}) were rated significantly more favorably than the \emph{bad} characters (\emph{Alex} and \emph{Francis}; all \emph{p}s \textless{} .001). There were no differences between \emph{Robin} and \emph{Sam} (\emph{good}: \emph{p} = .776) or between \emph{Alex} and \emph{Francis} (\emph{bad}; (\emph{p} = .683)).
+
+We conducted a linear-mixed-effects model to test if our predictors influenced MPS-4 responses. Our outcome measure was MPS-4, our predictor variables were condition and valence; we allowed intercepts and the effects of condition and valence to vary across participants.
+Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model,
+\(\chi\)\textsuperscript{2}(5) = 3,420.34, \emph{p} \textless{} .001.
+As expected, on its own, condition did not influence responses to the MPS-4
+, \emph{F}(1, 1746) = 0.01, \emph{p} = .937
+; valence significantly predicted responses,
+, \emph{F}(1, 1746) = 587.37, \emph{p} \textless{} .001
+; and there was a significant condition \(\times\) valence interaction,
+, \emph{F}(1, 1746) = 9.13, \emph{p} = .003.
+and was not a significant predictor in the model when controlling for scenario, \(b\) = 0.00, \emph{t}(1,746.00) = -0.08, \emph{p} = .937.
+
+We conducted a linear-mixed-effects model to test if our predictors influenced MM-1 responses. The model was the same as the previous model, with a change to the outcome measure, our outcome measure for this model was MM-1. As above, our predictor variables were condition and valence; we allowed intercepts and the effects of condition and valence to vary across participants.
+Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model,
+\(\chi\)\textsuperscript{2}(5) = 3,441.43, \emph{p} \textless{} .001.
+As expected, on its own, condition did not influence responses to the MPS-4
+, \emph{F}(1, 1746) = 0.03, \emph{p} = .852
+; valence significantly predicted responses,
+, \emph{F}(1, 1746) = 638.14, \emph{p} \textless{} .001
+; and there was a significant condition \(\times\) valence interaction,
+, \emph{F}(1, 1746) = 17.23, \emph{p} \textless{} .001.
+and was not a significant predictor in the model when controlling for scenario, \(b\) = -0.03, \emph{t}(1,746.00) = -0.19, \emph{p} = .852.
+
+\hypertarget{differences-in-the-bad-descriptions}{%
+\subsection{\texorpdfstring{Differences in the \emph{Bad} Descriptions}{Differences in the Bad Descriptions}}\label{differences-in-the-bad-descriptions}}
+
+To interpret the interaction effect, we conducted separate analyses for the Good and Bad descriptions.
+
+We conducted a linear-mixed-effects model to test if condition influenced MPS-4 responses. Our outcome measure was MPS-4, our predictor variable was condition; we allowed intercepts and the effect of condition to vary across participants. Overall, the model did not significantly predict participants responses, or provide a better fit for the data than the baseline model, \(\chi\)\textsuperscript{2}(3) = 5.40, \emph{p} = .145. Condition did not significantly influence MPS-4 responses \emph{F}(1, 872.00) = 3.54, \emph{p} = .060, and was not a significant predictor in the model \(b\) = -0.03, \emph{t}(872.00) = -1.88, \emph{p} = .060, see Figure~\ref{fig:S3bothconditionplot}.
+
+We conducted a linear-mixed-effects model to test if condition influenced MM-1 responses. Our outcome measure was MM-1, our predictor variable was condition; we allowed intercepts and the effect of condition to vary across participants. Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model, \(\chi\)\textsuperscript{2}(3) = 8.67, \emph{p} = .034. Condition significantly influenced MM-1 responses \emph{F}(1, 872.00) = 7.01, \emph{p} = .008, and was a significant predictor in the model \(b\) = -0.69, \emph{t}(872.00) = -2.65, \emph{p} = .008, see Figure~\ref{fig:S3bothconditionplot}.
+
+\hypertarget{differences-in-the-good-descriptions}{%
+\subsection{\texorpdfstring{Differences in the \emph{Good} Descriptions}{Differences in the Good Descriptions}}\label{differences-in-the-good-descriptions}}
+
+To interpret the interaction effect, we conducted separate analyses for the Good and Bad descriptions.
+
+We conducted a linear-mixed-effects model to test if condition influenced MPS-4 responses. Our outcome measure was MPS-4, our predictor variable was condition; we allowed intercepts and the effect of condition to vary across participants. Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model, \(\chi\)\textsuperscript{2}(3) = 13.66, \emph{p} = .003. Condition significantly influenced MPS-4 responses \emph{F}(1, 872.00) = 6.82, \emph{p} = .009, and was a significant predictor in the model \(b\) = 0.03, \emph{t}(872.00) = 2.61, \emph{p} = .009, see Figure~\ref{fig:S3bothconditionplot}.
+
+\begin{figure}
+
+\includegraphics{Study_3_files/figure-latex/S3bothconditionplot-1} \hfill{}
+
+\caption{Study 3: Differences in moral perception depending on condition}\label{fig:S3bothconditionplot}
+\end{figure}
+
+We conducted a linear-mixed-effects model to test if condition influenced MM-1 responses. Our outcome measure was MM-1, our predictor variable was condition; we allowed intercepts and the effect of condition to vary across participants. Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model, \(\chi\)\textsuperscript{2}(1) = 11.97, \emph{p} \textless{} .001. Condition significantly influenced MM-1 responses \emph{F}(1, 873) = 12.04, \emph{p} \textless{} .001, and was a significant predictor in the model \(b\) = 0.63, \emph{t}(873) = 3.47, \emph{p} \textless{} .001, see Figure~\ref{fig:S3bothconditionplot}.
+
+In the supplementary analyses we report the effect of condition on moral perception for each description individually.
+
+The aim of Study 3 was to test if the moral dilution effect was moderated by valence of description. Based on the results of Studies 1 and 2 we hypothesized that a dilution effect would be observed for judgments of \emph{bad} characters, but not for judgments of \emph{good} characters. Interestingly, in Study 2 we found a dilution effect for \emph{good} characters across both measures, however we only found a dilution effect for \emph{bad} characters when using the single item measure of moral perception.
+
+
+\end{document}

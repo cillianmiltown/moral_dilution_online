@@ -1755,14 +1755,14 @@ model1 <- lmerTest::lmer(R_tot ~
                 + (1|ResponseId:valence)
                 , data = x
             )
-model1 <- lmerTest::lmer(R_tot ~
-                  condition*valence
-                + (1|ResponseId)
-                + (1|ResponseId:condition)
-                + (1|ResponseId:valence)
-                + (1|condition:valence)
-                , data = x
-            )
+# model1 <- lmerTest::lmer(R_tot ~
+#                   condition*valence
+#                 + (1|ResponseId)
+#                 + (1|ResponseId:condition)
+#                 + (1|ResponseId:valence)
+#                 + (1|condition:valence)
+#                 , data = x
+#             )
 summary(model1)
 anova(model1)
 
@@ -1786,7 +1786,7 @@ car::Anova(model1, type="3")
 ```{r, include=TRUE}
 
 anova(m1)
-ezANOVA(data = x, dv = .(R_tot), wid = .(ResponseId),
+ez::ezANOVA(data = x, dv = .(R_tot), wid = .(ResponseId),
         within = .(condition,valence), detailed = TRUE, type = 2)
 ```
 
@@ -1853,7 +1853,7 @@ summary(m1)
 ```{r include=TRUE}
 anova(m1)
 
-ezANOVA(data = x, dv = .(M1), wid = .(ResponseId),
+ez::ezANOVA(data = x, dv = .(M1), wid = .(ResponseId),
         within = .(condition), detailed = FALSE, type = 2)
 tapply(x$R_tot, x$condition, descriptives)
 
@@ -1889,7 +1889,7 @@ summary(m1)
 
 anova(m1)
 
-ezANOVA(data = x, dv = .(R_tot), wid = .(ResponseId),
+ez::ezANOVA(data = x, dv = .(R_tot), wid = .(ResponseId),
         within = .(condition), detailed = FALSE, type = 2)
 
 

@@ -20,7 +20,7 @@ keywords          : "keywords"
 wordcount         : "TBC"
 bibliography: "../resources/bib/My Library.bib"
 cls: "../resources/bib/apa7.cls"
-figsintext        : no
+figsintext        : yes
 floatsintext      : yes
 figurelist        : yes
 tablelist         : yes
@@ -33,6 +33,7 @@ output:
   papaja::apa6_pdf:
     extra_dependencies: ["float"]
 header-includes:
+- \raggedbottom
 - \usepackage{float}
 editor_options: 
   chunk_output_type: console
@@ -54,7 +55,6 @@ knitr::opts_chunk$set(fig.pos = "!p", out.extra = "")
 
 # Supplemantary Analyses
 
-\newpage
 
 ```{r child = 'Supplementary_analyses.Rmd'}
 ```

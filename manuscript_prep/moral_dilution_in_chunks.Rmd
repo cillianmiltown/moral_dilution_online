@@ -123,6 +123,18 @@ getwd()
 ```{r child = 'Study_2.Rmd'}
 ```
 
+
+```{r child = 'Study_3.Rmd'}
+```
+
+
+```{r child = 'Study_4.Rmd'}
+```
+
+
+```{r child = 'Study_5.Rmd'}
+```
+
 \newpage
 
 ```{r child = 'Discussion.Rmd'}

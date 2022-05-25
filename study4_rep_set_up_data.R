@@ -246,6 +246,8 @@ x$R_tot <- rowMeans(
   x[2:5]
 )
 
+x$M1R_tot <- scale(scale(x$R_tot)+scale(x$M1))
+
 df_long <- x
 x <- df_long
 

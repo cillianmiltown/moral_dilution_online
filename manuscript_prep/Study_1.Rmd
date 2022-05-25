@@ -114,7 +114,7 @@ alpha1 <- ltm::cronbach.alpha(MPS)
 alpha1
 ```
 
-# Study 1
+# Study 1 - Bad Characters
 
 ## Study 1: Method
 The aim of Study 1 is to test if the dilution effect exists in the moral domain. Participants were presented with descriptions of four characters, two descriptions will only contain diagnostic information (morally relevant information) and two will additionally contain non-diagnostic information (non morally relevant information) along with the diagnostic information. We hypothesize that moral perceptions of the diagnostic only descriptions will be more severe than for the descriptions that also contain non-diagnostic information.
@@ -139,7 +139,7 @@ att_both <- length(levels(as.factor(df1$ResponseId)))-length(levels(as.factor(df
 Participants who failed both manipulation checks were removed (*n* = `r att_both`), leaving a total sample of `r length(df3$gender)/4` participants (`r sum(df3$gender=="1",na.rm=T)/4` female, `r sum(df3$gender=="2", na.rm=T)/4` male, `r sum(df3$gender=="4", na.rm=T)/4` other, `r sum(df3$gender=="4", na.rm=T)/4` prefer not to say; *M*~age~ = `r round(mean(df3$age, na.rm=T),digits=2)`, min = `r min(df3$age, na.rm=T)`, max = `r max(df3$age, na.rm=T)`, *SD* = `r round(sd(df3$age, na.rm=T),digits=2)`).
 
 ### Study 1: Procedure and materials
-As in the pilot study, data were collected using an online questionnaire presented with Qualtrics (www.qualtrics.com). Participants were presented with four descriptions of characters (*Sam*, *Alex*, *Francis*, *Robin* from Pilot Study 1). All descriptions included diagnostic information relating to three moral foundations, e.g., *Imagine a person named Robin. Throughout their life they have been known to physically hurt others, treat some people differently to others, and show lack of loyalty*. We programmed our survey to randomly present non-diagnostic information along with two of the descriptions participants read (this was done through blocking, for details on the blocks see full materials at \color{blue}[https://osf.io/mdnpv/?view_only=77883e3fbc3d45f1a35fe92d5318cb67](https://osf.io/mdnpv/?view_only=77883e3fbc3d45f1a35fe92d5318cb67)\color{black}. Study 1 was pre-registered at \color{blue}[https://aspredicted.org/DVY_QN3](https://aspredicted.org/DVY_QN3)\color{black}
+As in the pilot study, data were collected using an online questionnaire presented with Qualtrics (www.qualtrics.com). Participants were presented with four descriptions of characters (*Sam*, *Alex*, *Francis*, *Robin* from Pilot Study 1). All descriptions included diagnostic information relating to three moral foundations, e.g., *Imagine a person named Robin. Throughout their life they have been known to physically hurt others, treat some people differently to others, and show lack of loyalty*. We programmed our survey to randomly present non-diagnostic information along with two of the descriptions participants read (this was done through blocking, for details on the blocks see full materials at \color{blue}[https://osf.io/mdnpv/?view_only=77883e3fbc3d45f1a35fe92d5318cb67](https://osf.io/mdnpv/?view_only=77883e3fbc3d45f1a35fe92d5318cb67)\color{black}. This meant that all participants read two descriptions containing diagnostic information only, and two descriptions that additionally included non-diagnostic information. We hypothesized that the descriptions including non-diagnostic information would be rated as less severe than the diagnostic-only descriptions. Study 1 was pre-registered at \color{blue}[https://aspredicted.org/DVY_QN3](https://aspredicted.org/DVY_QN3)\color{black}
 
 
 ## Study 1: Results
@@ -196,7 +196,7 @@ The means and standard deviations for MPS-4 for each scenario are as follows:
 *Alex*,
 *M*~MPS-4~ = `r mean(alex$R_tot)`, *SD*~MPS-4~ = `r sd(alex$R_tot)`,
 *Robin*,
-*M*~MPS-4~ = `r mean(robin$R_tot)`, *SD*~MPS-4~ = `r sd(robin$R_tot)`. There was significant variation depending on the description, *F*(`r aov1$DFd`, `r aov1$DFn`) = `r aov1$F`, *p* `r paste(p_report(aov1$p))`, partial $\eta$^2^ = `r aov1$ges`. *Francis* appeared to be rated as more moral than each of the other characters (all *p*s < .001), while *Robin* was rated as less moral than each of the other characters (all *p*s < .001), while *Sam* was rated more favorably than *Alex* (*p* < .001). 
+*M*~MPS-4~ = `r mean(robin$R_tot)`, *SD*~MPS-4~ = `r sd(robin$R_tot)`. There was significant variation depending on the description, *F*(`r round(aov1$DFn)`,`r round(aov1$DFd)`) = `r aov1$F`, *p* `r paste(p_report(aov1$p))`, partial $\eta$^2^ = `r aov1$ges`. *Francis* appeared to be rated as more moral than each of the other characters (all *p*s < .001), while *Robin* was rated as less moral than each of the other characters (all *p*s < .001), while *Sam* was rated more favorably than *Alex* (*p* < .001). 
 
 
 
@@ -234,14 +234,14 @@ pwc$p[2]
 ```
 
 The means and standard deviations for MM-1 for each scenario are as follows: 
-*Sam* (diagnostic/moral),
+*Sam*,
 *M*~MM-1~ = `r mean(sam$M1)`, *SD*~MM-1~ = `r sd(sam$M1)`;
-*Francis* (diagnostic/moral),
+*Francis*,
 *M*~MM-1~ = `r mean(francis$M1)`, *SD*~MM-1~ = `r sd(francis$M1)`;
-*Alex* (diagnostic/moral),
+*Alex*,
 *M*~MM-1~ = `r mean(alex$M1)`, *SD*~MM-1~ = `r sd(alex$M1)`;
-*Robin* (diagnostic/moral),
-*M*~MM-1~ = `r mean(robin$M1)`, *SD*~MM-1~ = `r sd(robin$M1)`. There was significant variation depending on the description, *F*(`r aov1$DFd`, `r aov1$DFn`) = `r aov1$F`, *p* `r paste(p_report(aov1$p))`, partial $\eta$^2^ = `r paste(aov1$ges)`. *Francis* was rated more favorably than all other characters (*p* < .001), *Sam* was the next most favorably rated character, rated significantly more favorably than both *Alex* and *Robin* (*p*s < .001), there was no difference between *Alex* and *Robin* (*p* = `r paste(p_report(pwc$p[2]))`).
+*Robin*,
+*M*~MM-1~ = `r mean(robin$M1)`, *SD*~MM-1~ = `r sd(robin$M1)`. There was significant variation depending on the description, *F*(`r round(aov1$DFn)`,`r round(aov1$DFd)`) = `r aov1$F`, *p* `r paste(p_report(aov1$p))`, partial $\eta$^2^ = `r paste(aov1$ges)`. *Francis* was rated more favorably than all other characters (*p* < .001), *Sam* was the next most favorably rated character, rated significantly more favorably than both *Alex* and *Robin* (*p*s < .001), there was no difference between *Alex* and *Robin* (*p* = `r paste(p_report(pwc$p[2]))`).
 
 
 
@@ -261,7 +261,7 @@ model1 <- lmerTest::lmer(R_tot ~
                 + (1|ResponseId)
                 + (1|ResponseId:condition)
                 , data = x
-                , contrasts = list(condition = contr.sum  )#, valence = contr.sum)
+                , contrasts = list(condition = contr.sum  , scenario = contr.sum)
             )
 
 results_anova <- as.data.frame(anova(model0,model1))
@@ -291,7 +291,7 @@ anova(model1)
 ```
 
 We conducted a linear-mixed-effects model to test if condition influenced MPS-4 responses. Our outcome measure was MPS-4, our predictor variable was condition; we allowed intercepts and the effect of condition to vary across participants, and scenario was also included in the model.
-Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model, $\chi$^2^(`r results_anova$Df[2]`) = `r results_anova$Chisq[2]`, *p* `r paste(p_report(p1))`. Condition significantly influenced responses to the MPS-4, *F*(`r aov1$NumDF[1]`, `r aov1$DenDF[1]`) = `r f3`, *p* `r paste(p_report(p3))`; and was a significant predictor in the model when controlling for scenario, $b$ = `r results_coef$Estimate[2]`, *t*(`r results_coef$df[2]`) = `r t1`, *p* `r paste(p_report(p2))`, with the non-diagnostic descriptions being rated as more moral than the diagnostic (morally relevant) descriptions of immoral characters Figure\ \@ref(fig:S1bothconditionplot).
+Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model, $\chi$^2^(`r results_anova$Df[2]`) = `r results_anova$Chisq[2]`, *p* `r paste(p_report(p1))`. Condition significantly influenced responses to the MPS-4, *F*(`r aov1$NumDF[1]`, `r aov1$DenDF[1]`) = `r f3`, *p* `r paste(p_report(p3))`; and was a significant predictor in the model when controlling for scenario, $b$ = `r results_coef$Estimate[2]`, *t*(`r results_coef$df[2]`) = `r t1`, *p* `r paste(p_report(p2))`, with the diagnostic descriptions being rated as more immoral than the non-diagnostic descriptions Figure\ \@ref(fig:S1bothconditionplot).
 
 ```{r S1Rtotconditionplot, fig.cap="Pilot Study 1: Differences in MPS-4 depending on condition", include=FALSE}
 
@@ -426,7 +426,7 @@ model1 <- lmerTest::lmer(M1 ~
                 + (1|ResponseId)
                 + (1|ResponseId:condition)
                 , data = x
-                , contrasts = list(condition = contr.sum )# , valence = contr.sum)
+                , contrasts = list(condition = contr.sum  , scenario = contr.sum)
             )
 
 results_anova <- as.data.frame(anova(model0,model1))
@@ -460,7 +460,7 @@ anova(model1)
 ```
 
 
-We conducted a linear-mixed-effects model to test if condition influenced MM-1 responses. Our outcome measure was MM-1, our predictor variable was condition; we allowed intercepts and the effect of condition to vary across participants. Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model, $\chi$^2^(`r results_anova$Df[2]`) = `r results_anova$Chisq[2]`, *p* `r paste(p_report(p1))`. Condition significantly predicted MM-1 responses *F*(`r aov1$NumDF[1]`, `r aov1$DenDF[1]`) = `r f3`, *p* `r paste(p_report(p3))`, and when controlling for scenario was a significant predictor in the model $b$ = `r results_coef$Estimate[2]`, *t*(`r results_coef$df[2]`) = `r t1`, *p* `r paste(p_report(p2))`, with the non-diagnostic (neutral) descriptions being rated as more moral than the diagnostic (morally relevant) descriptions, see Figure\ \@ref(fig:S1bothconditionplot).
+We conducted a linear-mixed-effects model to test if condition influenced MM-1 responses. Our outcome measure was MM-1, our predictor variable was condition; we allowed intercepts and the effect of condition to vary across participants. Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model, $\chi$^2^(`r results_anova$Df[2]`) = `r results_anova$Chisq[2]`, *p* `r paste(p_report(p1))`. Condition significantly predicted MM-1 responses *F*(`r aov1$NumDF[1]`, `r aov1$DenDF[1]`) = `r f3`, *p* `r paste(p_report(p3))`, and when controlling for scenario was a significant predictor in the model $b$ = `r results_coef$Estimate[2]`, *t*(`r results_coef$df[2]`) = `r t1`, *p* `r paste(p_report(p2))`, with the diagnostic descriptions being rated as more immoral than the non-diagnostic descriptions Figure\ \@ref(fig:S1bothconditionplot).
 
 In the supplementary analyses we report the effect of condition on moral perception for each description individually.
 
