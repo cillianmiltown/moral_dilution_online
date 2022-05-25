@@ -138,6 +138,24 @@ length(df3$gender)/4
 att_both <- length(levels(as.factor(df1$ResponseId)))-length(levels(as.factor(df3$ResponseId)))
 ```
 
+
+```{r}
+df_long_clean <- df3
+
+x <- df3
+x$attn_chk_1Q
+x$attn_chk_2_Q
+x <- x[which(x$attn_chk_2_Q==2|x$attn_chk_2_Q==5),]
+x <- x[which(x$attn_chk_1Q==7),]
+df_long_extra_clean <- x
+
+x <- df3
+# 
+# df3 <- x
+# att_both <- length(levels(as.factor(df1$ResponseId)))-length(levels(as.factor(df3$ResponseId)))
+```
+
+
 Participants who failed both manipulation checks were removed (*n* = `r att_both`), leaving a total sample of `r length(df3$gender)` participants (`r sum(df3$gender=="1",na.rm=T)` female, `r sum(df3$gender=="2", na.rm=T)` male, `r sum(df3$gender=="4", na.rm=T)` other, `r sum(df3$gender=="4", na.rm=T)` prefer not to say; *M*~age~ = `r round(mean(df3$age, na.rm=T),digits=2)`, min = `r min(df3$age, na.rm=T)`, max = `r max(df3$age, na.rm=T)`, *SD* = `r round(sd(df3$age, na.rm=T),digits=2)`).
 
 

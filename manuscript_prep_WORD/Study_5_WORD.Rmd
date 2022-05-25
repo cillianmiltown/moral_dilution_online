@@ -1,0 +1,556 @@
+---
+title             : "Study 5"
+shorttitle        : "Moral Dilution"
+author:
+  - name          : "Blinded"
+    affiliation   : "1"
+    corresponding : yes    # Define only one corresponding author
+    address       : "Blinded"
+    email         : "Blinded"
+  - name          : "Blinded"
+    affiliation   : "2"
+  - name          : "Blinded"
+    affiliation   : "1"
+  - name          : "Blinded"
+    affiliation   : "1"
+affiliation:
+  - id            : "1"
+    institution   : "Blinded"
+  - id            : "2"
+    institution   : "Blinded"
+author_note: >
+  All procedures performed in studies involving human participants were approved by institutional research ethics committee and conducted in accordance with the Code of Professional Ethics of the Psychological Society of Ireland, and with the 1964 Helsinki declaration and its later amendments or comparable ethical standards. Informed consent was obtained from all individual participants included in the study. The authors declare that there are no potential conflicts of interest with respect to the research, authorship, and/or publication of this article. All authors consented to the submission of this manuscript.
+abstract: >
+  Six studies etc.
+keywords          : "keywords"
+wordcount         : "TBC"
+bibliography: "../resources/bib/My Library.bib"
+csl: "../resources/bib/apa.csl"
+figsintext        : true
+figurelist        : no
+tablelist         : no
+footnotelist      : no
+lineno            : no
+toc               : false
+lang              : "en-US"
+documentclass     : "apa7"
+output:
+  papaja::apa6_word
+header-includes:
+- \raggedbottom
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r S5setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, include = FALSE)
+# knitr::opts_chunk$set(eval = TRUE, echo = TRUE)
+#knitr::opts_chunk$set(include = FALSE)
+```
+
+
+```{r S5load_libraries_cogload}
+rm(list = ls())
+library(citr)
+#install.packages("sjstats")
+library(plyr)
+library(foreign)
+library(car)
+library(desnum)
+library(ggplot2)
+library(extrafont)
+#devtools::install_github("crsh/papaja")
+library(papaja)
+#library("dplyr")
+library("afex")
+library("tibble")
+library(scales)
+#install.packages("metap")
+library(metap)
+library(pwr)
+library(lsr)
+#install.packages("sjstats")
+library(sjstats)
+library(DescTools)
+#inatall.packages("ggstatsplot")
+#library(ggstatsplot)
+library(VGAM)
+library(nnet)
+library(mlogit)
+library(reshape2)
+#install.packages("powerMediation")
+library("powerMediation")
+library("ggpubr")
+
+
+# library(rstatix)
+
+
+#source("load_all_data.R")
+
+#devtools::install_github("benmarwick/wordcountaddin")
+#library(wordcountaddin)
+#wordcountaddin::text_stats("cogload_1to5_25Sept19.Rmd")
+#setwd("manuscript_prep")
+getwd()
+```
+
+
+
+```{r S5LoadData}
+#source("~/Dropbox/College/research/Research_general/cog_load/moral_dumbfounding_and_cognitive_load/read_and_sort_raw_data.R")
+#source("~/Dropbox/College/research/Research_general/cog_load/moral_dumbfounding_and_cognitive_load/load_study6_data.R")
+rm(list = ls())
+
+df3 <- read.csv("../data/study6_data_long.csv")
+df1 <- df3
+x <- read.csv("../data/study6_data_long_clean.csv")
+
+MPS <- x %>% 
+  select(R1,R2,R3,R4)
+
+alpha1 <- ltm::cronbach.alpha(MPS)
+
+alpha1
+```
+
+# Study 5 - Good and Bad Characters
+Studies 1-4 showed some evidence for the presence of the moral dilution effect. The effect appears to vary depending on specific factors. One factor we identified is the presence, and valence, of other descriptions. The dilution effect is observed for *bad* characters when participants are presented with only *bad* characters (Study 1). However this effect for *bad* characters is less reliably observed (depending on the measure) when participants are additionally presented with descriptions of *good* characters (Study 3). The reverse appears to be the case for *good* characters, such that when *good* characters are presented along with descriptions of *bad* characters, a moral dilution effect is observed (Study 3). However, when descriptions of *bad* characters are not present the moral dilution effect is not observed (Study 2), or less reliably observed (depending on the measure, Study 4). The aim of Study 5 was to test for the moral dilution effect in both good and bad characters, while attempting to eliminate the confounding influence of the presence of other descriptions by adopting a between-subjects design.
+
+
+
+## Study 5: Method
+### Study 5: Participants and design
+Study 5 was a 2 $\times$ 2 between-subjects factorial design. As in Study 3, the first independent variable was condition with two levels, diagnostic and non-diagnostic. The second independent variable was valence of character description, with two levels morally good and morally bad. We used the same two dependent variables as in previous studies (MPS-4, $\alpha$ = `r round(alpha1$alpha,digits=2)`, and MM-1).
+
+A total sample of `r length(levels(as.factor(df3$ResponseId)))` (`r sum(df1$gender=="1",na.rm=T)` female, `r sum(df1$gender=="2", na.rm=T)` male, `r round(sum(df1$gender=="3", na.rm=T))` non-binary, `r round(sum(df1$gender=="4", na.rm=T))` other; `r sum(df1$gender=="5", na.rm=T)` prefer not to say, *M*~age~ = `r round(mean(df3$age, na.rm=T),digits=2)`, min = `r min(df3$age, na.rm=T)`, max = `r max(df3$age, na.rm=T)`, *SD* = `r round(sd(df3$age, na.rm=T),digits=2)`) started the survey.  Participants were recruited from MTurk and paid $0.10 for their participation. 
+
+```{r}
+df1 <- read.csv("../data/study6_data_long.csv")
+df3 <- read.csv("../data/study6_data_long_clean.csv")
+df_long_clean <- df3
+table(df3$gender)
+length(df1$gender)/6
+length(levels(as.factor(df1$ResponseId)))-length(levels(as.factor(df3$ResponseId)))
+length(df3$gender)/4
+
+att_both <- length(levels(as.factor(df1$ResponseId)))-length(levels(as.factor(df3$ResponseId)))
+```
+
+
+```{r}
+df_long_clean <- df3
+
+x <- df3
+x$attn_chk_1Q
+x$attn_chk_2_Q
+x <- x[which(x$attn_chk_2_Q==2|x$attn_chk_2_Q==5),]
+x <- x[which(x$attn_chk_1Q==7),]
+df_long_extra_clean <- x
+
+x <- df3
+# 
+# df3 <- x
+# att_both <- length(levels(as.factor(df1$ResponseId)))-length(levels(as.factor(df3$ResponseId)))
+```
+
+
+Participants who failed both manipulation checks were removed (*n* = `r att_both`), leaving a total sample of `r length(df3$gender)` participants (`r sum(df3$gender=="1",na.rm=T)` female, `r sum(df3$gender=="2", na.rm=T)` male, `r sum(df3$gender=="4", na.rm=T)` other, `r sum(df3$gender=="4", na.rm=T)` prefer not to say; *M*~age~ = `r round(mean(df3$age, na.rm=T),digits=2)`, min = `r min(df3$age, na.rm=T)`, max = `r max(df3$age, na.rm=T)`, *SD* = `r round(sd(df3$age, na.rm=T),digits=2)`).
+
+
+### Study 5: Procedure and materials
+The materials for Study 5 were the same as those used in Study 3. Participants were randomly presented with a single character description: *Sam*, *Robin* (*good* characters), *Francis* and *Alex* (*bad* characters), and were randomly assigned to the diagnostic condition (containing diagnostic information only), or the non-diagnostic condition (where the character description additionally included non-diagnostic information). Study 5 was not pre-registered however our predictions were the same as those for Study 3.
+
+
+## Study 5: Results
+
+
+```{r}
+x <- df3
+sam <- x[which(x$scenario=="sam"),]
+francis <- x[which(x$scenario=="francis"),]
+alex <- x[which(x$scenario=="alex"),]
+robin <- x[which(x$scenario=="robin"),]
+
+```
+
+```{r}
+x <- df3
+tapply(x$R_tot, x$scenario, descriptives)
+# bad <- x[which(x$condition=="diagnostic"),]
+# good <- x[which(x$condition=="non-diagnostic"),]
+#good$scenario_abb <- droplevels(good$scenario_abb)
+x$valence
+#x <- bad
+
+aov1 <- aov(R_tot~scenario,data=x)
+aov1$df.residual
+
+test <- summary(aov1)
+test[[1]][["Df"]][1]
+test[[1]][["Df"]][2]
+
+test[[1]][["F value"]][1]
+test[[1]][["Pr(>F)"]][1]
+p_report(test[[1]][["Pr(>F)"]][1])
+
+aov1$effects
+effectsize::eta_squared(aov1)
+eta1 <- effectsize::eta_squared(aov1)
+eta1$Eta2
+(aov1)
+aov1$model
+
+tuk <- TukeyHSD(aov(R_tot~scenario,data=x))
+round(tuk$scenario[19], digits = 3)
+
+
+```
+
+
+
+
+The means and standard deviations for MPS-4 for each scenario are as follows: 
+*Sam* (good),
+*M*~MPS-4~ = `r mean(sam$R_tot)`, *SD*~MPS-4~ = `r sd(sam$R_tot)`,
+*Francis* (bad),
+*M*~MPS-4~ = `r mean(francis$R_tot)`, *SD*~MPS-4~ = `r sd(francis$R_tot)`,
+*Alex* (bad),
+*M*~MPS-4~ = `r mean(alex$R_tot)`, *SD*~MPS-4~ = `r sd(alex$R_tot)`,
+*Robin* (good),
+*M*~MPS-4~ = `r mean(robin$R_tot)`, *SD*~MPS-4~ = `r sd(robin$R_tot)`. There was significant variation depending on the description, *F*(`r test[[1]][["Df"]][1]`,`r test[[1]][["Df"]][2]`) = `r test[[1]][["F value"]][1]`, *p* `r paste(p_report(test[[1]][["Pr(>F)"]][1]))`, partial $\eta$^2^ = `r eta1$Eta2`. Both the *good* characters (*Robin* and *Sam*) were rated significantly more favorably than both the *bad* characters (*Alex* and *Francis*; all *p*s < .001). There were no differences between *Robin* and *Sam* (*good*: *p* `r paste(p_report(tuk$scenario[24]))`) or between *Alex* and *Francis* (*bad*; (*p* > .999)). 
+
+
+
+```{r}
+x <- df3
+# bad <- x[which(x$condition=="diagnostic"),]
+# good <- x[which(x$condition=="non-diagnostic"),]
+#good$scenario_abb <- droplevels(good$scenario_abb)
+
+aov1 <- aov(M1~scenario,data=x)
+aov1$df.residual
+
+test <- summary(aov1)
+test[[1]][["Df"]][1]
+test[[1]][["Df"]][2]
+
+test[[1]][["F value"]][1]
+test[[1]][["Pr(>F)"]][1]
+p_report(test[[1]][["Pr(>F)"]][1])
+
+aov1$effects
+effectsize::eta_squared(aov1)
+eta1 <- effectsize::eta_squared(aov1)
+eta1$Eta2
+(aov1)
+aov1$model
+
+tuk <- TukeyHSD(aov(M1~scenario,data=x))
+round(tuk$scenario[19], digits = 3)
+```
+
+The means and standard deviations for MM-1 for each scenario are as follows: 
+*Sam* (good),
+*M*~MM-1~ = `r mean(sam$M1)`, *SD*~MM-1~ = `r sd(sam$M1)`;
+*Francis* (bad),
+*M*~MM-1~ = `r mean(francis$M1)`, *SD*~MM-1~ = `r sd(francis$M1)`;
+*Alex* (bad),
+*M*~MM-1~ = `r mean(alex$M1)`, *SD*~MM-1~ = `r sd(alex$M1)`;
+*Robin* (good),
+*M*~MM-1~ = `r mean(robin$M1)`, *SD*~MM-1~ = `r sd(robin$M1)`. There was significant variation depending on the description, *F*(`r test[[1]][["Df"]][1]`,`r test[[1]][["Df"]][2]`) = `r test[[1]][["F value"]][1]`, *p* `r paste(p_report(test[[1]][["Pr(>F)"]][1]))`, partial $\eta$^2^ = `r eta1$Eta2`. Both the *good* characters (*Robin* and *Sam*) were rated significantly more favorably than both the *bad* characters (*Alex* and *Francis*; all *p*s < .001). There were no differences between *Robin* and *Sam* (*good*: *p* `r paste(p_report(tuk$scenario[24]))`) or between *Alex* and *Francis* (*bad*; (*p* `r paste(p_report(tuk$scenario[19]))`)). 
+
+### Testing for the Interaction
+
+```{r}
+aov_raw <- aov(R_tot ~ condition*valence,data=x)
+results_anova <- summary(aov_raw)
+aov1 <- as.data.frame(results_anova[[1]])
+aov1$Df
+aov1
+
+f3a <- aov1$`F value`[1]
+f3b <- aov1$`F value`[2]
+f3c <- aov1$`F value`[3]
+p3a <- aov1$`Pr(>F)`[1]
+p3b <- aov1$`Pr(>F)`[2]
+p3c <- aov1$`Pr(>F)`[3]
+
+
+```
+
+We conducted a 2 $\times$ 2 between subjects ANOVA to test for an interaction between valence and condition in predicting MPS-4.
+As expected, on its own, condition did not influence responses to the MPS-4,
+*F*(`r aov1$Df[1]`, `r round(aov1$Df[4])`) = `r f3a`, *p* `r paste(p_report(p3a))`;
+valence significantly predicted responses,
+*F*(`r aov1$Df[2]`, `r round(aov1$Df[4])`) = `r f3b`, *p* `r paste(p_report(p3b))`;
+and there was a significant condition $\times$ valence interaction,
+*F*(`r aov1$Df[3]`, `r round(aov1$Df[4])`) = `r f3c`, *p* `r paste(p_report(p3c))`.
+
+
+
+
+
+
+```{r}
+aov_raw <- aov(M1 ~ condition*valence,data=x)
+results_anova <- summary(aov_raw)
+aov1 <- as.data.frame(results_anova[[1]])
+aov1$Df
+aov1
+
+f3a <- aov1$`F value`[1]
+f3b <- aov1$`F value`[2]
+f3c <- aov1$`F value`[3]
+p3a <- aov1$`Pr(>F)`[1]
+p3b <- aov1$`Pr(>F)`[2]
+p3c <- aov1$`Pr(>F)`[3]
+
+
+```
+
+We conducted a 2 $\times$ 2 between subjects ANOVA to test for an interaction between valence and condition in predicting responses to MM-1.
+As expected, on its own, condition did not influence responses to MM-1,
+*F*(`r aov1$Df[1]`, `r round(aov1$Df[4])`) = `r f3a`, *p* `r paste(p_report(p3a))`;
+valence significantly predicted responses,
+*F*(`r aov1$Df[2]`, `r round(aov1$Df[4])`) = `r f3b`, *p* `r paste(p_report(p3b))`;
+and there was a significant condition $\times$ valence interaction,
+*F*(`r aov1$Df[3]`, `r round(aov1$Df[4])`) = `r f3c`, *p* `r paste(p_report(p3c))`.
+
+
+To interpret the interaction effect, we conducted separate analyses for the Good and Bad descriptions.
+
+
+
+
+## Differences in the *Bad* Descriptions
+
+
+
+```{r}
+x <- df3
+
+x <- x[which(x$valence=="bad"),]
+
+#x <- x[which(x$valence=="good"),]
+
+d1 <- lsr::cohensD(R_tot~condition,x,method="pooled")
+t1 <- t.test(R_tot~condition,x,paired=FALSE)
+#t1 <- t.test(x$R_tot~x$condition,paired=FALSE)
+t1
+d1
+
+dg1 <- x[which(x$condition=="diagnostic"),]
+dg2 <- x[which(x$condition=="non-diagnostic"),]
+
+```
+
+For the *bad* characters, there was no significant difference in responses to MPS-4 between the diagnostic condition (*M* = `r mean(dg1$R_tot)`, *SD* = `r sd(dg1$R_tot)`) and the non-diagnostic condition (*M* = `r mean(dg2$R_tot)`, *SD* = `r sd(dg2$R_tot)`) depending on condition, *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`.
+
+
+
+
+```{r}
+x <- df3
+
+x <- x[which(x$valence=="bad"),]
+
+#x <- x[which(x$valence=="good"),]
+
+d1 <- lsr::cohensD(M1~condition,x,method="pooled")
+t1 <- t.test(M1~condition,x,paired=FALSE)
+#t1 <- t.test(x$R_tot~x$condition,paired=FALSE)
+t1
+d1
+
+dg1 <- x[which(x$condition=="diagnostic"),]
+dg2 <- x[which(x$condition=="non-diagnostic"),]
+
+```
+
+For the *bad* characters, there was no significant difference in responses to MPS-4 between the diagnostic condition (*M* = `r mean(dg1$M1)`, *SD* = `r sd(dg1$M1)`) and the non-diagnostic condition (*M* = `r mean(dg2$M1)`, *SD* = `r sd(dg2$M1)`) depending on condition, *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`.
+
+
+
+## Differences in the *Good* Descriptions
+
+
+```{r}
+x <- df3
+
+#x <- x[which(x$valence=="bad"),]
+
+x <- x[which(x$valence=="good"),]
+
+d1 <- lsr::cohensD(R_tot~condition,x,method="pooled")
+t1 <- t.test(R_tot~condition,x,paired=FALSE)
+#t1 <- t.test(x$R_tot~x$condition,paired=FALSE)
+t1
+d1
+
+dg1 <- x[which(x$condition=="diagnostic"),]
+dg2 <- x[which(x$condition=="non-diagnostic"),]
+
+```
+
+For the *good* characters, there was no significant difference in responses to MPS-4 between the diagnostic condition (*M* = `r mean(dg1$R_tot)`, *SD* = `r sd(dg1$R_tot)`) and the non-diagnostic condition (*M* = `r mean(dg2$R_tot)`, *SD* = `r sd(dg2$R_tot)`) depending on condition, *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`.
+
+
+
+
+```{r}
+x <- df3
+
+#x <- x[which(x$valence=="bad"),]
+
+x <- x[which(x$valence=="good"),]
+
+d1 <- lsr::cohensD(M1~condition,x,method="pooled")
+t1 <- t.test(M1~condition,x,paired=FALSE)
+#t1 <- t.test(x$R_tot~x$condition,paired=FALSE)
+t1
+d1
+
+dg1 <- x[which(x$condition=="diagnostic"),]
+dg2 <- x[which(x$condition=="non-diagnostic"),]
+
+```
+
+For the *good* characters, there was no significant difference in responses to MPS-4 between the diagnostic condition (*M* = `r mean(dg1$M1)`, *SD* = `r sd(dg1$M1)`) and the non-diagnostic condition (*M* = `r mean(dg2$M1)`, *SD* = `r sd(dg2$M1)`) depending on condition, *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`.
+
+
+
+```{r}
+x <- df3
+
+x$Valence <- dplyr::recode(x$valence
+              , "good" = "Good"
+              , "bad" = "Bad")
+
+```
+
+
+```{r S5Rtotconditionplot, fig.cap="Study 3: Differences in MPS-4 depending on condition", include=FALSE}
+
+mps4plot <- 
+ggplot(x,aes(x=condition,y=R_tot))+
+  geom_violin() +
+  stat_summary(fun=mean, geom="point", shape=23, size=2)+
+  geom_boxplot(width=0.1)+
+#  geom_dotplot(binaxis='y', stackdir='center', dotsize=.05)+
+# violin plot with jittered points
+# 0.2 : degree of jitter in x direction
+  geom_jitter(shape=16
+              , position=position_jitter(0.15)
+              , size=.1
+              , color="dark grey") +
+  xlab("Condition") +
+  ylab("MPS-4") +
+  facet_grid(cols = vars(Valence)) +
+  theme_bw() +
+  theme(panel.border = element_blank(),
+        axis.line = element_line(size = .2),
+        strip.background  = element_blank(),
+        panel.grid = element_blank(),
+        plot.title=element_text(#family="Times",
+                                size=12
+                                ),
+        legend.text=element_text(#family="Times",
+                                 size=8
+                                 ),
+          legend.title=element_text(#family="Times",
+                                    size=10
+                                    ),
+          axis.text=element_text(#family="Times",
+                                 colour = "black",
+                                 size=8
+                                 ),
+          axis.ticks.x = element_blank(),
+          axis.title=element_text(#family="Times",
+                                  size=12
+                                  ),
+          strip.text=element_text(#family = "Times",
+                                  size = 12
+                                  ),
+         # strip.background = element_rect(fill = "white"),
+          legend.position="right")
+
+
+
+
+```
+
+
+```{r S5M1conditionplot, fig.cap="Study 3: Differences in MM1 depending on condition", include=FALSE, out.width = "50%"}
+
+M1plot <- 
+  ggplot(x,aes(x=condition,y=M1))+
+  geom_violin() +
+  stat_summary(fun=mean, geom="point", shape=23, size=2)+
+  geom_boxplot(width=0.1)+
+  #  geom_dotplot(binaxis='y', stackdir='center', dotsize=.05)+
+  # violin plot with jittered points
+  # 0.2 : degree of jitter in x direction
+  geom_jitter(shape=16
+              , position=position_jitter(0.15)
+              , size=.1
+              , color="dark grey") +
+  xlab("Condition") +
+  ylab("MM-1")+
+  facet_grid(cols = vars(Valence)) +
+  theme_bw() +
+  theme(panel.border = element_blank(),
+        axis.line = element_line(size = .2),
+        strip.background  = element_blank(),
+        panel.grid = element_blank(),
+        plot.title=element_text(#family="Times",
+          size=12
+        ),
+        legend.text=element_text(#family="Times",
+          size=8
+        ),
+        legend.title=element_text(#family="Times",
+          size=10
+        ),
+        axis.text=element_text(#family="Times",
+          colour = "black",
+          size=8
+        ),
+        axis.ticks.x = element_blank(),
+        axis.title=element_text(#family="Times",
+          size=12
+        ),
+        strip.text=element_text(#family = "Times",
+          size = 12
+        ),
+        # strip.background = element_rect(fill = "white"),
+        legend.position="right")
+
+
+
+
+```
+
+```{r}
+figure <- ggarrange(mps4plot
+                    , M1plot
+                    #,labels = c("A")
+                    , ncol = 1
+                    , nrow = 2
+                    #, widths = c(0.485, 0.5)
+                    )
+figure
+```
+
+
+```{r S5bothconditionplot, fig.cap="Study 3: Differences in moral perception depending on condition", include=TRUE, fig.width = 5, fig.height = 7.5}
+
+suppressWarnings(print(figure))
+
+```
+
+
+In the supplementary analyses we report the effect of condition on moral perception for each description individually.
+
+

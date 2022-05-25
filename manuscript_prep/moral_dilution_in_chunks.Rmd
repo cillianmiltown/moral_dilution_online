@@ -103,6 +103,14 @@ library(reshape2)
 getwd()
 ```
 
+```{r, include=FALSE, echo=FALSE}
+
+# # Stricter Exclusion!!!!!
+
+# - **In the analyses below we adopted a stricter attention check - Participants who failed either attention check were excluded (rather than just those who failed both as per the main analysis and our pre-registration)**
+# - Using the stricter exclusion leads to changes in the results for Study 4, but not for any of the other Studies (I think). I haven't changed the write-up
+
+```
 
 
 ```{r child = 'Introduction.Rmd'}

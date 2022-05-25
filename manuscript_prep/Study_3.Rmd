@@ -137,6 +137,23 @@ length(df3$gender)/4
 att_both <- length(levels(as.factor(df1$ResponseId)))-length(levels(as.factor(df3$ResponseId)))
 ```
 
+
+```{r}
+df_long_clean <- df3
+
+x <- df3
+x$attn_chk_1Q
+x$attn_chk_2_Q
+x <- x[which(x$attn_chk_2_Q==2|x$attn_chk_2_Q==5),]
+x <- x[which(x$attn_chk_1Q==7),]
+df_long_extra_clean <- x
+
+x <- df3
+# 
+# df3 <- x
+# att_both <- length(levels(as.factor(df1$ResponseId)))-length(levels(as.factor(df3$ResponseId)))
+```
+
 Participants who failed both manipulation checks were removed (*n* = `r att_both`), leaving a total sample of `r length(df3$gender)/4` participants (`r sum(df3$gender=="1",na.rm=T)/4` female, `r sum(df3$gender=="2", na.rm=T)/4` male, `r sum(df3$gender=="4", na.rm=T)/4` other, `r sum(df3$gender=="4", na.rm=T)/4` prefer not to say; *M*~age~ = `r round(mean(df3$age, na.rm=T),digits=2)`, min = `r min(df3$age, na.rm=T)`, max = `r max(df3$age, na.rm=T)`, *SD* = `r round(sd(df3$age, na.rm=T),digits=2)`).
 
 
@@ -313,13 +330,13 @@ anova(model1)
 We conducted a linear-mixed-effects model to test if our predictors influenced MPS-4 responses. Our outcome measure was MPS-4, our predictor variables were condition and valence; we allowed intercepts and the effects of condition and valence to vary across participants.
 Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model,
 $\chi$^2^(`r results_anova$Df[2]`) = `r results_anova$Chisq[2]`, *p* `r paste(p_report(p1))`. 
-As expected, on its own, condition did not influence responses to the MPS-4
-, *F*(`r aov1$NumDF[1]`, `r round(aov1$DenDF[1])`) = `r f3a`, *p* `r paste(p_report(p3a))`
-; valence significantly predicted responses,
-, *F*(`r aov1$NumDF[2]`, `r round(aov1$DenDF[2])`) = `r f3b`, *p* `r paste(p_report(p3b))`
-; and there was a significant condition $\times$ valence interaction,
-, *F*(`r aov1$NumDF[3]`, `r round(aov1$DenDF[3])`) = `r f3c`, *p* `r paste(p_report(p3c))`.
-and was not a significant predictor in the model when controlling for scenario, $b$ = `r results_coef$Estimate[2]`, *t*(`r results_coef$df[2]`) = `r t1`, *p* `r paste(p_report(p2))`.
+As expected, on its own, condition did not influence responses to the MPS-4,
+*F*(`r aov1$NumDF[1]`, `r round(aov1$DenDF[1])`) = `r f3a`, *p* `r paste(p_report(p3a))`;
+valence significantly predicted responses,
+*F*(`r aov1$NumDF[2]`, `r round(aov1$DenDF[2])`) = `r f3b`, *p* `r paste(p_report(p3b))`;
+and there was a significant condition $\times$ valence interaction,
+*F*(`r aov1$NumDF[3]`, `r round(aov1$DenDF[3])`) = `r f3c`, *p* `r paste(p_report(p3c))`.
+
 
 
 ```{r}
@@ -387,13 +404,12 @@ anova(model1)
 We conducted a linear-mixed-effects model to test if our predictors influenced MM-1 responses. The model was the same as the previous model, with a change to the outcome measure, our outcome measure for this model was MM-1. As above, our predictor variables were condition and valence; we allowed intercepts and the effects of condition and valence to vary across participants.
 Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model,
 $\chi$^2^(`r results_anova$Df[2]`) = `r results_anova$Chisq[2]`, *p* `r paste(p_report(p1))`. 
-As expected, on its own, condition did not influence responses to the MPS-4
-, *F*(`r aov1$NumDF[1]`, `r round(aov1$DenDF[1])`) = `r f3a`, *p* `r paste(p_report(p3a))`
-; valence significantly predicted responses,
-, *F*(`r aov1$NumDF[2]`, `r round(aov1$DenDF[2])`) = `r f3b`, *p* `r paste(p_report(p3b))`
-; and there was a significant condition $\times$ valence interaction,
-, *F*(`r aov1$NumDF[3]`, `r round(aov1$DenDF[3])`) = `r f3c`, *p* `r paste(p_report(p3c))`.
-and was not a significant predictor in the model when controlling for scenario, $b$ = `r results_coef$Estimate[2]`, *t*(`r results_coef$df[2]`) = `r t1`, *p* `r paste(p_report(p2))`.
+As expected, on its own, condition did not influence responses to the MPS-4,
+*F*(`r aov1$NumDF[1]`, `r round(aov1$DenDF[1])`) = `r f3a`, *p* `r paste(p_report(p3a))`;
+valence significantly predicted responses,
+*F*(`r aov1$NumDF[2]`, `r round(aov1$DenDF[2])`) = `r f3b`, *p* `r paste(p_report(p3b))`;
+and there was a significant condition $\times$ valence interaction,
+*F*(`r aov1$NumDF[3]`, `r round(aov1$DenDF[3])`) = `r f3c`, *p* `r paste(p_report(p3c))`.
 
 ## Differences in the *Bad* Descriptions
 

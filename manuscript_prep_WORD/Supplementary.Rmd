@@ -1,0 +1,63 @@
+---
+title             : "Supplement: Moral Dilution"
+shorttitle        : "Moral Dilution"
+author:
+  - name          : "Cillian McHugh"
+    affiliation   : "1"
+    corresponding : yes    # Define only one corresponding author
+    address       : "University of Limerick, Limerick, Ireland, V94 T9PX"
+    email         : "cillian.mchugh@ul.ie"
+  - name          : "Eric R. Igou"
+    affiliation   : "1"
+affiliation:
+  - id            : "1"
+    institution   : "University of Limerick"
+author_note: >
+  All procedures performed in studies involving human participants were approved by institutional research ethics committee and conducted in accordance with the Code of Professional Ethics of the Psychological Society of Ireland, and with the 1964 Helsinki declaration and its later amendments or comparable ethical standards. Informed consent was obtained from all individual participants included in the study. The authors declare that there are no potential conflicts of interest with respect to the research, authorship, and/or publication of this article. All authors consented to the submission of this manuscript.
+abstract: >
+  five studies
+keywords          : "keywords"
+wordcount         : "TBC"
+bibliography: "../resources/bib/My Library.bib"
+cls: "../resources/bib/apa7.cls"
+figsintext        : yes
+floatsintext      : yes
+figurelist        : yes
+tablelist         : yes
+footnotelist      : no
+lineno            : no
+toc               : false
+lang              : "en-US"
+documentclass     : "apa7"
+output:
+  papaja::apa6_pdf:
+    extra_dependencies: ["float"]
+header-includes:
+- \raggedbottom
+- \usepackage{float}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+knitr::opts_chunk$set(fig.pos = "!p", out.extra = "")
+```
+
+
+# Supplemantary Materials
+
+\newpage
+
+```{r child = 'Supplementary_materials.Rmd'}
+```
+
+\newpage
+
+# Supplemantary Analyses
+
+
+```{r child = 'Supplementary_analyses.Rmd'}
+```
+
+
+
