@@ -369,7 +369,7 @@ dg2 <- x[which(x$condition=="non-diagnostic"),]
 
 ```
 
-For the *bad* characters, there was no significant difference in responses to MPS-4 between the diagnostic condition (*M* = `r mean(dg1$M1)`, *SD* = `r sd(dg1$M1)`) and the non-diagnostic condition (*M* = `r mean(dg2$M1)`, *SD* = `r sd(dg2$M1)`) depending on condition, *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`.
+For the *bad* characters, there was no significant difference in responses to MM-1 between the diagnostic condition (*M* = `r mean(dg1$M1)`, *SD* = `r sd(dg1$M1)`) and the non-diagnostic condition (*M* = `r mean(dg2$M1)`, *SD* = `r sd(dg2$M1)`) depending on condition, *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`.
 
 
 
