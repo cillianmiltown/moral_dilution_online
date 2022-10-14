@@ -149,10 +149,42 @@ x <- x[which(x$attn_chk_1Q==7),]
 df_long_extra_clean <- x
 
 x <- df3
+
 # 
 # df3 <- x
 # att_both <- length(levels(as.factor(df1$ResponseId)))-length(levels(as.factor(df3$ResponseId)))
+
+
+
+
+good <- x[which(x$valence=="good"),]
+bad <- x[which(x$valence=="bad"),]
+
+good$R_tot_recoded <- 7 - good$R_tot
+bad$R_tot_recoded <- bad$R_tot
+
+good$M1_recoded <- 100 - good$M1
+bad$M1_recoded <- bad$M1
+
+df_recoded <- rbind(good,bad)
+
+
+x <- df_long_extra_clean
+
+good <- x[which(x$valence=="good"),]
+bad <- x[which(x$valence=="bad"),]
+
+good$R_tot_recoded <- 7 - good$R_tot
+bad$R_tot_recoded <- bad$R_tot
+
+good$M1_recoded <- 100 - good$M1
+bad$M1_recoded <- bad$M1
+
+df_recoded_extra_clean <- rbind(good,bad)
+
+x <- df_recoded_extra_clean
 ```
+
 
 Participants who failed both manipulation checks were removed (*n* = `r att_both`), leaving a total sample of `r length(df3$gender)/4` participants (`r sum(df3$gender=="1",na.rm=T)/4` female, `r sum(df3$gender=="2", na.rm=T)/4` male, `r sum(df3$gender=="4", na.rm=T)/4` other, `r sum(df3$gender=="4", na.rm=T)/4` prefer not to say; *M*~age~ = `r round(mean(df3$age, na.rm=T),digits=2)`, min = `r min(df3$age, na.rm=T)`, max = `r max(df3$age, na.rm=T)`, *SD* = `r round(sd(df3$age, na.rm=T),digits=2)`).
 
@@ -216,7 +248,7 @@ The means and standard deviations for MPS-4 for each scenario are as follows:
 *Alex* (bad),
 *M*~MPS-4~ = `r mean(alex$R_tot)`, *SD*~MPS-4~ = `r sd(alex$R_tot)`,
 *Robin* (good),
-*M*~MPS-4~ = `r mean(robin$R_tot)`, *SD*~MPS-4~ = `r sd(robin$R_tot)`. There was significant variation depending on the description, *F*(`r round(aov1$DFn)`,`r round(aov1$DFd)`) = `r aov1$F`, *p* `r paste(p_report(aov1$p))`, partial $\eta$^2^ = `r aov1$ges`. Both the *good* characters (*Robin* and *Sam*) were rated significantly more favorably than both the *bad* characters (*Alex* and *Francis*; all *p*s < .001). There were no differences between *Robin* and *Sam* (*good*: *p* `r paste(p_report(pwc$p[6]))`) or between *Alex* and *Francis* (*bad*; (*p* `r paste(p_report(pwc$p[1]))`)). 
+*M*~MPS-4~ = `r mean(robin$R_tot)`, *SD*~MPS-4~ = `r sd(robin$R_tot)`. There was significant variation depending on the description, *F*(`r round(aov1$DFn)`,`r round(aov1$DFd)`) = `r aov1$F`, *p* `r paste(p_report(aov1$p))`, partial $\eta$^2^ = `r aov1$ges`. Both the *good* characters (*Robin* and *Sam*) were rated significantly more favorably than both the *bad* characters (*Alex* and *Francis*; all *p*s < .001). There were no differences between *Robin* and *Sam* (*good*: *p* `r paste(p_report(pwc$p[6]))`) or between *Alex* and *Francis* (*bad*; *p* `r paste(p_report(pwc$p[1]))`). 
 
 
 
@@ -261,13 +293,15 @@ The means and standard deviations for MM-1 for each scenario are as follows:
 *Alex* (bad),
 *M*~MM-1~ = `r mean(alex$M1)`, *SD*~MM-1~ = `r sd(alex$M1)`;
 *Robin* (good),
-*M*~MM-1~ = `r mean(robin$M1)`, *SD*~MM-1~ = `r sd(robin$M1)`. There was significant variation depending on the description, *F*(`r round(aov1$DFn)`,`r round(aov1$DFd)`) = `r aov1$F`, *p* `r paste(p_report(aov1$p))`, partial $\eta$^2^ = `r paste(aov1$ges)`. Again, the *good* characters (*Robin* and *Sam*) were rated significantly more favorably than the *bad* characters (*Alex* and *Francis*; all *p*s < .001). There were no differences between *Robin* and *Sam* (*good*: *p* `r paste(p_report(pwc$p[6]))`) or between *Alex* and *Francis* (*bad*; (*p* `r paste(p_report(pwc$p[1]))`)). 
+*M*~MM-1~ = `r mean(robin$M1)`, *SD*~MM-1~ = `r sd(robin$M1)`. There was significant variation depending on the description, *F*(`r round(aov1$DFn)`,`r round(aov1$DFd)`) = `r aov1$F`, *p* `r paste(p_report(aov1$p))`, partial $\eta$^2^ = `r paste(aov1$ges)`. Again, the *good* characters (*Robin* and *Sam*) were rated significantly more favorably than the *bad* characters (*Alex* and *Francis*; all *p*s < .001). There were no differences between *Robin* and *Sam* (*good*: *p* `r paste(p_report(pwc$p[6]))`) or between *Alex* and *Francis* (*bad*; *p* `r paste(p_report(pwc$p[1]))`). 
 
 
 
 ```{r}
 x <- df3
-model0 <- lmerTest::lmer(R_tot ~ 1
+x <- df_recoded
+
+model0 <- lmerTest::lmer(R_tot_recoded ~ 1
                 #   condition
                  + (1|ResponseId)
                 # + (1|ResponseId:condition)
@@ -286,7 +320,7 @@ model1 <- lmerTest::lmer(R_tot ~
 
 
 
-model1 <- lmerTest::lmer(R_tot ~
+model1 <- lmerTest::lmer(R_tot_recoded ~
                   condition*valence
                 + (1|ResponseId)
                 + (1|ResponseId:condition)
@@ -330,17 +364,17 @@ anova(model1)
 We conducted a linear-mixed-effects model to test if our predictors influenced MPS-4 responses. Our outcome measure was MPS-4, our predictor variables were condition and valence; we allowed intercepts and the effects of condition and valence to vary across participants.
 Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model,
 $\chi$^2^(`r results_anova$Df[2]`) = `r results_anova$Chisq[2]`, *p* `r paste(p_report(p1))`. 
-As expected, on its own, condition did not influence responses to the MPS-4,
+Overall, there was a significant main effect for condition,
 *F*(`r aov1$NumDF[1]`, `r round(aov1$DenDF[1])`) = `r f3a`, *p* `r paste(p_report(p3a))`;
 valence significantly predicted responses,
 *F*(`r aov1$NumDF[2]`, `r round(aov1$DenDF[2])`) = `r f3b`, *p* `r paste(p_report(p3b))`;
-and there was a significant condition $\times$ valence interaction,
+and there was no significant condition $\times$ valence interaction,
 *F*(`r aov1$NumDF[3]`, `r round(aov1$DenDF[3])`) = `r f3c`, *p* `r paste(p_report(p3c))`.
-
 
 
 ```{r}
 x <- df3
+x <- df_recoded
 model0 <- lmerTest::lmer(M1 ~ 1
                 #   condition
                  + (1|ResponseId)
@@ -360,7 +394,7 @@ model1 <- lmerTest::lmer(M1 ~
 
 
 
-model1 <- lmerTest::lmer(M1 ~
+model1 <- lmerTest::lmer(M1_recoded ~
                   condition*valence
                 + (1|ResponseId)
                 + (1|ResponseId:condition)
@@ -404,16 +438,18 @@ anova(model1)
 We conducted a linear-mixed-effects model to test if our predictors influenced MM-1 responses. The model was the same as the previous model, with a change to the outcome measure, our outcome measure for this model was MM-1. As above, our predictor variables were condition and valence; we allowed intercepts and the effects of condition and valence to vary across participants.
 Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model,
 $\chi$^2^(`r results_anova$Df[2]`) = `r results_anova$Chisq[2]`, *p* `r paste(p_report(p1))`. 
-As expected, on its own, condition did not influence responses to the MPS-4,
+Overall there was a main effect for condition,
 *F*(`r aov1$NumDF[1]`, `r round(aov1$DenDF[1])`) = `r f3a`, *p* `r paste(p_report(p3a))`;
 valence significantly predicted responses,
 *F*(`r aov1$NumDF[2]`, `r round(aov1$DenDF[2])`) = `r f3b`, *p* `r paste(p_report(p3b))`;
-and there was a significant condition $\times$ valence interaction,
+and there was no significant condition $\times$ valence interaction,
 *F*(`r aov1$NumDF[3]`, `r round(aov1$DenDF[3])`) = `r f3c`, *p* `r paste(p_report(p3c))`.
+
+For both MP-4 and MM-1 we found a main effect for condition and valence, and there was no condition $\times$ valence interaction. We conducted follow-up analyses to test the if the main effect for condition holds for both good and bad descriptions separately.
+
 
 ## Differences in the *Bad* Descriptions
 
-To interpret the interaction effect, we conducted separate analyses for the Good and Bad descriptions.
 
 
 

@@ -57,6 +57,7 @@ library(citr)
 library(plyr)
 library(foreign)
 library(car)
+#devtools::install_github("cillianmiltown/R_desnum")
 library(desnum)
 library(ggplot2)
 library(extrafont)
@@ -139,6 +140,25 @@ att_both <- length(levels(as.factor(df1$ResponseId)))-length(levels(as.factor(df
 ```
 
 
+
+```{r}
+x$valence
+
+good <- x[which(x$valence=="good"),]
+bad <- x[which(x$valence=="bad"),]
+
+good$R_tot_recoded <- 7 - good$R_tot
+bad$R_tot_recoded <- bad$R_tot
+
+good$M1_recoded <- 100 - good$M1
+bad$M1_recoded <- bad$M1
+
+df_recoded <- rbind(good,bad)
+
+x <- df_recoded
+```
+
+
 ```{r}
 df_long_clean <- df3
 
@@ -150,6 +170,23 @@ x <- x[which(x$attn_chk_1Q==7),]
 df_long_extra_clean <- x
 
 x <- df3
+
+
+
+x <- df_long_extra_clean
+
+good <- x[which(x$valence=="good"),]
+bad <- x[which(x$valence=="bad"),]
+
+good$R_tot_recoded <- 7 - good$R_tot
+bad$R_tot_recoded <- bad$R_tot
+
+good$M1_recoded <- 100 - good$M1
+bad$M1_recoded <- bad$M1
+
+df_recoded_extra_clean <- rbind(good,bad)
+
+x <- df_recoded_extra_clean
 # 
 # df3 <- x
 # att_both <- length(levels(as.factor(df1$ResponseId)))-length(levels(as.factor(df3$ResponseId)))
@@ -261,14 +298,74 @@ The means and standard deviations for MM-1 for each scenario are as follows:
 *Robin* (good),
 *M*~MM-1~ = `r mean(robin$M1)`, *SD*~MM-1~ = `r sd(robin$M1)`. There was significant variation depending on the description, *F*(`r test[[1]][["Df"]][1]`,`r test[[1]][["Df"]][2]`) = `r test[[1]][["F value"]][1]`, *p* `r paste(p_report(test[[1]][["Pr(>F)"]][1]))`, partial $\eta$^2^ = `r eta1$Eta2`. Both the *good* characters (*Robin* and *Sam*) were rated significantly more favorably than both the *bad* characters (*Alex* and *Francis*; all *p*s < .001). There were no differences between *Robin* and *Sam* (*good*: *p* `r paste(p_report(tuk$scenario[24]))`) or between *Alex* and *Francis* (*bad*; (*p* `r paste(p_report(tuk$scenario[19]))`)). 
 
+
+```{r}
+
+table(sam$condition)
+table(sam$valence)
+
+table(robin$condition)
+table(robin$valence)
+
+table(francis$condition)
+table(francis$valence)
+
+table(alex$condition)
+table(alex$valence)
+
+
+y <- sam
+
+
+y$scenario[1]
+
+freq_table <- function(x){
+  y <- x
+  `colnames<-`(
+  rbind.data.frame(
+  c(y$valence[1], y$scenario[1],sum(y$condition=="non-diagnostic"),sum(y$condition=="diagnostic"),length(y$ResponseId)),
+  c("","","","","")
+  ),
+  c("valence","scenario","non-diagnostic","diagnostic","total")
+  )[1,]
+  
+}
+
+
+freq_table(sam)
+`colnames<-`(freq_table(sam),c("valence","scenario","non-diagnostic","diagnostic"))
+
+rbind(freq_table(sam)
+      ,freq_table(robin)
+      ,c("good","total"
+         ,sum(sam$condition=="non-diagnostic")+sum(robin$condition=="non-diagnostic")
+         ,sum(sam$condition=="diagnostic")+sum(robin$condition=="diagnostic")
+         ,sum(df3$valence=="good"))
+      ,freq_table(francis)
+      ,freq_table(alex)
+      ,c("bad","total"
+         ,sum(francis$condition=="non-diagnostic")+sum(alex$condition=="non-diagnostic")
+         ,sum(francis$condition=="diagnostic")+sum(alex$condition=="diagnostic")
+         ,sum(df3$valence=="bad"))
+      )
+
+```
+
+
 ### Testing for the Interaction
 
 ```{r}
-aov_raw <- aov(R_tot ~ condition*valence,data=x)
+x <- df_recoded
+#x <- df_recoded_extra_clean
+
+
+aov_raw <- aov(R_tot_recoded ~ condition*valence,data=x)
 results_anova <- summary(aov_raw)
 aov1 <- as.data.frame(results_anova[[1]])
 aov1$Df
 aov1
+
+lsr::etaSquared(aov_raw)
 
 f3a <- aov1$`F value`[1]
 f3b <- aov1$`F value`[2]
@@ -281,11 +378,11 @@ p3c <- aov1$`Pr(>F)`[3]
 ```
 
 We conducted a 2 $\times$ 2 between subjects ANOVA to test for an interaction between valence and condition in predicting MPS-4.
-As expected, on its own, condition did not influence responses to the MPS-4,
+Condition significantly influenced responses to the MPS-4,
 *F*(`r aov1$Df[1]`, `r round(aov1$Df[4])`) = `r f3a`, *p* `r paste(p_report(p3a))`;
 valence significantly predicted responses,
 *F*(`r aov1$Df[2]`, `r round(aov1$Df[4])`) = `r f3b`, *p* `r paste(p_report(p3b))`;
-and there was a significant condition $\times$ valence interaction,
+and there was no significant condition $\times$ valence interaction,
 *F*(`r aov1$Df[3]`, `r round(aov1$Df[4])`) = `r f3c`, *p* `r paste(p_report(p3c))`.
 
 
@@ -294,11 +391,14 @@ and there was a significant condition $\times$ valence interaction,
 
 
 ```{r}
-aov_raw <- aov(M1 ~ condition*valence,data=x)
+aov_raw <- aov(M1_recoded ~ condition*valence,data=x)
 results_anova <- summary(aov_raw)
 aov1 <- as.data.frame(results_anova[[1]])
 aov1$Df
 aov1
+
+lsr::etaSquared(aov_raw)
+
 
 f3a <- aov1$`F value`[1]
 f3b <- aov1$`F value`[2]
@@ -311,18 +411,14 @@ p3c <- aov1$`Pr(>F)`[3]
 ```
 
 We conducted a 2 $\times$ 2 between subjects ANOVA to test for an interaction between valence and condition in predicting responses to MM-1.
-As expected, on its own, condition did not influence responses to MM-1,
+Condition significantly influenced responses to MM-1,
 *F*(`r aov1$Df[1]`, `r round(aov1$Df[4])`) = `r f3a`, *p* `r paste(p_report(p3a))`;
 valence significantly predicted responses,
 *F*(`r aov1$Df[2]`, `r round(aov1$Df[4])`) = `r f3b`, *p* `r paste(p_report(p3b))`;
-and there was a significant condition $\times$ valence interaction,
+and there was no significant condition $\times$ valence interaction,
 *F*(`r aov1$Df[3]`, `r round(aov1$Df[4])`) = `r f3c`, *p* `r paste(p_report(p3c))`.
 
-
-To interpret the interaction effect, we conducted separate analyses for the Good and Bad descriptions.
-
-
-
+As in previous studied we conducted separate analyses for the good and bad descriptions.
 
 ## Differences in the *Bad* Descriptions
 
@@ -330,6 +426,8 @@ To interpret the interaction effect, we conducted separate analyses for the Good
 
 ```{r}
 x <- df3
+# x <- df_recoded_extra_clean
+# x <- df_long_extra_clean
 
 x <- x[which(x$valence=="bad"),]
 
@@ -353,7 +451,7 @@ For the *bad* characters, there was no significant difference in responses to MP
 
 ```{r}
 x <- df3
-
+x <- df_long_extra_clean
 x <- x[which(x$valence=="bad"),]
 
 #x <- x[which(x$valence=="good"),]
@@ -369,7 +467,7 @@ dg2 <- x[which(x$condition=="non-diagnostic"),]
 
 ```
 
-For the *bad* characters, there was no significant difference in responses to MPS-4 between the diagnostic condition (*M* = `r mean(dg1$M1)`, *SD* = `r sd(dg1$M1)`) and the non-diagnostic condition (*M* = `r mean(dg2$M1)`, *SD* = `r sd(dg2$M1)`) depending on condition, *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`.
+For the *bad* characters, there was no significant difference in responses to MM-1 between the diagnostic condition (*M* = `r mean(dg1$M1)`, *SD* = `r sd(dg1$M1)`) and the non-diagnostic condition (*M* = `r mean(dg2$M1)`, *SD* = `r sd(dg2$M1)`) depending on condition, *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`.
 
 
 

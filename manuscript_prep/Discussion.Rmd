@@ -49,6 +49,7 @@ knitr::opts_chunk$set(echo = FALSE, include = FALSE)
 
 ```{r}
 library("papaja")
+library(metap)
 #library("wordcountaddin")
 #wordcountaddin::word_count("Introduction.Rmd")
 getwd()
@@ -71,6 +72,18 @@ all_ps <-
     ,.002 , .0001  # Study 5 Good
 )
 
+
+
+all_ps <-
+  c(# MPS-4  MM-1
+     .0001#, .0001  # Study 1
+    ,.624 #, .267   # Study 2
+    ,.060 #, .008   # Study 3 Bad
+    ,.009 #, .0001  # Study 3 Good
+    ,.095 #, .029   # Study 4
+    ,.221 #, .140   # Study 5 Bad
+    ,.002 #, .0001  # Study 5 Good
+)
 
 all_ns <- 
   c(

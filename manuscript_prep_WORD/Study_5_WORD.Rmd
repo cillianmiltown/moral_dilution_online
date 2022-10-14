@@ -140,6 +140,23 @@ att_both <- length(levels(as.factor(df1$ResponseId)))-length(levels(as.factor(df
 
 
 ```{r}
+x$valence
+
+good <- x[which(x$valence=="good"),]
+bad <- x[which(x$valence=="bad"),]
+
+good$R_tot_recoded <- 7 - good$R_tot
+bad$R_tot_recoded <- bad$R_tot
+
+good$M1_recoded <- 100 - good$M1
+bad$M1_recoded <- bad$M1
+
+df_recoded <- rbind(good,bad)
+
+x <- df_recoded
+```
+
+```{r}
 df_long_clean <- df3
 
 x <- df3
@@ -150,6 +167,24 @@ x <- x[which(x$attn_chk_1Q==7),]
 df_long_extra_clean <- x
 
 x <- df3
+
+
+
+x <- df_long_extra_clean
+
+good <- x[which(x$valence=="good"),]
+bad <- x[which(x$valence=="bad"),]
+
+good$R_tot_recoded <- 7 - good$R_tot
+bad$R_tot_recoded <- bad$R_tot
+
+good$M1_recoded <- 100 - good$M1
+bad$M1_recoded <- bad$M1
+
+df_recoded_extra_clean <- rbind(good,bad)
+
+x <- df_recoded_extra_clean
+
 # 
 # df3 <- x
 # att_both <- length(levels(as.factor(df1$ResponseId)))-length(levels(as.factor(df3$ResponseId)))
@@ -264,7 +299,11 @@ The means and standard deviations for MM-1 for each scenario are as follows:
 ### Testing for the Interaction
 
 ```{r}
-aov_raw <- aov(R_tot ~ condition*valence,data=x)
+x <- df_recoded
+#x <- df_recoded_extra_clean
+
+
+aov_raw <- aov(R_tot_recoded ~ condition*valence,data=x)
 results_anova <- summary(aov_raw)
 aov1 <- as.data.frame(results_anova[[1]])
 aov1$Df
@@ -281,11 +320,11 @@ p3c <- aov1$`Pr(>F)`[3]
 ```
 
 We conducted a 2 $\times$ 2 between subjects ANOVA to test for an interaction between valence and condition in predicting MPS-4.
-As expected, on its own, condition did not influence responses to the MPS-4,
+Condition significantly influenced responses to the MPS-4,
 *F*(`r aov1$Df[1]`, `r round(aov1$Df[4])`) = `r f3a`, *p* `r paste(p_report(p3a))`;
 valence significantly predicted responses,
 *F*(`r aov1$Df[2]`, `r round(aov1$Df[4])`) = `r f3b`, *p* `r paste(p_report(p3b))`;
-and there was a significant condition $\times$ valence interaction,
+and there was no significant condition $\times$ valence interaction,
 *F*(`r aov1$Df[3]`, `r round(aov1$Df[4])`) = `r f3c`, *p* `r paste(p_report(p3c))`.
 
 
@@ -294,7 +333,7 @@ and there was a significant condition $\times$ valence interaction,
 
 
 ```{r}
-aov_raw <- aov(M1 ~ condition*valence,data=x)
+aov_raw <- aov(M1_recoded ~ condition*valence,data=x)
 results_anova <- summary(aov_raw)
 aov1 <- as.data.frame(results_anova[[1]])
 aov1$Df
@@ -318,10 +357,7 @@ valence significantly predicted responses,
 and there was a significant condition $\times$ valence interaction,
 *F*(`r aov1$Df[3]`, `r round(aov1$Df[4])`) = `r f3c`, *p* `r paste(p_report(p3c))`.
 
-
-To interpret the interaction effect, we conducted separate analyses for the Good and Bad descriptions.
-
-
+We conducted follow-up analyses to test for the effect of condition across good and bad descriptions separately.
 
 
 ## Differences in the *Bad* Descriptions

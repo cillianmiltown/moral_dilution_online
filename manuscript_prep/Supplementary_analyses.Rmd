@@ -1342,7 +1342,27 @@ length(df1$gender)/6
 length(levels(as.factor(df1$ResponseId)))-length(levels(as.factor(df3$ResponseId)))
 length(df3$gender)/4
 
+
 att_both <- length(levels(as.factor(df1$ResponseId)))-length(levels(as.factor(df3$ResponseId)))
+
+
+x <- df3
+good <- x[which(x$valence=="good"),]
+bad <- x[which(x$valence=="bad"),]
+
+good$R_tot_recoded <- 7 - good$R_tot
+bad$R_tot_recoded <- bad$R_tot
+
+good$M1_recoded <- 100 - good$M1
+bad$M1_recoded <- bad$M1
+
+df_recoded <- rbind(good,bad)
+
+x <- df_recoded
+
+x$M1R_tot_recoded <- scale(scale(x$R_tot_recoded)+scale(x$M1_recoded))
+df_recoded <- x
+
 ```
 
 
@@ -1403,7 +1423,8 @@ The means and standard deviations for the combined measure for each scenario are
 
 ```{r}
 x <- df3
-model0 <- lmerTest::lmer(M1R_tot ~ 1
+x <- df_recoded
+model0 <- lmerTest::lmer(M1R_tot_recoded ~ 1
                 #   condition
                  + (1|ResponseId)
                 # + (1|ResponseId:condition)
@@ -1412,7 +1433,7 @@ model0 <- lmerTest::lmer(M1R_tot ~ 1
             )
 
 summary(model0)
-model1 <- lmerTest::lmer(M1R_tot ~
+model1 <- lmerTest::lmer(M1R_tot_recoded ~
                   condition*scenario
                 + (1|ResponseId)
                 + (1|ResponseId:condition)
@@ -1422,7 +1443,7 @@ model1 <- lmerTest::lmer(M1R_tot ~
 
 
 
-model1 <- lmerTest::lmer(M1R_tot ~
+model1 <- lmerTest::lmer(M1R_tot_recoded ~
                   condition*valence
                 + (1|ResponseId)
                 + (1|ResponseId:condition)
@@ -1466,13 +1487,13 @@ anova(model1)
 We conducted a linear-mixed-effects model to test if our predictors influenced responses on the combined moral perception measure. Our outcome measure was the combined moral perception measure, our predictor variables were condition and valence; we allowed intercepts and the effects of condition and valence to vary across participants.
 Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model,
 $\chi$^2^(`r results_anova$Df[2]`) = `r results_anova$Chisq[2]`, *p* `r paste(p_report(p1))`. 
-As expected, on its own, condition did not influence responses to the combined moral perception measure
-, *F*(`r aov1$NumDF[1]`, `r round(aov1$DenDF[1])`) = `r f3a`, *p* `r paste(p_report(p3a))`
-; valence significantly predicted responses,
-, *F*(`r aov1$NumDF[2]`, `r round(aov1$DenDF[2])`) = `r f3b`, *p* `r paste(p_report(p3b))`
-; and there was a significant condition $\times$ valence interaction,
-, *F*(`r aov1$NumDF[3]`, `r round(aov1$DenDF[3])`) = `r f3c`, *p* `r paste(p_report(p3c))`.
-and was not a significant predictor in the model when controlling for scenario, $b$ = `r results_coef$Estimate[2]`, *t*(`r results_coef$df[2]`) = `r t1`, *p* `r paste(p_report(p2))`, see Figure\ \@ref(fig:S3combinedplot).
+Condition significantly influenced responses to the combined moral perception measure,
+*F*(`r aov1$NumDF[1]`, `r round(aov1$DenDF[1])`) = `r f3a`, *p* `r paste(p_report(p3a))`
+and was a significant predictor in the model when controlling for scenario, $b$ = `r results_coef$Estimate[2]`, *t*(`r results_coef$df[2]`) = `r t1`, *p* `r paste(p_report(p2))`;
+valence significantly predicted responses,
+*F*(`r aov1$NumDF[2]`, `r round(aov1$DenDF[2])`) = `r f3b`, *p* `r paste(p_report(p3b))`;
+and there was no significant condition $\times$ valence interaction,
+*F*(`r aov1$NumDF[3]`, `r round(aov1$DenDF[3])`) = `r f3c`, *p* `r paste(p_report(p3c))`, see Figure\ \@ref(fig:S3combinedplot).
 
 
 ```{r}
@@ -2294,6 +2315,26 @@ length(levels(as.factor(df1$ResponseId)))-length(levels(as.factor(df3$ResponseId
 length(df3$gender)/4
 
 att_both <- length(levels(as.factor(df1$ResponseId)))-length(levels(as.factor(df3$ResponseId)))
+
+x <- df3
+good <- x[which(x$valence=="good"),]
+bad <- x[which(x$valence=="bad"),]
+
+good$R_tot_recoded <- 7 - good$R_tot
+bad$R_tot_recoded <- bad$R_tot
+
+good$M1_recoded <- 100 - good$M1
+bad$M1_recoded <- bad$M1
+
+df_recoded <- rbind(good,bad)
+
+x <- df_recoded
+
+
+x$M1R_tot_recoded <- scale(scale(x$R_tot_recoded)+scale(x$M1_recoded))
+df_recoded <- x
+
+
 ```
 
 
@@ -2349,9 +2390,10 @@ The means and standard deviations for the combined measure for each scenario are
 
 
 ```{r}
-x <- df3
+#x <- df3
+x <- df_recoded
 
-aov_raw <- aov(M1R_tot ~ condition*valence,data=x)
+aov_raw <- aov(M1R_tot_recoded ~ condition*valence,data=x)
 results_anova <- summary(aov_raw)
 aov1 <- as.data.frame(results_anova[[1]])
 aov1$Df
@@ -2368,12 +2410,12 @@ p3c <- aov1$`Pr(>F)`[3]
 ```
 
 We conducted a 2 $\times$ 2 between subjects ANOVA to test for an interaction between valence and condition.
-As expected, on its own, condition did not influence responses to the MPS-4
-, *F*(`r aov1$Df[1]`, `r round(aov1$Df[4])`) = `r f3a`, *p* `r paste(p_report(p3a))`
-; valence significantly predicted responses,
-, *F*(`r aov1$Df[2]`, `r round(aov1$Df[4])`) = `r f3b`, *p* `r paste(p_report(p3b))`
-; and there was a significant condition $\times$ valence interaction,
-, *F*(`r aov1$Df[3]`, `r round(aov1$Df[4])`) = `r f3c`, *p* `r paste(p_report(p3c))`.
+Condition did not influence responses to the combined measure,
+*F*(`r aov1$Df[1]`, `r round(aov1$Df[4])`) = `r f3a`, *p* `r paste(p_report(p3a))`;
+valence significantly predicted responses,
+*F*(`r aov1$Df[2]`, `r round(aov1$Df[4])`) = `r f3b`, *p* `r paste(p_report(p3b))`;
+and there was no significant condition $\times$ valence interaction,
+*F*(`r aov1$Df[3]`, `r round(aov1$Df[4])`) = `r f3c`, *p* `r paste(p_report(p3c))`.
 
 
 
