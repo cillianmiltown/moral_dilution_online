@@ -3,12 +3,11 @@
 \PassOptionsToPackage{hyphens}{url}
 %
 \documentclass[
-  american,
-  man,mask,floatsintext]{apa6}
+  man,floatsintext]{apa6}
+\usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{amssymb,amsmath}
-\usepackage{ifxetex,ifluatex}
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+\usepackage{iftex}
+\ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
@@ -34,15 +33,7 @@
   \KOMAoptions{parskip=half}}
 \makeatother
 \usepackage{xcolor}
-\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
-\hypersetup{
-  pdftitle={Supplement: Moral Dilution},
-  pdflang={en-US},
-  hidelinks,
-  pdfcreator={LaTeX via pandoc}}
-\urlstyle{same} % disable monospaced font for URLs
-\usepackage{graphicx,grffile}
+\usepackage{graphicx}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
 \def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
@@ -68,6 +59,38 @@
   \let\oldsubparagraph\subparagraph
   \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newlength{\cslentryspacingunit} % times entry-spacing
+\setlength{\cslentryspacingunit}{\parskip}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+  \let\oldpar\par
+  \def\par{\hangindent=\cslhangindent\oldpar}
+  \fi
+  % set entry spacing
+  \setlength{\parskip}{#2\cslentryspacingunit}
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+\ifLuaTeX
+\usepackage[bidi=basic]{babel}
+\else
+\usepackage[bidi=default]{babel}
+\fi
+\babelprovide[main,import]{english}
+% get rid of language-specific shorthands (see #6817):
+\let\LanguageShortHands\languageshorthands
+\def\languageshorthands#1{}
 % Manuscript styling
 \usepackage{upgreek}
 \captionsetup{font=singlespacing,justification=justified}
@@ -132,29 +155,26 @@
     {}{\InnerPatchFailed}%
   }
 {}{\PatchFailed}
+\keywords{keywords\newline\indent Word count: X}
+\usepackage{lineno}
+
+\linenumbers
 \usepackage{csquotes}
-\usepackage[titles]{tocloft}
-\cftpagenumbersoff{figure}
-\renewcommand{\cftfigpresnum}{\itshape\figurename\enspace}
-\renewcommand{\cftfigaftersnum}{.\space}
-\setlength{\cftfigindent}{0pt}
-\setlength{\cftafterloftitleskip}{0pt}
-\settowidth{\cftfignumwidth}{Figure 10.\qquad}
-\cftpagenumbersoff{table}
-\renewcommand{\cfttabpresnum}{\itshape\tablename\enspace}
-\renewcommand{\cfttabaftersnum}{.\space}
-\setlength{\cfttabindent}{0pt}
-\setlength{\cftafterloftitleskip}{0pt}
-\settowidth{\cfttabnumwidth}{Table 10.\qquad}
 \raggedbottom
 \usepackage{float}
-\ifxetex
-  % Load polyglossia as late as possible: uses bidi with RTL langages (e.g. Hebrew, Arabic)
-  \usepackage{polyglossia}
-  \setmainlanguage[variant=american]{english}
-\else
-  \usepackage[shorthands=off,main=american]{babel}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
 \fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Supplement: Moral Dilution},
+  pdfauthor={Cillian McHugh1 \& Eric R. Igou1},
+  pdflang={en-EN},
+  pdfkeywords={keywords},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
 
 \title{Supplement: Moral Dilution}
 \author{Cillian McHugh\textsuperscript{1} \& Eric R. Igou\textsuperscript{1}}
@@ -165,6 +185,10 @@
 
 \authornote{
 
+Department of Psychology, University of Limerick.
+
+All procedures performed in studies involving human participants were approved by institutional research ethics committee and conducted in accordance with the Code of Professional Ethics of the Psychological Society of Ireland, and with the 1964 Helsinki declaration and its later amendments or comparable ethical standards. Informed consent was obtained from all individual participants included in the study. The authors declare that there are no potential conflicts of interest with respect to the research, authorship, and/or publication of this article. All authors consented to the submission of this manuscript.
+
 Correspondence concerning this article should be addressed to Cillian McHugh, University of Limerick, Limerick, Ireland, V94 T9PX. E-mail: \href{mailto:cillian.mchugh@ul.ie}{\nolinkurl{cillian.mchugh@ul.ie}}
 
 }
@@ -172,13 +196,149 @@ Correspondence concerning this article should be addressed to Cillian McHugh, Un
 \affiliation{\vspace{0.5cm}\textsuperscript{1} University of Limerick}
 
 \abstract{%
-Supplementary analysis to accompany the manuscript The Moral Dilution Effect: Irrelevant Information Influences Judgments of Moral Character
+Supplementary analysis to accompany the manuscript The Moral Dilution Effect: Irrelevant Information Influences Judgments of Moral Character.
 }
 
 
 
 \begin{document}
 \maketitle
+
+\hypertarget{pilot-study-1}{%
+\section{Pilot Study 1}\label{pilot-study-1}}
+
+The aim of this pilot study was to develop and test materials that could be used to study the dilution effect for moral characters. We developed diagnostic and non-diagnostic character descriptions. We hypothesized that moral evaluations of the diagnostic descriptions would be more severe (more immoral) than for the non-diagnostic descriptions.
+
+\hypertarget{pilot-study-1-method}{%
+\subsection{Pilot Study 1: Method}\label{pilot-study-1-method}}
+
+\hypertarget{pilot-1-participants-and-design}{%
+\subsubsection{Pilot 1: Participants and design}\label{pilot-1-participants-and-design}}
+
+The pilot study was a within-subjects design. The independent variable was description type with two levels, \emph{diagnostic} and \emph{non-diagnostic}. We used two dependent variables. The first dependent variable was the four item moral perception scale (MPS-4), participants rated the characters on four dimensions using 7-point bipolar scales. The dimensions and scale endpoints were: Bad-Good, Immoral-Moral, Violent-Peaceful, Merciless-Empathetic, this showed excellent reliability, \(\alpha\) = 0.93. The second dependent variable was a single item moral perception measure (MM-1) which consisted of a 100-point slider ranging from 0 = \emph{Very Immoral} to 100 = \emph{Very Moral}. Both dependent variables were taken from Walker et al. (2021).
+
+A total sample of 235 (89 female, 142 male, 1 non-binary, 1 prefer not to say; \emph{M}\textsubscript{age} = 36.45, min = 20, max = 72, \emph{SD} = 10.23) started the survey. Participants were recruited from MTurk.
+
+We removed participants who failed both manipulation checks (\emph{n} = 23), leaving a total sample of 212 participants (80 female, 128 male, 1 non-binary, 1 prefer not to say; \emph{M}\textsubscript{age} = 36.63, min = 20, max = 72, \emph{SD} = 10.34).
+
+\hypertarget{pilot-1-procedure-and-materials}{%
+\subsubsection{Pilot 1: Procedure and materials}\label{pilot-1-procedure-and-materials}}
+
+Data were collected using an online questionnaire presented with Qualtrics (www.qualtrics.com). Participants were presented with descriptions of six characters.
+
+Moral character descriptions were developed by combining descriptions relating to three different moral foundations. These descriptions were adapted from the items of the extended character morality questionnaire (Grizzard et al., 2020), and read as follows: (i) \emph{Imagine a person named Sam. Throughout their life they have been known to be cruel, act unfairly, and to betray their own group}; (ii) \emph{Imagine a person named Robin. Throughout their life they have been known to physically hurt others, treat some people differently to others, and show lack of loyalty}; (iii) \emph{Imagine a person named Francis. Throughout their life they have been known to violate the standards of purity and decency, show lack of respect for authority, and treat people unequally} (iv) \emph{Imagine a person named Alex. Throughout their life they have been known to cause others to suffer emotionally, to deny others their rights, and to cause chaos or disorder}.
+
+We developed neutral descriptions that included information relating to physical appearance/attributes, hobbies/activities, and family information that read as follows: (i) \emph{Imagine a person named Jackie. They have red hair, play tennis four times a month, and have one older sibling and one younger sibling}; (ii) \emph{Imagine a person named Charlie. They are left-handed, drink tea in the morning, and have two older siblings and one younger sibling}.
+
+Character descriptions did not specify the gender of the charcters, and all characters had names that could be either male or female (Sam, Robin, Francis, Alex, Jackie, Charlie). All participants read six descriptions, four moral descriptions and two neutral. Pilot Study 1 was pre-registered at \color{blue}\url{https://aspredicted.org/3VK_8FD}\color{black}.
+
+\hypertarget{pilot-1-results}{%
+\subsection{Pilot 1: Results}\label{pilot-1-results}}
+
+The means and standard deviations for MPS-4 for each scenario are as follows:
+\emph{Sam} (diagnostic),
+\emph{M}\textsubscript{MPS-4} = 4.35, \emph{SD}\textsubscript{MPS-4} = 1.90,
+\emph{Francis} (diagnostic),
+\emph{M}\textsubscript{MPS-4} = 4.46, \emph{SD}\textsubscript{MPS-4} = 1.73,
+\emph{Alex} (diagnostic),
+\emph{M}\textsubscript{MPS-4} = 4.44, \emph{SD}\textsubscript{MPS-4} = 1.79,
+\emph{Robin} (diagnostic),
+\emph{M}\textsubscript{MPS-4} = 4.35, \emph{SD}\textsubscript{MPS-4} = 1.96,
+\emph{Jackie} (non-diagnostic),
+\emph{M}\textsubscript{MPS-4} = 5.40, \emph{SD}\textsubscript{MPS-4} = 1.01,
+\emph{Charlie} (non-diagnostic),
+\emph{M}\textsubscript{MPS-4} = 5.38, \emph{SD}\textsubscript{MPS-4} = 1.01. For the diagnostic descriptions, there was no significant variation depending on the description, \emph{F}(3,600) = 1.58, \emph{p} = .194, partial \(\eta\)\textsuperscript{2} = 0.00. For the non-diagnostic descriptions there was no significant difference in ratings depending on description, \emph{t}(211) = -0.67, \emph{p} = .506, \emph{d} = 0.05.
+
+The means and standard deviations for MM-1 for each scenario are as follows:
+\emph{Sam} (diagnostic),
+\emph{M}\textsubscript{MM-1} = 55.67, \emph{SD}\textsubscript{MM-1} = 30.47;
+\emph{Francis} (diagnostic),
+\emph{M}\textsubscript{MM-1} = 58.22, \emph{SD}\textsubscript{MM-1} = 28.61;
+\emph{Alex} (diagnostic),
+\emph{M}\textsubscript{MM-1} = 56.80, \emph{SD}\textsubscript{MM-1} = 29.45;
+\emph{Robin} (diagnostic),
+\emph{M}\textsubscript{MM-1} = 55.49, \emph{SD}\textsubscript{MM-1} = 31.38;
+\emph{Jackie} (non-diagnostic),
+\emph{M}\textsubscript{MM-1} = 73.00, \emph{SD}\textsubscript{MM-1} = 14.72;
+\emph{Charlie} (non-diagnostic),
+\emph{M}\textsubscript{MM-1} = 72.94, \emph{SD}\textsubscript{MM-1} = 14.79. For the diagnostic descriptions, we observed significant variation depending on the description, \emph{F}(3,608) = 3.01, \emph{p} = .032, partial \(\eta\)\textsuperscript{2} = 0.001. When correcting for multiple comparisons, pairwise comparisons did not reveal significant differences between descriptions. We note that without correction, \emph{Francis} appeared to be rated as more moral than both \emph{Robin} (\emph{p} = .012), and \emph{Sam} (\emph{p} = .009). For the non-diagnostic descriptions there was no significant difference in ratings depending on description, \emph{t}(211) = -0.09, \emph{p} = .929, \emph{d} = 0.01.
+
+We conducted a linear-mixed-effects model to test if condition influenced MPS-4 responses. Our outcome measure was MPS-4, our predictor variable was condition; we allowed intercepts and the effect of condition to vary across participants.
+Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model, \(\chi\)\textsuperscript{2}(2) = 860.16, \emph{p} \textless{} .001. Condition was a significant predictor in the model \(b\) = -0.49, \emph{t}(211.05) = -8.54, \emph{p} \textless{} .001, with the non-diagnostic descriptions being rated as more moral than the diagnostic descriptions of immoral characters Figure~\ref{fig:pilot1bothconditionplot}.
+
+\begin{figure}[!h]
+\includegraphics[width=\textwidth,]{Supplementary_files/figure-latex/pilot1bothconditionplot-1} \caption{Pilot Study 1: Differences in moral perception depending on condition}\label{fig:pilot1bothconditionplot}
+\end{figure}
+
+We conducted a linear-mixed-effects model to test if condition influenced MM-1 responses. Our outcome measure was MM-1, our predictor variable was condition; we allowed intercepts and the effect of condition to vary across participants. Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model, \(\chi\)\textsuperscript{2}(2) = 924.82, \emph{p} \textless{} .001. Condition was a significant predictor in the model \(b\) = -8.22, \emph{t}(210.98) = -8.60, \emph{p} \textless{} .001, with the non-diagnostic descriptions being rated as more moral than the diagnostic descriptions, see Figure~\ref{fig:pilot1bothconditionplot}.
+
+\hypertarget{pilot-study-2}{%
+\section{Pilot Study 2}\label{pilot-study-2}}
+
+Study 1 showed the moral dilution effect for judgments of \emph{bad} characters. The aim of this pilot study was to develop and test materials that may be used to study the moral dilution effect for judgments of morally \emph{good} characters. As with Pilot Study 1, we developed diagnostic and non-diagnostic descriptions. We hypothesized that evaluations of the diagnostic descriptions would be more extreme (more moral) than for the non-diagnostic descriptions
+
+\hypertarget{pilot-study-2-method}{%
+\subsection{Pilot Study 2: Method}\label{pilot-study-2-method}}
+
+\hypertarget{pilot-2-participants-and-design}{%
+\subsubsection{Pilot 2: Participants and design}\label{pilot-2-participants-and-design}}
+
+The pilot study was a within-subjects design. The independent variable was description type with two levels, \emph{diagnostic} and \emph{non-diagnostic}. We used the same two dependent variables as in previous studies, the four item moral perception scale (MPS-4, \(\alpha\) = 0.84), and the single item moral perception measure (MM-1).
+
+A total sample of 245 (70 female, 175 male, 0 non-binary, 0 prefer not to say; \emph{M}\textsubscript{age} = 36.69, min = 18, max = 71, \emph{SD} = 9.57) started the survey. Participants were recruited from MTurk.
+
+We removed participants who failed both manipulation checks (\emph{n} = 30), leaving a total sample of 215 participants (63 female, 152 male, 0 non-binary, 0 prefer not to say; \emph{M}\textsubscript{age} = 36.59, min = 18, max = 71, \emph{SD} = 9.59).
+
+\hypertarget{pilot-2-procedure-and-materials}{%
+\subsubsection{Pilot 2: Procedure and materials}\label{pilot-2-procedure-and-materials}}
+
+Data were collected using an online questionnaire presented with Qualtrics (www.qualtrics.com). Participants were presented with descriptions of six characters.
+
+Moral character descriptions were developed by combining descriptions relating to three different moral foundations, focusing on upholding the moral foundations (rather than transgressions as in previous studies). We developed 4 descriptions of moral characters that read as follows: (i) \emph{Imagine a person named Sam. Throughout their life they have been known to always help and care for others, treat everyone fairly and equally, and show a strong sense of loyalty to others}; (ii) \emph{Imagine a person named Robin. Throughout their life they have been known to show compassion and empathy for others, act with a sense of fairness and justice, and, never to break their word}; (iii) \emph{Imagine a person named Francis. Throughout their life they have been known to uphold the standards of purity and decency, show respect for authority, and to always act honestly and fairly}; (iv) \emph{Imagine a person named Alex. Throughout their life they have been known to protect and provide shelter to the weak and vulnerable, uphold the rights of others, and show respect for authority}. We developed 2 descriptions of morally neutral characters that included information relating to physical appearance/attributes, hobbies/activities, and a color preference: (i) \emph{Imagine a person named Jackie. They have dark hair, go for a jog twice a week, and their favourite colour is blue}; (ii) \emph{Imagine a person named Charlie. They have blue eyes, drink coffee in the morning, and their favourite colour is green}.
+
+We used the same gender ambiguous names, and we did not specify the gender of the characters. Pilot Study 2 was pre-registered at \color{blue}\url{https://aspredicted.org/W52_VPX}\color{black}.
+
+\hypertarget{pilot-2-results}{%
+\subsection{Pilot 2: Results}\label{pilot-2-results}}
+
+The means and standard deviations for MPS-4 for each scenario are as follows:
+\emph{Sam} (diagnostic),
+\emph{M}\textsubscript{MPS-4} = 6.01, \emph{SD}\textsubscript{MPS-4} = 0.91,
+\emph{Francis} (diagnostic),
+\emph{M}\textsubscript{MPS-4} = 5.89, \emph{SD}\textsubscript{MPS-4} = 0.95,
+\emph{Alex} (diagnostic),
+\emph{M}\textsubscript{MPS-4} = 5.94, \emph{SD}\textsubscript{MPS-4} = 0.94,
+\emph{Robin} (diagnostic),
+\emph{M}\textsubscript{MPS-4} = 5.93, \emph{SD}\textsubscript{MPS-4} = 0.92,
+\emph{Jackie} (non-diagnostic),
+\emph{M}\textsubscript{MPS-4} = 5.60, \emph{SD}\textsubscript{MPS-4} = 0.99,
+\emph{Charlie} (non-diagnostic),
+\emph{M}\textsubscript{MPS-4} = 5.53, \emph{SD}\textsubscript{MPS-4} = 1.08. For the diagnostic descriptions, there was significant variation depending on the description, \emph{F}(3,613) = 2.91, \emph{p} = .036, partial \(\eta\)\textsuperscript{2} = 0.00, \emph{Sam} was viewed significantly more favorably than \emph{Francis} (\emph{p} = .040). For the non-diagnostic descriptions there was no significant difference in ratings depending on description, \emph{t}(214) = -1.79, \emph{p} = .075, \emph{d} = 0.12.
+
+The means and standard deviations for MM-1 for each scenario are as follows:
+\emph{Sam} (diagnostic),
+\emph{M}\textsubscript{MM-1} = 79.85, \emph{SD}\textsubscript{MM-1} = 15.44;
+\emph{Francis} (diagnostic),
+\emph{M}\textsubscript{MM-1} = 78.30, \emph{SD}\textsubscript{MM-1} = 15.84;
+\emph{Alex} (diagnostic),
+\emph{M}\textsubscript{MM-1} = 79.78, \emph{SD}\textsubscript{MM-1} = 15.71;
+\emph{Robin} (diagnostic),
+\emph{M}\textsubscript{MM-1} = 79.46, \emph{SD}\textsubscript{MM-1} = 15.41;
+\emph{Jackie} (non-diagnostic),
+\emph{M}\textsubscript{MM-1} = 73.44, \emph{SD}\textsubscript{MM-1} = 15.83;
+\emph{Charlie} (non-diagnostic),
+\emph{M}\textsubscript{MM-1} = 73.07, \emph{SD}\textsubscript{MM-1} = 16.22. For the diagnostic descriptions, we observed no significant variation depending on the description, \emph{F}(3,594) = 1.45, \emph{p} = .231, partial \(\eta\)\textsuperscript{2} = 0.002. For the non-diagnostic descriptions there was no significant difference in ratings depending on description, \emph{t}(214) = -0.60, \emph{p} = .552, \emph{d} = 0.04.
+
+\begin{figure}[!h]
+\includegraphics[width=\textwidth,]{Supplementary_files/figure-latex/pilot2bothconditionplot-1} \caption{Pilot Study 2: Differences in moral perception depending on condition}\label{fig:pilot2bothconditionplot}
+\end{figure}
+
+We conducted a linear-mixed-effects model to test if condition influenced MPS-4 responses. Our outcome measure was MPS-4, our predictor variable was condition; we allowed intercepts and the effect of condition to vary across participants.
+Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model, \(\chi\)\textsuperscript{2}(2) = 475.42, \emph{p} \textless{} .001. Condition was a significant predictor in the model \(b\) = 0.19, \emph{t}(214.35) = 6.53, \emph{p} \textless{} .001, with the diagnostic descriptions being rated as more moral than the non-diagnostic descriptions of immoral characters Figure~\ref{fig:pilot2bothconditionplot}.
+
+We conducted a linear-mixed-effects model to test if condition influenced MM-1 responses. Our outcome measure was MM-1, our predictor variable was condition; we allowed intercepts and the effect of condition to vary across participants. Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model, \(\chi\)\textsuperscript{2}(2) = 324.13, \emph{p} \textless{} .001. Condition was a significant predictor in the model \(b\) = 3.04, \emph{t}(214.90) = 6.02, \emph{p} \textless{} .001, with the diagnostic descriptions being rated as more moral than the non-diagnostic descriptions, see Figure~\ref{fig:pilot2bothconditionplot}.
+
+\newpage
 
 \hypertarget{supplementary-materials}{%
 \section{Supplementary Materials}\label{supplementary-materials}}
@@ -230,6 +390,8 @@ They have red hair, play tennis four times a month, and have one older sibling a
 Imagine a person named Charlie.
 They are left-handed, drink tea in the morning, and have two older siblings and one younger sibling.
 
+\newpage
+
 \hypertarget{descriptions-pilot-study-2-study-2-study-4}{%
 \subsection{Descriptions (Pilot Study 2, Study 2 \& Study 4)}\label{descriptions-pilot-study-2-study-2-study-4}}
 
@@ -277,6 +439,8 @@ They have dark hair, go for a jog twice a week, and their favorite color is blue
 Imagine a person named Charlie.
 They have blue eyes, drink coffee in the morning, and their favorite color is green.
 
+\newpage
+
 \hypertarget{descriptions-study-3-study-5}{%
 \subsection{Descriptions (Study 3 \& Study 5)}\label{descriptions-study-3-study-5}}
 
@@ -314,6 +478,8 @@ They have red hair, play tennis four times a month, and have one older sibling a
 
 They are left-handed, drink tea in the morning, and have two older siblings and one younger sibling.
 
+\newpage
+
 \hypertarget{measures}{%
 \subsection{Measures}\label{measures}}
 
@@ -328,24 +494,21 @@ Please rate \_\_\_\_ along the following dimensions:
 \caption{Screenshot of the MPS-4 items as presented to participants}
 \end{figure}
 
-\hypertarget{four-item-moral-perception-scale-mm1-4}{%
-\subsubsection{Four-item Moral Perception Scale (MM1-4)}\label{four-item-moral-perception-scale-mm1-4}}
+\hypertarget{single-item-moral-perception-measure-mm-1}{%
+\subsubsection{Single-item Moral Perception Measure (MM-1)}\label{single-item-moral-perception-measure-mm-1}}
 
 Please rate \_\_\_\_ according to immoral or moral you view them:
 
-\begin{figure}
-\centering
 \includegraphics{../resources/images/mm1.png}
-\caption{Screenshot of MM-1 as presented to participants}
-\end{figure}
+\newpage
 
 \newpage
 
 \hypertarget{supplementary-analyses}{%
 \section{Supplementary Analyses}\label{supplementary-analyses}}
 
-\hypertarget{pilot-study-1}{%
-\section{Pilot Study 1}\label{pilot-study-1}}
+\hypertarget{pilot-study-1-1}{%
+\section{Pilot Study 1}\label{pilot-study-1-1}}
 
 \hypertarget{pilot-1-differences-between-moral-descriptions}{%
 \subsection{Pilot: 1: Differences Between Moral Descriptions}\label{pilot-1-differences-between-moral-descriptions}}
@@ -369,7 +532,7 @@ The standardized means and standard deviations for the combined measure for each
 \hypertarget{pilot-1-testing-moral-vs-neutral}{%
 \subsection{Pilot 1: Testing Moral vs Neutral}\label{pilot-1-testing-moral-vs-neutral}}
 
-Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model \(\chi\)\textsuperscript{2}(2) = 1,035.36, \emph{p} \textless{} .001, and condition was a significant predictor in the model \(b\) = -0.31, \emph{t}(210.99) = -8.74, \emph{p} \textless{} .001.
+We conducted a linear-mixed-effects model to test if condition influenced responses on this combined measure. Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model \(\chi\)\textsuperscript{2}(2) = 1,035.36, \emph{p} \textless{} .001, and condition was a significant predictor in the model \(b\) = -0.31, \emph{t}(210.99) = -8.74, \emph{p} \textless{} .001.
 
 \begin{figure}[!h]
 \includegraphics[width=\textwidth,]{Supplementary_files/figure-latex/pilot1cobminedconditionplot-1} \caption{Pilot Study 1: Differences in combined measure depending on condition}\label{fig:pilot1cobminedconditionplot}
@@ -399,8 +562,12 @@ Overall, the model significantly predicted participants responses, and provided 
 \includegraphics[width=\textwidth,]{Supplementary_files/figure-latex/S1combinedconditionplot-1} \caption{Study 1: Differences in combined measure depending on condition}\label{fig:S1combinedconditionplot}
 \end{figure}
 
+\newpage
+
 \hypertarget{study-1-differences-between-the-descriptions}{%
 \subsection{Study 1: Differences between the Descriptions}\label{study-1-differences-between-the-descriptions}}
+
+We additionally conducted separate analyses for each scenario separately (for each dependent measure MPS-4, MM-1 and the combined measure). The responses for each scenario across each measure depending on condition are displayed in Figure~\ref{fig:S1allscenariosPlot}.
 
 \begin{figure}[!p]
 \includegraphics{Supplementary_files/figure-latex/S1allscenariosPlot-1} \caption{Study 1: Differences in moral perception for each description}\label{fig:S1allscenariosPlot}
@@ -416,8 +583,8 @@ For \emph{Francis}, MPS-4 scores were significantly higher for the non-diagnosti
 
 \newpage
 
-\hypertarget{pilot-study-2}{%
-\section{Pilot Study 2}\label{pilot-study-2}}
+\hypertarget{pilot-study-2-1}{%
+\section{Pilot Study 2}\label{pilot-study-2-1}}
 
 \hypertarget{pilot-2-differences-between-moral-descriptions}{%
 \subsection{Pilot: 2: Differences Between Moral Descriptions}\label{pilot-2-differences-between-moral-descriptions}}
@@ -478,13 +645,15 @@ Overall, the model significantly predicted participants responses, and provided 
 \hypertarget{study-2-differences-between-the-descriptions}{%
 \subsection{Study 2: Differences between the Descriptions}\label{study-2-differences-between-the-descriptions}}
 
+Below we provide analyses of the effect of condition on responses to each scenario individually. The responses for each scenario across each measure depending on condition are displayed in Figure~\ref{fig:S2allscenariosPlot}.
+
+For \emph{Sam}, MPS-4 scores were not significantly different in the non-diagnostic condition (\emph{M} = 6.17, \emph{SD} = 0.89), than in the diagnostic condition (\emph{M} = 6.05, \emph{SD} = 1.06), \emph{t}(680.49) = -1.71, \emph{p} = .088, \emph{d} = 0.12; MM-1 ratings were similar in the non-diagnostic condition (\emph{M} = 84.90, \emph{SD} = 14.26), than in the diagnostic condition (\emph{M} = 84.20, \emph{SD} = 14.76), \emph{t}(744.17) = -0.69, \emph{p} = .490, \emph{d} = 0.05. For the combined measure ratings were also similar in the non-diagnostic condition (\emph{M} = 0.11, \emph{SD} = 0.93), than in the diagnostic condition (\emph{M} = 0.02, \emph{SD} = 1.03), \emph{t}(717.94) = -1.33, \emph{p} = .183, \emph{d} = 0.10.
+
 \newpage
 
 \begin{figure}[!p]
 \includegraphics{Supplementary_files/figure-latex/S2allscenariosPlot-1} \caption{Study 2: Differences in moral perception for each description}\label{fig:S2allscenariosPlot}
 \end{figure}
-
-For \emph{Sam}, MPS-4 scores were not significantly different in the non-diagnostic condition (\emph{M} = 6.17, \emph{SD} = 0.89), than in the diagnostic condition (\emph{M} = 6.05, \emph{SD} = 1.06), \emph{t}(680.49) = -1.71, \emph{p} = .088, \emph{d} = 0.12; MM-1 ratings were similar in the non-diagnostic condition (\emph{M} = 84.90, \emph{SD} = 14.26), than in the diagnostic condition (\emph{M} = 84.20, \emph{SD} = 14.76), \emph{t}(744.17) = -0.69, \emph{p} = .490, \emph{d} = 0.05. For the combined measure ratings were also similar in the non-diagnostic condition (\emph{M} = 0.11, \emph{SD} = 0.93), than in the diagnostic condition (\emph{M} = 0.02, \emph{SD} = 1.03), \emph{t}(717.94) = -1.33, \emph{p} = .183, \emph{d} = 0.10.
 
 For \emph{Robin}, MPS-4 scores were not significantly different for the non-diagnostic condition (\emph{M} = 6.08, \emph{SD} = 1.00), than in the diagnostic condition (\emph{M} = 6.13, \emph{SD} = 0.98), \emph{t}(784.04) = 0.73, \emph{p} = .463, \emph{d} = 0.05; MM-1 ratings were similar in the non-diagnostic condition (\emph{M} = 84.12, \emph{SD} = 14.37), and in the diagnostic condition (\emph{M} = 85.98, \emph{SD} = 13.32), \emph{t}(800.09) = 1.92, \emph{p} = .055, \emph{d} = 0.13. For the combined measure ratings were also similar in the non-diagnostic condition (\emph{M} = 0.03, \emph{SD} = 0.98), than in the diagnostic condition (\emph{M} = 0.13, \emph{SD} = 0.95), \emph{t}(788.76) = 1.46, \emph{p} = .145, \emph{d} = 0.10.
 
@@ -531,19 +700,21 @@ and there was no significant condition \(\times\) valence interaction,
 \hypertarget{study-3-differences-between-the-descriptions}{%
 \subsection{Study 3: Differences between the descriptions}\label{study-3-differences-between-the-descriptions}}
 
-\newpage
-
-\begin{figure}[!p]
-\includegraphics{Supplementary_files/figure-latex/S3allscenariosPlot-1} \caption{Study 3: Differences in moral perception for each description}\label{fig:S3allscenariosPlot}
-\end{figure}
+Again, we conducted separate analyses to investigate of condition on responses to each scenario individually. The responses for each scenario across each measure depending on condition are displayed in Figure~\ref{fig:S3allscenariosPlot}.
 
 For \emph{Sam}, MPS-4 scores were significantly lower in the non-diagnostic condition (\emph{M} = 5.81, \emph{SD} = 1.09), than in the diagnostic condition (\emph{M} = 5.98, \emph{SD} = 0.97), \emph{t}(859.15) = 2.46, \emph{p} = .014, \emph{d} = 0.17; Similarly, MM-1 ratings were significantly lower in the non-diagnostic condition (\emph{M} = 79.64, \emph{SD} = 15.68), than in the diagnostic condition (\emph{M} = 82.37, \emph{SD} = 14.67), \emph{t}(867.08) = 2.66, \emph{p} = .008, \emph{d} = 0.18. For the combined measure ratings were also lower in the non-diagnostic condition (\emph{M} = 0.39, \emph{SD} = 0.54), than in the diagnostic condition (\emph{M} = 0.50, \emph{SD} = 0.50), \emph{t}(863.14) = 2.85, \emph{p} = .004, \emph{d} = 0.19.
+
+\newpage
 
 For \emph{Robin}, MPS-4 scores were not significantly different for the non-diagnostic condition (\emph{M} = 5.88, \emph{SD} = 0.96), than in the diagnostic condition (\emph{M} = 5.83, \emph{SD} = 1.14), \emph{t}(844.53) = -0.77, \emph{p} = .440, \emph{d} = 0.05; MM-1 ratings were similar in the non-diagnostic condition (\emph{M} = 80.92, \emph{SD} = 15.27), and in the diagnostic condition (\emph{M} = 80.70, \emph{SD} = 15.07), \emph{t}(871.98) = -0.22, \emph{p} = .828, \emph{d} = 0.01. For the combined measure ratings were also similar in the non-diagnostic condition (\emph{M} = 0.44, \emph{SD} = 0.51), than in the diagnostic condition (\emph{M} = 0.42, \emph{SD} = 0.54), \emph{t}(867.63) = -0.57, \emph{p} = .569, \emph{d} = 0.04.
 
 For \emph{Alex}, MPS-4 scores were not significantly different for the non-diagnostic condition (\emph{M} = 4.08, \emph{SD} = 1.96), than in the diagnostic condition (\emph{M} = 3.97, \emph{SD} = 2.11), \emph{t}(865.81) = -0.80, \emph{p} = .421, \emph{d} = 0.05; MM-1 ratings were similar in the non-diagnostic condition (\emph{M} = 52.19, \emph{SD} = 31.29), than in the diagnostic condition (\emph{M} = 49.58, \emph{SD} = 32.95), \emph{t}(868.76) = -1.20, \emph{p} = .230, \emph{d} = 0.08. For the combined measure ratings were also similar in the non-diagnostic condition (\emph{M} = -0.62, \emph{SD} = 1.11), than in the diagnostic condition (\emph{M} = -0.70, \emph{SD} = 1.19), \emph{t}(867.67) = -1.04, \emph{p} = .301, \emph{d} = 0.07.
 
 For \emph{Francis}, MPS-4 scores were not significantly different for the non-diagnostic condition (\emph{M} = 4.08, \emph{SD} = 2.07), than in the diagnostic condition (\emph{M} = 4.07, \emph{SD} = 2.07), \emph{t}(871.94) = -0.09, \emph{p} = .928, \emph{d} = 0.01; MM-1 ratings were not significantly different in the non-diagnostic condition (\emph{M} = 51.56, \emph{SD} = 32.68), than in the diagnostic condition (\emph{M} = 51.42, \emph{SD} = 33.70), \emph{t}(871.59) = -0.06, \emph{p} = .952, \emph{d} = 0.00. For the combined measure ratings were also similar in the non-diagnostic condition (\emph{M} = -0.63, \emph{SD} = 1.18), and in the diagnostic condition (\emph{M} = -0.64, \emph{SD} = 1.20), \emph{t}(871.88) = -0.08, \emph{p} = .939, \emph{d} = 0.01.
+
+\begin{figure}[!p]
+\includegraphics{Supplementary_files/figure-latex/S3allscenariosPlot-1} \caption{Study 3: Differences in moral perception for each description}\label{fig:S3allscenariosPlot}
+\end{figure}
 
 \newpage
 
@@ -574,7 +745,7 @@ Overall, the model significantly predicted participants responses, and provided 
 \hypertarget{study-4-differences-between-the-descriptions}{%
 \subsection{Study 4: Differences between the Descriptions}\label{study-4-differences-between-the-descriptions}}
 
-\newpage
+As in previous studies, we additionally conducted separate analyses to investigate of condition on responses to each scenario individually. The responses for each scenario across each measure depending on condition are displayed in Figure~\ref{fig:S4allscenariosPlot}.
 
 \begin{figure}[!p]
 \includegraphics{Supplementary_files/figure-latex/S4allscenariosPlot-1} \caption{Study 4: Differences in moral perception for each description}\label{fig:S4allscenariosPlot}
@@ -587,6 +758,8 @@ For \emph{Robin} (good), MPS-4 scores were significantly lower for the non-diagn
 For \emph{Alex}, MPS-4 scores were not significantly different for the non-diagnostic condition (\emph{M} = 5.97, \emph{SD} = 0.91), than in the diagnostic condition (\emph{M} = 5.91, \emph{SD} = 0.99), \emph{t}(845.29) = -0.91, \emph{p} = .362, \emph{d} = 0.06; MM-1 ratings were similar in the non-diagnostic condition (\emph{M} = 81.93, \emph{SD} = 13.38), than in the diagnostic condition (\emph{M} = 80.51, \emph{SD} = 15.21), \emph{t}(850.53) = -1.46, \emph{p} = .145, \emph{d} = 0.10. For the combined measure ratings were also similar in the non-diagnostic condition (\emph{M} = 0.07, \emph{SD} = 0.98), than in the diagnostic condition (\emph{M} = -0.02, \emph{SD} = 1.09), \emph{t}(847.27) = -1.30, \emph{p} = .192, \emph{d} = 0.09.
 
 For \emph{Francis}, MPS-4 scores were not significantly different for the non-diagnostic condition (\emph{M} = 5.87, \emph{SD} = 0.95), than in the diagnostic condition (\emph{M} = 5.91, \emph{SD} = 0.87), \emph{t}(787.36) = 0.77, \emph{p} = .443, \emph{d} = 0.05; MM-1 ratings were not significantly different in the non-diagnostic condition (\emph{M} = 80.54, \emph{SD} = 14.38), than in the diagnostic condition (\emph{M} = 80.75, \emph{SD} = 13.99), \emph{t}(809.63) = 0.21, \emph{p} = .832, \emph{d} = 0.01. For the combined measure ratings were also similar in the non-diagnostic condition (\emph{M} = -0.05, \emph{SD} = 0.99), and in the diagnostic condition (\emph{M} = -0.01, \emph{SD} = 0.98), \emph{t}(814.30) = 0.55, \emph{p} = .581, \emph{d} = 0.04.
+
+\newpage
 
 \hypertarget{study-5}{%
 \section{Study 5}\label{study-5}}
@@ -616,6 +789,8 @@ For the \emph{good} characters, there was a significant difference in responses 
 \hypertarget{study-5-differences-between-the-descriptions}{%
 \subsection{Study 5: Differences between the Descriptions}\label{study-5-differences-between-the-descriptions}}
 
+Again, we conducted separate analyses to investigate of condition on responses to each scenario individually. The responses for each scenario across each measure depending on condition are displayed in Figure~\ref{fig:S5allscenariosPlot}.
+
 \begin{figure}[!p]
 \includegraphics{Supplementary_files/figure-latex/S5allscenariosPlot-1} \caption{Study 5: Differences in moral perception for each description}\label{fig:S5allscenariosPlot}
 \end{figure}
@@ -630,12 +805,21 @@ For \emph{Francis}, MPS-4 scores were not significantly different for the non-di
 
 \newpage
 
+\newpage
 
-\clearpage
-\renewcommand{\listfigurename}{Figure captions}
+\hypertarget{references}{%
+\section*{References}\label{references}}
+\addcontentsline{toc}{section}{References}
 
-\clearpage
-\renewcommand{\listtablename}{Table captions}
+\hypertarget{refs}{}
+\begin{CSLReferences}{1}{0}
+\leavevmode\vadjust pre{\hypertarget{ref-grizzard_validating_2020}{}}%
+Grizzard, M., Fitzgerald, K., Francemone, C. J., Ahn, C., Huang, J., Walton, J., \ldots{} Eden, A. (2020). Validating the extended character morality questionnaire. \emph{Media Psychology}, \emph{23}(1), 107--130. \url{https://doi.org/10.1080/15213269.2019.1572523}
+
+\leavevmode\vadjust pre{\hypertarget{ref-walker_better_2021}{}}%
+Walker, A. C., Turpin, M. H., Fugelsang, J. A., \& Białek, M. (2021). Better the two devils you know, than the one you don't: {Predictability} influences moral judgments of immoral actors. \emph{Journal of Experimental Social Psychology}, \emph{97}, 104220. \url{https://doi.org/10.1016/j.jesp.2021.104220}
+
+\end{CSLReferences}
 
 
 \end{document}

@@ -180,7 +180,7 @@ p2 <- results_coef$`Pr(>|t|)`[2]
 anova(model1)
 ```
 
-Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model $\chi$^2^(`r results_anova$Df[2]`) = `r results_anova$Chisq[2]`, *p* `r paste(p_report(p1))`, and condition was a significant predictor in the model $b$ = `r results_coef$Estimate[2]`, *t*(`r results_coef$df[2]`) = `r t1`, *p* `r paste(p_report(p2))`.
+We conducted a linear-mixed-effects model to test if condition influenced responses on this combined measure. Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model $\chi$^2^(`r results_anova$Df[2]`) = `r results_anova$Chisq[2]`, *p* `r paste(p_report(p1))`, and condition was a significant predictor in the model $b$ = `r results_coef$Estimate[2]`, *t*(`r results_coef$df[2]`) = `r t1`, *p* `r paste(p_report(p2))`.
 
 ```{r pilot1cobminedconditionplot, fig.cap="Pilot Study 1: Differences in combined measure depending on condition", include=TRUE, out.width = "\\textwidth", fig.pos = "!h"}
 
@@ -400,10 +400,11 @@ ggplot(x,aes(x=condition,y=R_tot))+
 
 ```
 
+\newpage
 
 ## Study 1: Differences between the Descriptions
 
-
+We additionally conducted separate analyses for each scenario separately (for each dependent measure MPS-4, MM-1 and the combined measure). The responses for each scenario across each measure depending on condition are displayed in Figure\ \@ref(fig:S1allscenariosPlot).
 
 
 ```{r}
@@ -1039,6 +1040,31 @@ ggplot(x,aes(x=condition,y=M1R_tot))+
 
 ## Study 2: Differences between the Descriptions
 
+Below we provide analyses of the effect of condition on responses to each scenario individually. The responses for each scenario across each measure depending on condition are displayed in Figure\ \@ref(fig:S2allscenariosPlot).
+
+
+
+```{r}
+
+x <- sam
+d1 <- lsr::cohensD(R_tot~condition,x)
+t1 <- t.test(R_tot~condition,x,paired=FALSE)
+t1$parameter
+t1$statistic
+t1$p.value
+
+d2 <- lsr::cohensD(M1~condition,x)
+t2 <- t.test(M1~condition,x,paired=FALSE)
+
+
+d3 <- lsr::cohensD(M1R_tot~condition,x)
+t3 <- t.test(M1R_tot~condition,x,paired=FALSE)
+
+xd <- x[which(x$condition=="diagnostic"),]
+xnond <- x[which(x$condition=="non-diagnostic"),]
+```
+
+For *Sam*, MPS-4 scores were not significantly different in the non-diagnostic condition (*M* = `r mean(xnond$R_tot)`, *SD* = `r sd(xnond$R_tot)`), than in the diagnostic condition (*M* = `r mean(xd$R_tot)`, *SD* = `r sd(xd$R_tot)`), *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`; MM-1 ratings were similar in the non-diagnostic condition (*M* = `r mean(xnond$M1)`, *SD* = `r sd(xnond$M1)`), than in the diagnostic condition (*M* = `r mean(xd$M1)`, *SD* = `r sd(xd$M1)`), *t*(`r t2$parameter`) = `r t2$statistic`, *p* `r paste(p_report(t2$p.value))`, *d* = `r d2`. For the combined measure ratings were also similar in the non-diagnostic condition (*M* = `r mean(xnond$M1R_tot)`, *SD* = `r sd(xnond$M1R_tot)`), than in the diagnostic condition (*M* = `r mean(xd$M1R_tot)`, *SD* = `r sd(xd$M1R_tot)`), *t*(`r t3$parameter`) = `r t3$statistic`, *p* `r paste(p_report(t3$p.value))`, *d* = `r d3`.
 
 
 ```{r}
@@ -1226,30 +1252,6 @@ figure
 suppressWarnings(print(figure))
 
 ```
-
-
-
-```{r}
-
-x <- sam
-d1 <- lsr::cohensD(R_tot~condition,x)
-t1 <- t.test(R_tot~condition,x,paired=FALSE)
-t1$parameter
-t1$statistic
-t1$p.value
-
-d2 <- lsr::cohensD(M1~condition,x)
-t2 <- t.test(M1~condition,x,paired=FALSE)
-
-
-d3 <- lsr::cohensD(M1R_tot~condition,x)
-t3 <- t.test(M1R_tot~condition,x,paired=FALSE)
-
-xd <- x[which(x$condition=="diagnostic"),]
-xnond <- x[which(x$condition=="non-diagnostic"),]
-```
-
-For *Sam*, MPS-4 scores were not significantly different in the non-diagnostic condition (*M* = `r mean(xnond$R_tot)`, *SD* = `r sd(xnond$R_tot)`), than in the diagnostic condition (*M* = `r mean(xd$R_tot)`, *SD* = `r sd(xd$R_tot)`), *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`; MM-1 ratings were similar in the non-diagnostic condition (*M* = `r mean(xnond$M1)`, *SD* = `r sd(xnond$M1)`), than in the diagnostic condition (*M* = `r mean(xd$M1)`, *SD* = `r sd(xd$M1)`), *t*(`r t2$parameter`) = `r t2$statistic`, *p* `r paste(p_report(t2$p.value))`, *d* = `r d2`. For the combined measure ratings were also similar in the non-diagnostic condition (*M* = `r mean(xnond$M1R_tot)`, *SD* = `r sd(xnond$M1R_tot)`), than in the diagnostic condition (*M* = `r mean(xd$M1R_tot)`, *SD* = `r sd(xd$M1R_tot)`), *t*(`r t3$parameter`) = `r t3$statistic`, *p* `r paste(p_report(t3$p.value))`, *d* = `r d3`.
 
 
 ```{r}
@@ -1580,6 +1582,81 @@ xnond <- x[which(x$condition=="non-diagnostic"),]
 
 ## Study 3: Differences between the descriptions
 
+Again, we conducted separate analyses to investigate of condition on responses to each scenario individually. The responses for each scenario across each measure depending on condition are displayed in Figure\ \@ref(fig:S3allscenariosPlot).
+
+
+For *Sam*, MPS-4 scores were significantly lower in the non-diagnostic condition (*M* = `r mean(xnond$R_tot)`, *SD* = `r sd(xnond$R_tot)`), than in the diagnostic condition (*M* = `r mean(xd$R_tot)`, *SD* = `r sd(xd$R_tot)`), *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`; Similarly, MM-1 ratings were significantly lower in the non-diagnostic condition (*M* = `r mean(xnond$M1)`, *SD* = `r sd(xnond$M1)`), than in the diagnostic condition (*M* = `r mean(xd$M1)`, *SD* = `r sd(xd$M1)`), *t*(`r t2$parameter`) = `r t2$statistic`, *p* `r paste(p_report(t2$p.value))`, *d* = `r d2`. For the combined measure ratings were also lower in the non-diagnostic condition (*M* = `r mean(xnond$M1R_tot)`, *SD* = `r sd(xnond$M1R_tot)`), than in the diagnostic condition (*M* = `r mean(xd$M1R_tot)`, *SD* = `r sd(xd$M1R_tot)`), *t*(`r t3$parameter`) = `r t3$statistic`, *p* `r paste(p_report(t3$p.value))`, *d* = `r d3`.
+
+\newpage
+
+```{r}
+
+x <- robin
+d1 <- lsr::cohensD(R_tot~condition,x)
+t1 <- t.test(R_tot~condition,x,paired=FALSE)
+t1$parameter
+t1$statistic
+t1$p.value
+
+d2 <- lsr::cohensD(M1~condition,x)
+t2 <- t.test(M1~condition,x,paired=FALSE)
+
+
+d3 <- lsr::cohensD(M1R_tot~condition,x)
+t3 <- t.test(M1R_tot~condition,x,paired=FALSE)
+
+xd <- x[which(x$condition=="diagnostic"),]
+xnond <- x[which(x$condition=="non-diagnostic"),]
+```
+
+For *Robin*, MPS-4 scores were not significantly different for the non-diagnostic condition (*M* = `r mean(xnond$R_tot)`, *SD* = `r sd(xnond$R_tot)`), than in the diagnostic condition (*M* = `r mean(xd$R_tot)`, *SD* = `r sd(xd$R_tot)`), *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`; MM-1 ratings were similar in the non-diagnostic condition (*M* = `r mean(xnond$M1)`, *SD* = `r sd(xnond$M1)`), and in the diagnostic condition (*M* = `r mean(xd$M1)`, *SD* = `r sd(xd$M1)`), *t*(`r t2$parameter`) = `r t2$statistic`, *p* `r paste(p_report(t2$p.value))`, *d* = `r d2`. For the combined measure ratings were also similar in the non-diagnostic condition (*M* = `r mean(xnond$M1R_tot)`, *SD* = `r sd(xnond$M1R_tot)`), than in the diagnostic condition (*M* = `r mean(xd$M1R_tot)`, *SD* = `r sd(xd$M1R_tot)`), *t*(`r t3$parameter`) = `r t3$statistic`, *p* `r paste(p_report(t3$p.value))`, *d* = `r d3`.
+
+
+```{r}
+
+x <- alex
+d1 <- lsr::cohensD(R_tot~condition,x)
+t1 <- t.test(R_tot~condition,x,paired=FALSE)
+t1$parameter
+t1$statistic
+t1$p.value
+
+d2 <- lsr::cohensD(M1~condition,x)
+t2 <- t.test(M1~condition,x,paired=FALSE)
+
+
+d3 <- lsr::cohensD(M1R_tot~condition,x)
+t3 <- t.test(M1R_tot~condition,x,paired=FALSE)
+
+xd <- x[which(x$condition=="diagnostic"),]
+xnond <- x[which(x$condition=="non-diagnostic"),]
+```
+
+For *Alex*, MPS-4 scores were not significantly different for the non-diagnostic condition (*M* = `r mean(xnond$R_tot)`, *SD* = `r sd(xnond$R_tot)`), than in the diagnostic condition (*M* = `r mean(xd$R_tot)`, *SD* = `r sd(xd$R_tot)`), *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`; MM-1 ratings were similar in the non-diagnostic condition (*M* = `r mean(xnond$M1)`, *SD* = `r sd(xnond$M1)`), than in the diagnostic condition (*M* = `r mean(xd$M1)`, *SD* = `r sd(xd$M1)`), *t*(`r t2$parameter`) = `r t2$statistic`, *p* `r paste(p_report(t2$p.value))`, *d* = `r d2`. For the combined measure ratings were also similar in the non-diagnostic condition (*M* = `r mean(xnond$M1R_tot)`, *SD* = `r sd(xnond$M1R_tot)`), than in the diagnostic condition (*M* = `r mean(xd$M1R_tot)`, *SD* = `r sd(xd$M1R_tot)`), *t*(`r t3$parameter`) = `r t3$statistic`, *p* `r paste(p_report(t3$p.value))`, *d* = `r d3`.
+
+
+```{r}
+
+x <- francis
+d1 <- lsr::cohensD(R_tot~condition,x)
+t1 <- t.test(R_tot~condition,x,paired=FALSE)
+t1$parameter
+t1$statistic
+t1$p.value
+
+d2 <- lsr::cohensD(M1~condition,x)
+t2 <- t.test(M1~condition,x,paired=FALSE)
+
+
+d3 <- lsr::cohensD(M1R_tot~condition,x)
+t3 <- t.test(M1R_tot~condition,x,paired=FALSE)
+
+xd <- x[which(x$condition=="diagnostic"),]
+xnond <- x[which(x$condition=="non-diagnostic"),]
+```
+
+For *Francis*, MPS-4 scores were not significantly different for the non-diagnostic condition (*M* = `r mean(xnond$R_tot)`, *SD* = `r sd(xnond$R_tot)`), than in the diagnostic condition (*M* = `r mean(xd$R_tot)`, *SD* = `r sd(xd$R_tot)`), *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`; MM-1 ratings were not significantly different in the non-diagnostic condition (*M* = `r mean(xnond$M1)`, *SD* = `r sd(xnond$M1)`), than in the diagnostic condition (*M* = `r mean(xd$M1)`, *SD* = `r sd(xd$M1)`), *t*(`r t2$parameter`) = `r t2$statistic`, *p* `r paste(p_report(t2$p.value))`, *d* = `r d2`. For the combined measure ratings were also similar in the non-diagnostic condition (*M* = `r mean(xnond$M1R_tot)`, *SD* = `r sd(xnond$M1R_tot)`), and in the diagnostic condition (*M* = `r mean(xd$M1R_tot)`, *SD* = `r sd(xd$M1R_tot)`), *t*(`r t3$parameter`) = `r t3$statistic`, *p* `r paste(p_report(t3$p.value))`, *d* = `r d3`.
+
 
 ```{r}
 x <- df3
@@ -1759,85 +1836,12 @@ figure <- ggarrange(mps4plot
 figure
 ```
 
-\newpage
 
 ```{r S3allscenariosPlot, fig.cap="Study 3: Differences in moral perception for each description", include=TRUE, fig.height=12, fig.width=8}
 
 suppressWarnings(print(figure))
 
 ```
-
-For *Sam*, MPS-4 scores were significantly lower in the non-diagnostic condition (*M* = `r mean(xnond$R_tot)`, *SD* = `r sd(xnond$R_tot)`), than in the diagnostic condition (*M* = `r mean(xd$R_tot)`, *SD* = `r sd(xd$R_tot)`), *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`; Similarly, MM-1 ratings were significantly lower in the non-diagnostic condition (*M* = `r mean(xnond$M1)`, *SD* = `r sd(xnond$M1)`), than in the diagnostic condition (*M* = `r mean(xd$M1)`, *SD* = `r sd(xd$M1)`), *t*(`r t2$parameter`) = `r t2$statistic`, *p* `r paste(p_report(t2$p.value))`, *d* = `r d2`. For the combined measure ratings were also lower in the non-diagnostic condition (*M* = `r mean(xnond$M1R_tot)`, *SD* = `r sd(xnond$M1R_tot)`), than in the diagnostic condition (*M* = `r mean(xd$M1R_tot)`, *SD* = `r sd(xd$M1R_tot)`), *t*(`r t3$parameter`) = `r t3$statistic`, *p* `r paste(p_report(t3$p.value))`, *d* = `r d3`.
-
-
-
-```{r}
-
-x <- robin
-d1 <- lsr::cohensD(R_tot~condition,x)
-t1 <- t.test(R_tot~condition,x,paired=FALSE)
-t1$parameter
-t1$statistic
-t1$p.value
-
-d2 <- lsr::cohensD(M1~condition,x)
-t2 <- t.test(M1~condition,x,paired=FALSE)
-
-
-d3 <- lsr::cohensD(M1R_tot~condition,x)
-t3 <- t.test(M1R_tot~condition,x,paired=FALSE)
-
-xd <- x[which(x$condition=="diagnostic"),]
-xnond <- x[which(x$condition=="non-diagnostic"),]
-```
-
-For *Robin*, MPS-4 scores were not significantly different for the non-diagnostic condition (*M* = `r mean(xnond$R_tot)`, *SD* = `r sd(xnond$R_tot)`), than in the diagnostic condition (*M* = `r mean(xd$R_tot)`, *SD* = `r sd(xd$R_tot)`), *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`; MM-1 ratings were similar in the non-diagnostic condition (*M* = `r mean(xnond$M1)`, *SD* = `r sd(xnond$M1)`), and in the diagnostic condition (*M* = `r mean(xd$M1)`, *SD* = `r sd(xd$M1)`), *t*(`r t2$parameter`) = `r t2$statistic`, *p* `r paste(p_report(t2$p.value))`, *d* = `r d2`. For the combined measure ratings were also similar in the non-diagnostic condition (*M* = `r mean(xnond$M1R_tot)`, *SD* = `r sd(xnond$M1R_tot)`), than in the diagnostic condition (*M* = `r mean(xd$M1R_tot)`, *SD* = `r sd(xd$M1R_tot)`), *t*(`r t3$parameter`) = `r t3$statistic`, *p* `r paste(p_report(t3$p.value))`, *d* = `r d3`.
-
-
-```{r}
-
-x <- alex
-d1 <- lsr::cohensD(R_tot~condition,x)
-t1 <- t.test(R_tot~condition,x,paired=FALSE)
-t1$parameter
-t1$statistic
-t1$p.value
-
-d2 <- lsr::cohensD(M1~condition,x)
-t2 <- t.test(M1~condition,x,paired=FALSE)
-
-
-d3 <- lsr::cohensD(M1R_tot~condition,x)
-t3 <- t.test(M1R_tot~condition,x,paired=FALSE)
-
-xd <- x[which(x$condition=="diagnostic"),]
-xnond <- x[which(x$condition=="non-diagnostic"),]
-```
-
-For *Alex*, MPS-4 scores were not significantly different for the non-diagnostic condition (*M* = `r mean(xnond$R_tot)`, *SD* = `r sd(xnond$R_tot)`), than in the diagnostic condition (*M* = `r mean(xd$R_tot)`, *SD* = `r sd(xd$R_tot)`), *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`; MM-1 ratings were similar in the non-diagnostic condition (*M* = `r mean(xnond$M1)`, *SD* = `r sd(xnond$M1)`), than in the diagnostic condition (*M* = `r mean(xd$M1)`, *SD* = `r sd(xd$M1)`), *t*(`r t2$parameter`) = `r t2$statistic`, *p* `r paste(p_report(t2$p.value))`, *d* = `r d2`. For the combined measure ratings were also similar in the non-diagnostic condition (*M* = `r mean(xnond$M1R_tot)`, *SD* = `r sd(xnond$M1R_tot)`), than in the diagnostic condition (*M* = `r mean(xd$M1R_tot)`, *SD* = `r sd(xd$M1R_tot)`), *t*(`r t3$parameter`) = `r t3$statistic`, *p* `r paste(p_report(t3$p.value))`, *d* = `r d3`.
-
-
-```{r}
-
-x <- francis
-d1 <- lsr::cohensD(R_tot~condition,x)
-t1 <- t.test(R_tot~condition,x,paired=FALSE)
-t1$parameter
-t1$statistic
-t1$p.value
-
-d2 <- lsr::cohensD(M1~condition,x)
-t2 <- t.test(M1~condition,x,paired=FALSE)
-
-
-d3 <- lsr::cohensD(M1R_tot~condition,x)
-t3 <- t.test(M1R_tot~condition,x,paired=FALSE)
-
-xd <- x[which(x$condition=="diagnostic"),]
-xnond <- x[which(x$condition=="non-diagnostic"),]
-```
-
-For *Francis*, MPS-4 scores were not significantly different for the non-diagnostic condition (*M* = `r mean(xnond$R_tot)`, *SD* = `r sd(xnond$R_tot)`), than in the diagnostic condition (*M* = `r mean(xd$R_tot)`, *SD* = `r sd(xd$R_tot)`), *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`; MM-1 ratings were not significantly different in the non-diagnostic condition (*M* = `r mean(xnond$M1)`, *SD* = `r sd(xnond$M1)`), than in the diagnostic condition (*M* = `r mean(xd$M1)`, *SD* = `r sd(xd$M1)`), *t*(`r t2$parameter`) = `r t2$statistic`, *p* `r paste(p_report(t2$p.value))`, *d* = `r d2`. For the combined measure ratings were also similar in the non-diagnostic condition (*M* = `r mean(xnond$M1R_tot)`, *SD* = `r sd(xnond$M1R_tot)`), and in the diagnostic condition (*M* = `r mean(xd$M1R_tot)`, *SD* = `r sd(xd$M1R_tot)`), *t*(`r t3$parameter`) = `r t3$statistic`, *p* `r paste(p_report(t3$p.value))`, *d* = `r d3`.
 
 \newpage
 
@@ -2019,7 +2023,7 @@ ggplot(x,aes(x=condition,y=M1R_tot))+
 
 ## Study 4: Differences between the Descriptions
 
-
+As in previous studies, we additionally conducted separate analyses to investigate of condition on responses to each scenario individually. The responses for each scenario across each measure depending on condition are displayed in Figure\ \@ref(fig:S4allscenariosPlot).
 
 
 
@@ -2201,7 +2205,6 @@ figure <- ggarrange(mps4plot
 figure
 ```
 
-\newpage
 
 ```{r S4allscenariosPlot, fig.cap="Study 4: Differences in moral perception for each description", include=TRUE, fig.height=12, fig.width=8}
 
@@ -2301,6 +2304,8 @@ xnond <- x[which(x$condition=="non-diagnostic"),]
 ```
 
 For *Francis*, MPS-4 scores were not significantly different for the non-diagnostic condition (*M* = `r mean(xnond$R_tot)`, *SD* = `r sd(xnond$R_tot)`), than in the diagnostic condition (*M* = `r mean(xd$R_tot)`, *SD* = `r sd(xd$R_tot)`), *t*(`r t1$parameter`) = `r t1$statistic`, *p* `r paste(p_report(t1$p.value))`, *d* = `r d1`; MM-1 ratings were not significantly different in the non-diagnostic condition (*M* = `r mean(xnond$M1)`, *SD* = `r sd(xnond$M1)`), than in the diagnostic condition (*M* = `r mean(xd$M1)`, *SD* = `r sd(xd$M1)`), *t*(`r t2$parameter`) = `r t2$statistic`, *p* `r paste(p_report(t2$p.value))`, *d* = `r d2`. For the combined measure ratings were also similar in the non-diagnostic condition (*M* = `r mean(xnond$M1R_tot)`, *SD* = `r sd(xnond$M1R_tot)`), and in the diagnostic condition (*M* = `r mean(xd$M1R_tot)`, *SD* = `r sd(xd$M1R_tot)`), *t*(`r t3$parameter`) = `r t3$statistic`, *p* `r paste(p_report(t3$p.value))`, *d* = `r d3`.
+
+\newpage
 
 # Study 5
 
@@ -2466,7 +2471,7 @@ For the *good* characters, there was a significant difference in responses to th
 
 ## Study 5: Differences between the Descriptions
 
-
+Again, we conducted separate analyses to investigate of condition on responses to each scenario individually. The responses for each scenario across each measure depending on condition are displayed in Figure\ \@ref(fig:S5allscenariosPlot).
 
 ```{r}
 x <- df3

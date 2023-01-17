@@ -26,8 +26,8 @@ keywords          : "keywords"
 wordcount         : "TBC"
 bibliography: "../resources/bib/My Library.bib"
 csl: "../resources/bib/apa6.csl"
-figsintext        : no
-floatsintext      : no
+figsintext        : yes
+floatsintext      : yes
 figurelist        : yes
 tablelist         : yes
 footnotelist      : no
@@ -136,9 +136,7 @@ We removed participants who failed both manipulation checks (*n* = `r att_both`)
 ### Pilot 2: Procedure and materials
 Data were collected using an online questionnaire presented with Qualtrics (www.qualtrics.com).  Participants were presented with descriptions of six characters.
 
-Moral character descriptions were developed by combining descriptions relating to three different moral foundations, focusing on upholding the moral foundations (rather than transgressions as in previous studies). A sample description reads: *Imagine a person named Sam. Throughout their life they have been known to always help and care for others, treat everyone fairly and equally, and show a strong sense of loyalty to others.*. Full text of these descriptions can be found in the supplementary materials. 
-
-We developed neutral descriptions that included information relating to physical appearance/attributes, hobbies/activities, and a color preference, e.g., *Imagine a person named Charlie. They have blue eyes, drink coffee in the morning, and their favourite colour is green*.
+Moral character descriptions were developed by combining descriptions relating to three different moral foundations, focusing on upholding the moral foundations (rather than transgressions as in previous studies). We developed 4 descriptions of moral characters that read as follows: (i) *Imagine a person named Sam. Throughout their life they have been known to always help and care for others, treat everyone fairly and equally, and show a strong sense of loyalty to others*; (ii) *Imagine a person named Robin. Throughout their life they have been known to show compassion and empathy for others, act with a sense of fairness and justice, and, never to break their word*; (iii) *Imagine a person named Francis. Throughout their life they have been known to uphold the standards of purity and decency, show respect for authority, and to always act honestly and fairly*; (iv) *Imagine a person named Alex. Throughout their life they have been known to protect and provide shelter to the weak and vulnerable, uphold the rights of others, and show respect for authority*. We developed 2 descriptions of morally neutral characters that included information relating to physical appearance/attributes, hobbies/activities, and a color preference: (i) *Imagine a person named Jackie. They have dark hair, go for a jog twice a week, and their favourite colour is blue*; (ii) *Imagine a person named Charlie. They have blue eyes, drink coffee in the morning, and their favourite colour is green*. 
 
 We used the same gender ambiguous names, and we did not specify the gender of the characters. Pilot Study 2 was pre-registered at \color{blue}[https://aspredicted.org/W52_VPX](https://aspredicted.org/W52_VPX)\color{black}.
 
@@ -289,8 +287,6 @@ p2 <- results_coef$`Pr(>|t|)`[2]
 anova(model1)
 ```
 
-We conducted a linear-mixed-effects model to test if condition influenced MPS-4 responses. Our outcome measure was MPS-4, our predictor variable was condition; we allowed intercepts and the effect of condition to vary across participants.
-Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model, $\chi$^2^(`r results_anova$Df[2]`) = `r results_anova$Chisq[2]`, *p* `r paste(p_report(p1))`. Condition was a significant predictor in the model $b$ = `r results_coef$Estimate[2]`, *t*(`r results_coef$df[2]`) = `r t1`, *p* `r paste(p_report(p2))`, with the diagnostic descriptions being rated as more moral than the non-diagnostic descriptions of immoral characters Figure\ \@ref(fig:pilot2bothconditionplot).
 
 ```{r pilot2Rtotconditionplot, fig.cap="Pilot Study 1: Differences in MPS-4 depending on condition", include=FALSE}
 
@@ -401,13 +397,15 @@ figure
 ```
 
 
-```{r pilot2bothconditionplot, fig.cap="Pilot Study 2: Differences in moral perception depending on condition", include=TRUE}
+```{r pilot2bothconditionplot, fig.cap="Pilot Study 2: Differences in moral perception depending on condition", out.width = "\\textwidth", fig.pos = "!h", include=TRUE}
 
 suppressWarnings(print(figure))
 
 ```
 
 
+We conducted a linear-mixed-effects model to test if condition influenced MPS-4 responses. Our outcome measure was MPS-4, our predictor variable was condition; we allowed intercepts and the effect of condition to vary across participants.
+Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model, $\chi$^2^(`r results_anova$Df[2]`) = `r results_anova$Chisq[2]`, *p* `r paste(p_report(p1))`. Condition was a significant predictor in the model $b$ = `r results_coef$Estimate[2]`, *t*(`r results_coef$df[2]`) = `r t1`, *p* `r paste(p_report(p2))`, with the diagnostic descriptions being rated as more moral than the non-diagnostic descriptions of immoral characters Figure\ \@ref(fig:pilot2bothconditionplot).
 
 ```{r}
 model0 <- lmerTest::lmer(M1 ~ 1

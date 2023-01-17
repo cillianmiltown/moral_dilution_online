@@ -1,0 +1,79 @@
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[!p]
+\includegraphics{Supplementary_files/figure-latex/pilot1bothconditionplot-1} \caption{Pilot Study 1: Differences in moral perception depending on condition}\label{fig:pilot1bothconditionplot}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[!p]
+\includegraphics{Supplementary_files/figure-latex/pilot2bothconditionplot-1} \caption{Pilot Study 2: Differences in moral perception depending on condition}\label{fig:pilot2bothconditionplot}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
+\includegraphics{../resources/images/mps4.png}
+\caption{Screenshot of the MPS-4 items as presented to participants}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
+\includegraphics{../resources/images/mm1.png}
+\caption{Screenshot of MM-1 as presented to participants}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[!h]
+\includegraphics[width=\textwidth,]{Supplementary_files/figure-latex/pilot1cobminedconditionplot-1} \caption{Pilot Study 1: Differences in combined measure depending on condition}\label{fig:pilot1cobminedconditionplot}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[!h]
+\includegraphics[width=\textwidth,]{Supplementary_files/figure-latex/S1combinedconditionplot-1} \caption{Study 1: Differences in combined measure depending on condition}\label{fig:S1combinedconditionplot}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[!p]
+\includegraphics{Supplementary_files/figure-latex/S1allscenariosPlot-1} \caption{Study 1: Differences in moral perception for each description}\label{fig:S1allscenariosPlot}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[!h]
+\includegraphics[width=\textwidth,]{Supplementary_files/figure-latex/pilot2cobminedconditionplot-1} \caption{Pilot Study 1: Differences in combined measure depending on condition}\label{fig:pilot2cobminedconditionplot}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[!h]
+\includegraphics[width=\textwidth,]{Supplementary_files/figure-latex/S3combinedconditionplot-1} \caption{Study 2: Differences in combined measure depending on condition}\label{fig:S3combinedconditionplot}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[!p]
+\includegraphics{Supplementary_files/figure-latex/S2allscenariosPlot-1} \caption{Study 2: Differences in moral perception for each description}\label{fig:S2allscenariosPlot}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[!h]
+\includegraphics[width=\textwidth,]{Supplementary_files/figure-latex/S3combinedplot-1} \caption{Study 3: Differences in the combined measure depending on condition}\label{fig:S3combinedplot}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[!p]
+\includegraphics{Supplementary_files/figure-latex/S3allscenariosPlot-1} \caption{Study 3: Differences in moral perception for each description}\label{fig:S3allscenariosPlot}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[!h]
+\includegraphics[width=\textwidth,]{Supplementary_files/figure-latex/S4combinedconditionplot-1} \caption{Study 4: Differences in combined measure depending on condition}\label{fig:S4combinedconditionplot}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[!p]
+\includegraphics{Supplementary_files/figure-latex/S4allscenariosPlot-1} \caption{Study 4: Differences in moral perception for each description}\label{fig:S4allscenariosPlot}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[!p]
+\includegraphics{Supplementary_files/figure-latex/S5allscenariosPlot-1} \caption{Study 5: Differences in moral perception for each description}\label{fig:S5allscenariosPlot}
+\end{figure*}

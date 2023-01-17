@@ -1,0 +1,7 @@
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
+\includegraphics{pilot_1_files/figure-latex/pilot1bothconditionplot-1.pdf}
+\caption{\label{fig:pilot1bothconditionplot}Pilot Study 1: Differences in moral perception depending on condition}
+\end{figure*}

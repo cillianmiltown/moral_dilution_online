@@ -26,8 +26,8 @@ keywords          : "keywords"
 wordcount         : "TBC"
 bibliography: "../resources/bib/My Library.bib"
 csl: "../resources/bib/apa6.csl"
-figsintext        : no
-floatsintext      : no
+figsintext        : yes
+floatsintext      : yes
 figurelist        : yes
 tablelist         : yes
 footnotelist      : no
@@ -64,7 +64,16 @@ library(foreign)
 library(car)
 #devtools::install_github("cillianmiltown/R_desnum")
 library(desnum)
-library(ggplot2)
+# install.packages(
+#    "ggplot2",
+#    repos = c("http://rstudio.org/_packages",
+#    "http://cran.rstudio.com")
+# )
+# install.packages("ggplot2")
+library("ggplot2")
+
+#install.packages("vctrs")
+
 library(extrafont)
 #devtools::install_github("crsh/papaja")
 #install.packages("afex")
@@ -73,6 +82,12 @@ library(papaja)
 library("afex")
 library("tibble")
 library(scales)
+# if (!require("BiocManager", quietly = TRUE))
+#     install.packages("BiocManager")
+# 
+# BiocManager::install("multtest")
+
+#install.packages("multtest")
 #install.packages("metap")
 library(metap)
 #install.packages("pwr")
@@ -141,9 +156,9 @@ We removed participants who failed both manipulation checks (*n* = `r att_both`)
 ### Pilot 1: Procedure and materials
 Data were collected using an online questionnaire presented with Qualtrics (www.qualtrics.com).  Participants were presented with descriptions of six characters.
 
-Moral character descriptions were developed by combining descriptions relating to three different moral foundations. These descriptions were adapted from the items of the extended character morality questionnaire [@grizzard_validating_2020]. A sample description reads: *Imagine a person named Sam. Throughout their life they have been known to be cruel, act unfairly, and to betray their own group*. Full text of these descriptions can be found in the supplementary materials. 
+Moral character descriptions were developed by combining descriptions relating to three different moral foundations. These descriptions were adapted from the items of the extended character morality questionnaire [@grizzard_validating_2020], and read as follows: (i) *Imagine a person named Sam. Throughout their life they have been known to be cruel, act unfairly, and to betray their own group*; (ii) *Imagine a person named Robin. Throughout their life they have been known to physically hurt others, treat some people differently to others, and show lack of loyalty*; (iii) *Imagine a person named Francis. Throughout their life they have been known to violate the standards of purity and decency, show lack of respect for authority, and treat people unequally* (iv) *Imagine a person named Alex. Throughout their life they have been known to cause others to suffer emotionally, to deny others their rights, and to cause chaos or disorder*.
 
-We developed neutral descriptions that included information relating to physical appearance/attributes, hobbies/activities, and family information, e.g., *Imagine a person named Jackie. They have red hair, play tennis four times a month, and have one older sibling and one younger sibling*.
+We developed neutral descriptions that included information relating to physical appearance/attributes, hobbies/activities, and family information that read as follows: (i) *Imagine a person named Jackie. They have red hair, play tennis four times a month, and have one older sibling and one younger sibling*; (ii) *Imagine a person named Charlie. They are left-handed, drink tea in the morning, and have two older siblings and one younger sibling*.
 
 Character descriptions did not specify the gender of the charcters, and all characters had names that could be either male or female (Sam, Robin, Francis, Alex, Jackie, Charlie). All participants read six descriptions, four moral descriptions and two neutral. Pilot Study 1 was pre-registered at \color{blue}[https://aspredicted.org/3VK_8FD](https://aspredicted.org/3VK_8FD)\color{black}.
 
@@ -406,7 +421,7 @@ figure
 ```
 
 
-```{r pilot1bothconditionplot, fig.cap="Pilot Study 1: Differences in moral perception depending on condition", include=TRUE}
+```{r pilot1bothconditionplot, fig.cap="Pilot Study 1: Differences in moral perception depending on condition", out.width = "\\textwidth", fig.pos = "!h", include=TRUE}
 
 suppressWarnings(print(figure))
 

@@ -72,9 +72,27 @@ all_ps <-
     ,.002 , .0001  # Study 5 Good
 )
 
+all_ps_mm1 <-
+  c(# MPS-4  MM-1
+    # .0001
+             .0001  # Study 1
+    #,.624 
+            , .267   # Study 2
+    #,.060 
+            , .008   # Study 3 Bad
+    #,.009 
+            , .0001  # Study 3 Good
+    #,.095 
+            , .029   # Study 4
+    #,.221 
+            , .140   # Study 5 Bad
+    #,.002 
+            , .0001  # Study 5 Good
+)
 
 
-all_ps <-
+
+all_ps_m4 <-
   c(# MPS-4  MM-1
      .0001#, .0001  # Study 1
     ,.624 #, .267   # Study 2
@@ -88,24 +106,44 @@ all_ps <-
 all_ns <- 
   c(
     # MPS-4  MM-1
-     801 , 801   # Study 1
-    ,820 , 820   # Study 2
-    ,874 , 874   # Study 3 Bad
-    ,874 , 874   # Study 3 Good
-    ,856 , 856   # Study 4
-    ,860 , 860   # Study 5 Bad
-    ,890 , 890   # Study 5 Good
+     801 #, 801   # Study 1
+    ,820 #, 820   # Study 2
+    ,874 #, 874   # Study 3 Bad
+    ,874 #, 874   # Study 3 Good
+    ,856 #, 856   # Study 4
+    ,860 #, 860   # Study 5 Bad
+    ,890 #, 890   # Study 5 Good
   )
 
 meta3 <- sumlog(all_ps)
 meta3
 
+all_ps_mm1
+meta3 <- sumlog(all_ps_mm1)
+meta3
+
+all_ps_m4
+meta3 <- sumlog(all_ps_m4)
+meta3
+
+
+
 psch5 <- all_ps
 wtsch5 <- sqrt(all_ns)
 
-
 meta4 <- sumz(psch5,wtsch5)
 meta4
+
+psch5 <- all_ps_mm1
+wtsch5 <- sqrt(all_ns)
+meta4 <- sumz(psch5,wtsch5)
+meta4
+
+psch5 <- all_ps_m4
+wtsch5 <- sqrt(all_ns)
+meta4 <- sumz(psch5,wtsch5)
+meta4
+
 ```
 
 A mini meta-analysis and found a significant dilution effect across both good and bad character descriptions across all studies  $\chi$^2^(`r meta3$df`) = `r round(meta3$chisq, digits=3)`, *p* `r paste(p_report(meta3$p))` (Fisher’s method); or when weighting for sample size, *z* `r paste(p_report(meta4$z))`, *p* `r paste(p_report(meta4$p))` (Stouffer's Z-score method).
@@ -127,25 +165,81 @@ all_ps <-
 )
 
 
+
+
+all_ps_mm1 <-
+  c(# MPS-4  MM-1
+   # .0001
+             .0001  # Study 1
+  ##,.624 
+          #, .267   # Study 2
+   #,.060 
+          , .008   # Study 3 Bad
+  ##,.009 
+          #, .0001  # Study 3 Good
+  ##,.095 
+          #, .029   # Study 4
+   #,.221 
+           , .140   # Study 5 Bad
+  ##,.002 
+          #, .0001  # Study 5 Good
+)
+
+
+
+all_ps_m4 <-
+  c(# MPS-4  MM-1
+     .0001#, .0001  # Study 1
+  # ,.624 #, .267   # Study 2
+    ,.060 #, .008   # Study 3 Bad
+  # ,.009 #, .0001  # Study 3 Good
+  # ,.095 #, .029   # Study 4
+    ,.221 #, .140   # Study 5 Bad
+  # ,.002 #, .0001  # Study 5 Good
+)
+
+
 all_ns <- 
   c(
     # MPS-4  MM-1
-     801 , 801   # Study 1
-  # ,820 , 820   # Study 2
-    ,874 , 874   # Study 3 Bad
-  # ,874 , 874   # Study 3 Good
-  # ,856 , 856   # Study 4
-    ,860 , 860   # Study 5 Bad
-  # ,890 , 890   # Study 5 Good
+     801 #, 801   # Study 1
+  # ,820 #, 820   # Study 2
+    ,874 #, 874   # Study 3 Bad
+  # ,874 #, 874   # Study 3 Good
+  # ,856 #, 856   # Study 4
+    ,860 #, 860   # Study 5 Bad
+  # ,890 #, 890   # Study 5 Good
   )
 
+
+all_ps_m4
 
 meta3 <- sumlog(all_ps)
 meta3
 
+meta3 <- sumlog(all_ps_mm1)
+meta3
+
+meta3 <- sumlog(all_ps_m4)
+meta3
+
+
 psch5 <- all_ps
 wtsch5 <- sqrt(all_ns)
 
+meta4 <- sumz(psch5,wtsch5)
+meta4
+
+
+psch5 <- all_ps_mm1
+wtsch5 <- sqrt(all_ns)
+
+meta4 <- sumz(psch5,wtsch5)
+meta4
+
+
+psch5 <- all_ps_m4
+wtsch5 <- sqrt(all_ns)
 
 meta4 <- sumz(psch5,wtsch5)
 meta4
@@ -169,28 +263,73 @@ all_ps <-
 )
 
 
+all_ps_mm1 <-
+  c(# MPS-4  MM-1
+  # # .0001
+          #, .0001  # Study 1
+    # .624 
+           .267   # Study 2
+  # #,.060 
+          #, .008   # Study 3 Bad
+    #,.009 
+          , .0001  # Study 3 Good
+    #,.095 
+          , .029   # Study 4
+  # #,.221 
+          #, .140   # Study 5 Bad
+    #,.002 
+          , .0001  # Study 5 Good
+)
+
+all_ps_m4 <-
+  c(# MPS-4  MM-1
+  #  .0001#, .0001  # Study 1
+     .624 #, .267   # Study 2
+  # ,.060 #, .008   # Study 3 Bad
+    ,.009 #, .0001  # Study 3 Good
+    ,.095 #, .029   # Study 4
+  # ,.221 #, .140   # Study 5 Bad
+    ,.002 #, .0001  # Study 5 Good
+)
+
+
 all_ns <- 
   c(
     # MPS-4  MM-1
-  #  801 , 801   # Study 1
-     820 , 820   # Study 2
-  # ,874 , 874   # Study 3 Bad
-    ,874 , 874   # Study 3 Good
-    ,856 , 856   # Study 4
-  # ,860 , 860   # Study 5 Bad
-    ,890 , 890   # Study 5 Good
+  #  801 #, 801   # Study 1
+     820 #, 820   # Study 2
+  # ,874 #, 874   # Study 3 Bad
+    ,874 #, 874   # Study 3 Good
+    ,856 #, 856   # Study 4
+  # ,860 #, 860   # Study 5 Bad
+    ,890 #, 890   # Study 5 Good
   )
 
-meta3 <- sumlog(c(.023,.021,.039,.359,.215,.000002925))
+#meta3 <- sumlog(c(.023,.021,.039,.359,.215,.000002925))
 meta3 <- sumlog(all_ps)
+meta3
+
+meta3 <- sumlog(all_ps_mm1)
+meta3
+
+meta3 <- sumlog(all_ps_m4)
 meta3
 
 psch5 <- all_ps
 wtsch5 <- sqrt(all_ns)
-
-
 meta4 <- sumz(psch5,wtsch5)
 meta4
+
+psch5 <- all_ps_mm1
+wtsch5 <- sqrt(all_ns)
+meta4 <- sumz(psch5,wtsch5)
+meta4
+
+psch5 <- all_ps_m4
+wtsch5 <- sqrt(all_ns)
+meta4 <- sumz(psch5,wtsch5)
+meta4
+
 ```
 
 A mini meta-analysis and found a significant dilution effect for good character descriptions across all studies  $\chi$^2^(`r meta3$df`) = `r round(meta3$chisq, digits=3)`, *p* `r paste(p_report(meta3$p))` (Fisher’s method); or when weighting for sample size, *z* `r paste(p_report(meta4$z))`, *p* `r paste(p_report(meta4$p))` (Stouffer's Z-score method).
