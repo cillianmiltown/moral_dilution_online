@@ -43,6 +43,6 @@ Data and analyses for study of the dilution effect in the moral domain.
 - Study 2: good characters ([results](https://cillianmiltown.github.io/moral_dilution_online/study4_sample_analysis.html))
 - Study 3: both good and bad ([results](https://cillianmiltown.github.io/moral_dilution_online/study5_sample_analysis.html))
 - Study 4: good characters ([results](https://cillianmiltown.github.io/moral_dilution_online/study4_rep_sample_analysis.html))
-- Study 5: both good and bad (between subjects) ([results](https://cillianmiltown.github.io/moral_dilution_online/study5_sample_analysis.html))
+- Study 5: both good and bad (between subjects) ([results](https://cillianmiltown.github.io/moral_dilution_online/study6_sample_analysis.html))
 - Overview of results [here](https://cillianmiltown.github.io/moral_dilution_online/update_presentation_scroll.html)
 - Presentation to London Reasoning Workshop [here](https://cillianmiltown.github.io/moral_dilution_online/LRW_moral_dilution.html#1)

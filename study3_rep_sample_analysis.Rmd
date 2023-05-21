@@ -1,7 +1,7 @@
 ---
-title: "Sample Analysis Study 5"
+title: "Sample Analysis Study 3"
 author: "Cillian McHugh"
-date: "16th May 2022"
+date: "12th April 2022"
 bibliography: "resources/bib/My Library.bib"
 csl: "resources/bib/apa.csl"
 output:
@@ -16,7 +16,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Study 5
+# Study 3
 
 Below is the analysis for positive moral dilution study.
 
@@ -54,7 +54,7 @@ suppressMessages(library(car))
 ```{r, echo=TRUE}
 ## Run Script to set up Data
 
-source("study6_set_up_data.R")
+source("study5_set_up_data.R")
 # 
 # write.csv(df_wide_clean, file = "data/study_1_wide_clean.csv")
 # write.csv(df_long_clean, file = "data/study_1_long_clean.csv")
@@ -67,37 +67,9 @@ x <- df_long
 x <- df_long_clean
 
 
-#sum(x$gender=="1",na.rm = T)/4
-
-
-sam <- x[which(x$scenario=="sam"),]
-francis <- x[which(x$scenario=="francis"),]
-alex <- x[which(x$scenario=="alex"),]
-robin <- x[which(x$scenario=="robin"),]
-
-
-
-x <- sam
-x <- francis
-x <- alex
-x <- robin
-
-tapply(x$M1, x$condition, descriptives)
-t.test(x$M1~x$condition)
-tapply(x$R_tot, x$condition, descriptives)
-t.test(x$R_tot~x$condition)
-
+sum(x$gender=="1",na.rm = T)/4
 
 ```
-
-```{r, include=TRUE}
-
-x <- df_long_clean
-
-table(x$condition,x$scenario)
-
-```
-
 
 ```{r include=TRUE}
 ## Measures
@@ -127,12 +99,11 @@ sum(x$gender=="5")/4
 # 5 = prefer not to say
 
 round(mean(x$age),digits=1)
-x <- df_long_clean
 
 ```
 # Overview
 ## Sample
-Below is a sample analysis for a moral dilution study, with a total sample of *N* = `r length(x$gender)`, (female = `r sum(x$gender=="2")`, male = `r sum(x$gender=="1")`, non-binary/other = `r sum(x$gender=="3") + sum(x$gender=="5")`, prefer not to say `r sum(x$gender=="5")`, *M~age~* = `r round(mean(x$age),digits=1)`, *SD* = `r round(sd(x$age),digits=1)`).
+Below is a sample analysis for a moral dilution study, with a total sample of *N* = `r length(x$gender)/4`, (female = `r sum(x$gender=="2")/4`, male = `r sum(x$gender=="1")/4`, non-binary/other = `r sum(x$gender=="3")/4 + sum(x$gender=="5")/4`, prefer not to say `r sum(x$gender=="5")/4`, *M~age~* = `r round(mean(x$age),digits=1)`, *SD* = `r round(sd(x$age),digits=1)`).
 
 ```{r}
 x <- df_long_clean
@@ -144,32 +115,35 @@ x <- df_long_clean
 
 ## Four item Measure
 
-```{r include=TRUE}
-
-# model1 <- lme::lmer(R_tot ~
-#                   condition+scenario
-#                 + (1|ResponseId)
-#                 , data = x
-#                # , family=gaussian
-#             )
-# anova(model1)
+```{r include=FALSE}
+x$ResponseId <- as.factor(x$ResponseId)
+model1 <- lmerTest::lmer(R_tot ~
+                  condition+valence
+                + (1|ResponseId)
+                , data = x
+               # , family=gaussian
+            )
+anova(model1)
+summary(model1)
 
 
 library(nlme)
+
 m1 <- nlme::lme(R_tot ~ 
                   condition*valence
                 , random=~1|ResponseId
                 , data=x)
 summary(m1)
-
 anova(m1)
 
 ```
 
 
 ```{r, include=TRUE}
-# ezANOVA(data = x, dv = .(R_tot), wid = .(ResponseId),
-#         within = .(condition,valence), detailed = FALSE, type = 2)
+ezANOVA(data = x, dv = .(R_tot)
+        , wid = .(ResponseId)
+        , within = .(condition,valence)
+        , detailed = TRUE, type = 2)
 ```
 
 
@@ -214,14 +188,14 @@ ggplot(x,aes(x=scenario,y=R_tot))+
 
 ```{r include=FALSE}
 
-# model1 <- lmerTest::lmer(M1 ~
-#                   condition+scenario
-#                 + (1|ResponseId)
-#                 , data = x
-#                # , family=gaussian
-#             )
-# summary(model1)
-# anova(model1)
+model1 <- lme4::lmer(M1 ~
+                  condition+scenario
+                + (1|ResponseId)
+                , data = x
+               # , family=gaussian
+            )
+summary(model1)
+anova(model1)
 
 
 library(nlme)
@@ -246,8 +220,8 @@ anova(m1)
 
 
 ```{r, include=TRUE}
-# ezANOVA(data = x, dv = .(M1), wid = .(ResponseId),
-#         within = .(condition,valence), detailed = FALSE, type = 2)
+ezANOVA(data = x, dv = .(M1), wid = .(ResponseId),
+        within = .(condition,valence), detailed = FALSE, type = 2)
 ```
 
 
@@ -345,11 +319,8 @@ summary(m1)
 
 anova(m1)
 
-#summary(lm(R_tot~condition,data = x))
-#summary(aov(R_tot~condition,data = x))
-
-# ezANOVA(data = x, dv = .(R_tot), wid = .(ResponseId),
-#         within = .(condition), detailed = FALSE, type = 2)
+ezANOVA(data = x, dv = .(R_tot), wid = .(ResponseId),
+        within = .(condition), detailed = FALSE, type = 2)
 
 ```
 
@@ -372,22 +343,10 @@ summary(m1)
 
 anova(m1)
 
-# ezANOVA(data = x, dv = .(M1), wid = .(ResponseId),
-#         within = .(condition), detailed = FALSE, type = 2)
+ezANOVA(data = x, dv = .(M1), wid = .(ResponseId),
+        within = .(condition), detailed = FALSE, type = 2)
 
 ```
-
-#### Mean Differences
-
-```{r, include=TRUE}
-tapply(x$M1, x$condition, descriptives)
-t.test(x$M1~x$condition)
-wilcox.test(x$M1~x$condition)
-tapply(x$R_tot, x$condition, descriptives)
-t.test(x$R_tot~x$condition)
-wilcox.test(x$R_tot~x$condition)
-```
-
 
 ### Good
 
@@ -411,8 +370,8 @@ summary(m1)
 
 anova(m1)
 
-# ezANOVA(data = x, dv = .(R_tot), wid = .(ResponseId),
-#         within = .(condition), detailed = FALSE, type = 2)
+ezANOVA(data = x, dv = .(R_tot), wid = .(ResponseId),
+        within = .(condition), detailed = FALSE, type = 2)
 
 ```
 
@@ -436,20 +395,9 @@ summary(m1)
 
 anova(m1)
 
-# ezANOVA(data = x, dv = .(M1), wid = .(ResponseId),
-#         within = .(condition), detailed = FALSE, type = 2)
+ezANOVA(data = x, dv = .(M1), wid = .(ResponseId),
+        within = .(condition), detailed = FALSE, type = 2)
 
-```
-
-#### Mean Differences
-
-```{r, include=TRUE}
-tapply(x$M1, x$condition, descriptives)
-t.test(x$M1~x$condition)
-wilcox.test(x$M1~x$condition)
-tapply(x$R_tot, x$condition, descriptives)
-t.test(x$R_tot~x$condition)
-wilcox.test(x$R_tot~x$condition)
 ```
 
 ## Recoded Test
@@ -479,29 +427,28 @@ x <- rbind(good,bad)
 
 
 
-## Testing for differences in non-diagnostic conditions
+## Testing for Interaction Effect
 
 
+
+## Four item Measure
 
 
 ```{r, include=TRUE}
-# ezANOVA(data = x, dv = .(R_tot_strength), wid = .(ResponseId),
-#         within = .(condition,valence), detailed = FALSE, type = 2)
+ezANOVA(data = x, dv = .(R_tot_strength), wid = .(ResponseId),
+        within = .(condition,valence), detailed = FALSE, type = 2)
 
-
-y <- x
 y <- x[which(x$diagnostic12!="NA"),]
 y$diagnostic12 <- droplevels(y$diagnostic12)
-#y <- x
-# ezANOVA(data = y, dv = .(R_tot), wid = .(ResponseId),
-#         within = .(diagnostic12,valence), detailed = FALSE, type = 2)
+ezANOVA(data = y, dv = .(R_tot), wid = .(ResponseId),
+        within = .(diagnostic12,valence), detailed = FALSE, type = 2)
 
 y$valence
 good <- y[which(y$valence=="good"),]
 bad <- y[which(y$valence=="bad"),]
 
-# ezANOVA(data = good, dv = .(R_tot), wid = .(ResponseId),
-#         within = .(diagnostic12), detailed = FALSE, type = 2)
+ezANOVA(data = good, dv = .(R_tot), wid = .(ResponseId),
+        within = .(diagnostic12), detailed = FALSE, type = 2)
 
 t.test(good$R_tot~good$diagnostic12)
 tapply(good$R_tot, good$diagnostic12, descriptives)
@@ -515,184 +462,12 @@ tapply(bad$M1,    bad$diagnostic12, descriptives)
 ```
 
 
-```{r, include=TRUE}
-# ezANOVA(data = x, dv = .(M1_strength), wid = .(ResponseId),
-#         within = .(condition,valence), detailed = FALSE, type = 2)
-```
-
-## Testing individual scenarios
-
-```{r, include=TRUE}
 
 
-sam <- x[which(x$scenario=="sam"),]
-francis <- x[which(x$scenario=="francis"),]
-alex <- x[which(x$scenario=="alex"),]
-robin <- x[which(x$scenario=="robin"),]
-
-```
-
-### Sam
-```{r, include=TRUE}
-
-
-x <- sam
-# x <- francis
-# x <- alex
-# x <- robin
-
-tapply(x$M1, x$condition, descriptives)
-t.test(x$M1~x$condition)
-tapply(x$R_tot, x$condition, descriptives)
-t.test(x$R_tot~x$condition)
-wilcox.test(x$M1~x$condition)
-wilcox.test(x$R_tot~x$condition)
-
-```
-### Francis
-```{r, include=TRUE}
-
-# x <- sam
-x <- francis
-# x <- alex
-# x <- robin
-
-tapply(x$M1, x$condition, descriptives)
-t.test(x$M1~x$condition)
-tapply(x$R_tot, x$condition, descriptives)
-t.test(x$R_tot~x$condition)
-wilcox.test(x$M1~x$condition)
-wilcox.test(x$R_tot~x$condition)
-
-```
-### Alex
-```{r, include=TRUE}
-
-# x <- sam
-# x <- francis
-x <- alex
-# x <- robin
-
-tapply(x$M1, x$condition, descriptives)
-t.test(x$M1~x$condition)
-tapply(x$R_tot, x$condition, descriptives)
-t.test(x$R_tot~x$condition)
-wilcox.test(x$M1~x$condition)
-wilcox.test(x$R_tot~x$condition)
-
-```
-### Robin
-```{r, include=TRUE}
-
-# x <- sam
-# x <- francis
-# x <- alex
-x <- robin
-
-tapply(x$M1, x$condition, descriptives)
-t.test(x$M1~x$condition)
-tapply(x$R_tot, x$condition, descriptives)
-t.test(x$R_tot~x$condition)
-wilcox.test(x$M1~x$condition)
-wilcox.test(x$R_tot~x$condition)
-
-
-
-
-```
-
-## Plotting Scenario by condition
-
-```{r}
-
-df <- df_long_clean
-
-
-good <- df[which(df$valence=="good"),]
-
-bad <- df[which(df$valence=="bad"),]
-```
-
-### Good
-
-```{r}
-x <- good
-
-x$scenario_condition <- paste(x$scenario, x$condition)
-
-```
-
-```{r, include=TRUE}
-
-ggplot(x,aes(x=scenario_condition,y=M1, color=condition))+
-  geom_violin() +
-  stat_summary(fun=mean, geom="point", shape=23, size=2)+
-  geom_boxplot(width=0.1)+
-#  geom_dotplot(binaxis='y', stackdir='center', dotsize=.05)+
-# violin plot with jittered points
-# 0.2 : degree of jitter in x direction
-  geom_jitter(shape=16, position=position_jitter(0.15), size=.3, color="dark grey")
-  #+  facet_grid(cols = vars(valence))
-# violin plot with median points
-#p + stat_summary(fun.y=median, geom="point", size=.2, color="red")
-
-```
+### Single Item Measure
 
 
 ```{r, include=TRUE}
-
-ggplot(x,aes(x=scenario_condition,y=R_tot, color=condition))+
-  geom_violin() +
-  stat_summary(fun=mean, geom="point", shape=23, size=2)+
-  geom_boxplot(width=0.1)+
-#  geom_dotplot(binaxis='y', stackdir='center', dotsize=.05)+
-# violin plot with jittered points
-# 0.2 : degree of jitter in x direction
-  geom_jitter(shape=16, position=position_jitter(0.15), size=.3, color="dark grey")
-  #+  facet_grid(cols = vars(valence))
-# violin plot with median points
-#p + stat_summary(fun.y=median, geom="point", size=.2, color="red")
-
-```
-
-### Bad
-
-```{r}
-x <- bad
-
-x$scenario_condition <- paste(x$scenario, x$condition)
-
-```
-
-```{r, include=TRUE}
-
-ggplot(x,aes(x=scenario_condition,y=M1, color=condition))+
-  geom_violin() +
-  stat_summary(fun=mean, geom="point", shape=23, size=2)+
-  geom_boxplot(width=0.1)+
-#  geom_dotplot(binaxis='y', stackdir='center', dotsize=.05)+
-# violin plot with jittered points
-# 0.2 : degree of jitter in x direction
-  geom_jitter(shape=16, position=position_jitter(0.15), size=.3, color="dark grey")
-  #+  facet_grid(cols = vars(valence))
-# violin plot with median points
-#p + stat_summary(fun.y=median, geom="point", size=.2, color="red")
-
-```
-
-
-```{r, include=TRUE}
-
-ggplot(x,aes(x=scenario_condition,y=R_tot, color=condition))+
-  geom_violin() +
-  stat_summary(fun=mean, geom="point", shape=23, size=2)+
-  geom_boxplot(width=0.1)+
-#  geom_dotplot(binaxis='y', stackdir='center', dotsize=.05)+
-# violin plot with jittered points
-# 0.2 : degree of jitter in x direction
-  geom_jitter(shape=16, position=position_jitter(0.15), size=.3, color="dark grey")
-  #+  facet_grid(cols = vars(valence))
-# violin plot with median points
-#p + stat_summary(fun.y=median, geom="point", size=.2, color="red")
-
+ezANOVA(data = x, dv = .(M1_strength), wid = .(ResponseId),
+        within = .(condition,valence), detailed = FALSE, type = 2)
 ```

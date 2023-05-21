@@ -4,30 +4,48 @@ library(tidyverse)
 # source("../local_analysis/pilot_pre_processing.R")
 
 # read the data file
-#setwd("..")
 
-df <- suppressMessages(read_csv("../data/study_6.csv"))
+df <- suppressMessages(read_csv("../data/study_3_replication_May2023c.csv"))
+#df <- suppressMessages(read_csv("../../data/study_5.csv"))
 
 
 # check variable names
 variable.names(df)
-#
-# table(df$`Duration (in seconds)`)
-#
-# table(round(df$`Duration (in seconds)`/60))
-# hist(round(df$`Duration (in seconds)`/60))
-#
-# sum(round(df$`Duration (in seconds)`/60)<4)/length(df$StartDate)
-
-
-
 #View(df)
 
 #df <-
+# y <- df[which(df$age==7708),]
+# y <- y %>%
+#   mutate(age=
+#            dplyr::recode(age
+#                          , "7708" = "45"
+#                          ))
+# y1 <- y
+# y <- df[which(df$age==47906),]
+# y <- y %>%
+#   mutate(age=
+#            dplyr::recode(age
+#                          , "47906" = "47"
+#            ))
+# y2 <- y
+# y <- df[which(df$age==3),]
+# y <- y %>%
+#   mutate(age=
+#            dplyr::recode(age
+#                          , "3" = "30"
+#            ))
+# y3 <- y
+#
+# z <- df
+# z <- z[which(z$age!=7708),]
+# z <- z[which(z$age!=47906),]
+# z <- z[which(z$age!=3),]
+#
+# df <- rbind(z,y1,y2,y3)
 
 df$age <- as.numeric(df$age)
 
-rm(x,y,y1,y2,y3,z)
+#rm(y,y1,y2,y3,z)
 x <- df
 ##### create the dataframe #####
 
@@ -258,7 +276,6 @@ x$R_tot <- rowMeans(
   x[2:5]
 )
 
-
 x$M1R_tot <- scale(scale(x$R_tot)+scale(x$M1))
 
 
@@ -266,7 +283,7 @@ df_long <- x
 x <- df_long
 
 #x <- x[as.numeric(ave(x$ResponseId, x$ResponseId, FUN=length)) >= 4, ]
-#x <- x[as.numeric(ave(x$ResponseId, x$ResponseId, FUN=length)) >= 4, ]
+x <- x[as.numeric(ave(x$ResponseId, x$ResponseId, FUN=length)) >= 4, ]
 
 
 x <- x[which(((x$attn_chk_2_Q=="2"|x$attn_chk_2_Q=="5")==FALSE&x$attn_chk_1Q!="7")==FALSE),]
@@ -298,31 +315,31 @@ alex$R_tot <- rowMeans(
 
 
 
-names(sam)[2:10]
-names(sam)[2:10] <- paste0("sam_", names(sam)[2:10] )
-names(robin)[2:10] <- paste0("robin_", names(robin)[2:10] )
-names(francis)[2:10] <- paste0("francis_", names(francis)[2:10] )
-names(alex)[2:10] <- paste0("alex_", names(alex)[2:10] )
+names(sam)[2:11]
+names(sam)[2:11] <- paste0("sam_", names(sam)[2:11] )
+names(robin)[2:11] <- paste0("robin_", names(robin)[2:11] )
+names(francis)[2:11] <- paste0("francis_", names(francis)[2:11] )
+names(alex)[2:11] <- paste0("alex_", names(alex)[2:11] )
 
 
 x <- x %>% left_join(df %>% select("ResponseId", "age","gender"),
                      by = "ResponseId")#
 
-#
-# df_wide <- left_join(sam,robin, by="ResponseId") %>%
-#   left_join(francis, by="ResponseId") %>%
-#   left_join(alex, by="ResponseId")%>%
-#   left_join(df %>% select("ResponseId", "age","gender"
-#                           , "attn_chk_1Q", "attn_chk_2_Q"),
-#                                                 by = "ResponseId")
-#
-# df_wide_clean <-
-# df_wide[which(
-#   is.na(df_wide$alex_M1)==FALSE &
-#     is.na(df_wide$francis_M1)==FALSE &
-#     is.na(df_wide$sam_M1)==FALSE &
-#     is.na(df_wide$robin_M1)==FALSE
-#   ),]
+
+df_wide <- left_join(sam,robin, by="ResponseId") %>%
+  left_join(francis, by="ResponseId") %>%
+  left_join(alex, by="ResponseId")%>%
+  left_join(df %>% select("ResponseId", "age","gender"
+                          , "attn_chk_1Q", "attn_chk_2_Q"),
+                                                by = "ResponseId")
+
+df_wide_clean <-
+df_wide[which(
+  is.na(df_wide$alex_M1)==FALSE &
+    is.na(df_wide$francis_M1)==FALSE &
+    is.na(df_wide$sam_M1)==FALSE &
+    is.na(df_wide$robin_M1)==FALSE
+  ),]
 
 
 attention_fun <- function(data){
@@ -331,7 +348,7 @@ attention_fun <- function(data){
   x
 }
 #df_wide_clean <-
-# df_wide_clean <- attention_fun(df_wide_clean)
+df_wide_clean <- attention_fun(df_wide_clean)
 
 # #x <-
 # x[which(((x$attn_chk_2_Q=="2"|x$attn_chk_2_Q=="5")==FALSE&x$attn_chk_1Q!="7")==FALSE),]
@@ -492,9 +509,11 @@ attention_fun <- function(data){
 # head(as.data.frame(x))
 #
 #
-# write.csv(full_wide, "data/pilot_data_wide.csv", row.names = FALSE)
-write.csv(df_long, "data/study6_data_long.csv", row.names = FALSE)
-write.csv(df_long_clean, "data/study6_data_long_clean.csv", row.names = FALSE)
+write.csv(df_wide,       "data/study3_rep_data_wide.csv", row.names = FALSE)
+write.csv(df_long,       "data/study3_rep_data_long.csv", row.names = FALSE)
+write.csv(df_long_clean, "data/study3_rep_data_long_clean.csv", row.names = FALSE)
+write.csv(df_wide_clean, "data/study3_rep_data_wide_clean.csv", row.names = FALSE)
+
 #
 #
 rm(df,M,ND1, ND2,x, alex, francis, robin, sam)
