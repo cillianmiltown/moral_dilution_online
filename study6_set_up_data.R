@@ -493,6 +493,13 @@ attention_fun <- function(data){
 #
 #
 # write.csv(full_wide, "data/pilot_data_wide.csv", row.names = FALSE)
+
+
+df3 <- df_long # read.csv("../data/study3_rep_data_long.csv")
+# df1 <- read.csv("../data/study3_rep_data_wide.csv")
+# x <- read.csv("../data/study3_rep_data_long_clean.csv")
+
+write.csv(df_wide, "data/study6_data_wide.csv", row.names = FALSE)
 write.csv(df_long, "data/study6_data_long.csv", row.names = FALSE)
 write.csv(df_long_clean, "data/study6_data_long_clean.csv", row.names = FALSE)
 #

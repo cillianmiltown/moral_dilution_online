@@ -1,5 +1,5 @@
 ---
-title: "Sample Analysis Study 3"
+title: "Sample Analysis Study 3 Replication"
 author: "Cillian McHugh"
 date: "12th April 2022"
 bibliography: "resources/bib/My Library.bib"
@@ -16,9 +16,9 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Study 3
+# Study 3 Replication
 
-Below is the analysis for positive moral dilution study.
+Below is the analysis for replication moral dilution study.
 
 ```{r setup, include=FALSE}
 # Setting Up
@@ -54,7 +54,7 @@ suppressMessages(library(car))
 ```{r, echo=TRUE}
 ## Run Script to set up Data
 
-source("study5_set_up_data.R")
+source("study3_replication_set_up_data.R")
 # 
 # write.csv(df_wide_clean, file = "data/study_1_wide_clean.csv")
 # write.csv(df_long_clean, file = "data/study_1_long_clean.csv")
@@ -65,6 +65,7 @@ source("study5_set_up_data.R")
 
 x <- df_long
 x <- df_long_clean
+#x <- df_long_failed
 
 
 sum(x$gender=="1",na.rm = T)/4
@@ -103,7 +104,7 @@ round(mean(x$age),digits=1)
 ```
 # Overview
 ## Sample
-Below is a sample analysis for a moral dilution study, with a total sample of *N* = `r length(x$gender)/4`, (female = `r sum(x$gender=="2")/4`, male = `r sum(x$gender=="1")/4`, non-binary/other = `r sum(x$gender=="3")/4 + sum(x$gender=="5")/4`, prefer not to say `r sum(x$gender=="5")/4`, *M~age~* = `r round(mean(x$age),digits=1)`, *SD* = `r round(sd(x$age),digits=1)`).
+Below is a sample analysis for a moral dilution study, with a total sample of *N* = `r length(x$gender)/4`, (female = `r sum(x$gender=="2",na.rm=T)/4`, male = `r sum(x$gender=="1",na.rm=T)/4`, non-binary/other = `r sum(x$gender=="3",na.rm=T)/4 + sum(x$gender=="4",na.rm=T)/4`, prefer not to say `r sum(x$gender=="5",na.rm=T)/4`, *M~age~* = `r round(mean(x$age,na.rm=T),digits=1)`, *SD* = `r round(sd(x$age,na.rm=T),digits=1)`).
 
 ```{r}
 x <- df_long_clean
@@ -115,7 +116,7 @@ x <- df_long_clean
 
 ## Four item Measure
 
-```{r include=FALSE}
+```{r include=TRUE}
 x$ResponseId <- as.factor(x$ResponseId)
 model1 <- lmerTest::lmer(R_tot ~
                   condition+valence
@@ -139,11 +140,11 @@ anova(m1)
 ```
 
 
-```{r, include=TRUE}
-ezANOVA(data = x, dv = .(R_tot)
-        , wid = .(ResponseId)
-        , within = .(condition,valence)
-        , detailed = TRUE, type = 2)
+```{r, include=FALSE}
+# ezANOVA(data = x, dv = .(R_tot)
+#         , wid = .(ResponseId)
+#         , within = .(condition,valence)
+#         , detailed = TRUE, type = 2)
 ```
 
 
@@ -153,12 +154,12 @@ ezANOVA(data = x, dv = .(R_tot)
 
 ggplot(x,aes(x=condition,y=R_tot))+
   geom_violin() +
-  stat_summary(fun=mean, geom="point", shape=23, size=2)+
   geom_boxplot(width=0.1)+
 #  geom_dotplot(binaxis='y', stackdir='center', dotsize=.05)+
 # violin plot with jittered points
 # 0.2 : degree of jitter in x direction
   geom_jitter(shape=16, position=position_jitter(0.15), size=.3, color="dark grey")+
+  stat_summary(fun=mean, geom="point", shape=23, size=2, fill='black')+
   facet_grid(cols = vars(valence))
 # violin plot with median points
 #p + stat_summary(fun.y=median, geom="point", size=.2, color="red")
@@ -171,12 +172,12 @@ ggplot(x,aes(x=condition,y=R_tot))+
 
 ggplot(x,aes(x=scenario,y=R_tot))+
   geom_violin() +
-  stat_summary(fun=mean, geom="point", shape=23, size=.5)+
   geom_boxplot(width=0.1)+
   #geom_dotplot(binaxis='y', stackdir='center', dotsize=.5)+
 # violin plot with jittered points
 # 0.2 : degree of jitter in x direction
-  geom_jitter(shape=16, position=position_jitter(0.15), size = .3, color="dark grey")
+  geom_jitter(shape=16, position=position_jitter(0.15), size = .3, color="dark grey")+
+  stat_summary(fun=mean, geom="point", shape=23, size=2, fill='black')
 # violin plot with median points
 #p + stat_summary(fun.y=median, geom="point", size=.2, color="red")
 
@@ -184,7 +185,7 @@ ggplot(x,aes(x=scenario,y=R_tot))+
 
 
 
-### Single Item Measure
+## Single Item Measure
 
 ```{r include=FALSE}
 
@@ -220,8 +221,8 @@ anova(m1)
 
 
 ```{r, include=TRUE}
-ezANOVA(data = x, dv = .(M1), wid = .(ResponseId),
-        within = .(condition,valence), detailed = FALSE, type = 2)
+# ezANOVA(data = x, dv = .(M1), wid = .(ResponseId),
+#         within = .(condition,valence), detailed = FALSE, type = 2)
 ```
 
 
@@ -265,12 +266,12 @@ ezANOVA(data = x, dv = .(M1), wid = .(ResponseId),
 
 ggplot(x,aes(x=factor(condition),y=M1))+
   geom_violin() +
-  stat_summary(fun=mean, geom="point", shape=23, size=2)+
   geom_boxplot(width=0.1)+
 #  geom_dotplot(binaxis='y', stackdir='center', dotsize=.05)+
 # violin plot with jittered points
 # 0.2 : degree of jitter in x direction
   geom_jitter(shape=16, position=position_jitter(0.15), size=.3, color="dark grey")+
+  stat_summary(fun=mean, geom="point", shape=23, size=2, fill='black')+
   facet_grid(cols = vars(valence))
 # violin plot with median points
 #p + stat_summary(fun.y=median, geom="point", size=.2, color="red")
@@ -283,12 +284,12 @@ ggplot(x,aes(x=factor(condition),y=M1))+
 
 ggplot(x,aes(x=scenario,y=M1))+
   geom_violin() +
-  stat_summary(fun=mean, geom="point", shape=23, size=.5)+
   geom_boxplot(width=0.1)+
   #geom_dotplot(binaxis='y', stackdir='center', dotsize=.5)+
 # violin plot with jittered points
 # 0.2 : degree of jitter in x direction
-  geom_jitter(shape=16, position=position_jitter(0.15), size = .3, color="dark grey")
+  geom_jitter(shape=16, position=position_jitter(0.15), size = .3, color="dark grey")+
+  stat_summary(fun=mean, geom="point", shape=23, size=2, fill='black')
 # violin plot with median points
 #p + stat_summary(fun.y=median, geom="point", size=.2, color="red")
 
@@ -305,6 +306,9 @@ ggplot(x,aes(x=scenario,y=M1))+
 ```{r, include=TRUE}
 
 df <- df_long_clean
+#df <- df_long_failed
+# df <- attn_missing
+
 
 
 x <- df[which(df$valence=="bad"),]
@@ -319,8 +323,8 @@ summary(m1)
 
 anova(m1)
 
-ezANOVA(data = x, dv = .(R_tot), wid = .(ResponseId),
-        within = .(condition), detailed = FALSE, type = 2)
+# ezANOVA(data = x, dv = .(R_tot), wid = .(ResponseId),
+#         within = .(condition), detailed = FALSE, type = 2)
 
 ```
 
@@ -329,6 +333,7 @@ ezANOVA(data = x, dv = .(R_tot), wid = .(ResponseId),
 ```{r, include=TRUE}
 
 df <- df_long_clean
+#df <- df_long_failed
 
 
 x <- df[which(df$valence=="bad"),]
@@ -343,8 +348,8 @@ summary(m1)
 
 anova(m1)
 
-ezANOVA(data = x, dv = .(M1), wid = .(ResponseId),
-        within = .(condition), detailed = FALSE, type = 2)
+# ezANOVA(data = x, dv = .(M1), wid = .(ResponseId),
+#         within = .(condition), detailed = FALSE, type = 2)
 
 ```
 
@@ -355,6 +360,7 @@ ezANOVA(data = x, dv = .(M1), wid = .(ResponseId),
 ```{r, include=TRUE}
 
 df <- df_long_clean
+#df <- df_long_failed
 
 
 x <- df[which(df$valence=="good"),]
@@ -370,8 +376,8 @@ summary(m1)
 
 anova(m1)
 
-ezANOVA(data = x, dv = .(R_tot), wid = .(ResponseId),
-        within = .(condition), detailed = FALSE, type = 2)
+# ezANOVA(data = x, dv = .(R_tot), wid = .(ResponseId),
+#         within = .(condition), detailed = FALSE, type = 2)
 
 ```
 
@@ -380,6 +386,7 @@ ezANOVA(data = x, dv = .(R_tot), wid = .(ResponseId),
 ```{r, include=TRUE}
 
 df <- df_long_clean
+#df <- df_long_failed
 
 
 x <- df[which(df$valence=="good"),]
@@ -395,8 +402,8 @@ summary(m1)
 
 anova(m1)
 
-ezANOVA(data = x, dv = .(M1), wid = .(ResponseId),
-        within = .(condition), detailed = FALSE, type = 2)
+# ezANOVA(data = x, dv = .(M1), wid = .(ResponseId),
+#         within = .(condition), detailed = FALSE, type = 2)
 
 ```
 
@@ -431,34 +438,36 @@ x <- rbind(good,bad)
 
 
 
-## Four item Measure
+### Four item Measure
+
+
 
 
 ```{r, include=TRUE}
-ezANOVA(data = x, dv = .(R_tot_strength), wid = .(ResponseId),
-        within = .(condition,valence), detailed = FALSE, type = 2)
-
-y <- x[which(x$diagnostic12!="NA"),]
-y$diagnostic12 <- droplevels(y$diagnostic12)
-ezANOVA(data = y, dv = .(R_tot), wid = .(ResponseId),
-        within = .(diagnostic12,valence), detailed = FALSE, type = 2)
-
-y$valence
-good <- y[which(y$valence=="good"),]
-bad <- y[which(y$valence=="bad"),]
-
-ezANOVA(data = good, dv = .(R_tot), wid = .(ResponseId),
-        within = .(diagnostic12), detailed = FALSE, type = 2)
-
-t.test(good$R_tot~good$diagnostic12)
-tapply(good$R_tot, good$diagnostic12, descriptives)
-t.test(good$M1~good$diagnostic12)
-tapply(good$M1, good$diagnostic12, descriptives)
-
-t.test(bad$R_tot~ bad$diagnostic12)
-tapply(bad$R_tot, bad$diagnostic12, descriptives)
-t.test(bad$M1 ~   bad$diagnostic12)
-tapply(bad$M1,    bad$diagnostic12, descriptives)
+# # ezANOVA(data = x, dv = .(R_tot_strength), wid = .(ResponseId),
+# #         within = .(condition,valence), detailed = FALSE, type = 2)
+# 
+# y <- x[which(x$diagnostic12!="NA"),]
+# y$diagnostic12 <- droplevels(y$diagnostic12)
+# ezANOVA(data = y, dv = .(R_tot), wid = .(ResponseId),
+#         within = .(diagnostic12,valence), detailed = FALSE, type = 2)
+# 
+# y$valence
+# good <- y[which(y$valence=="good"),]
+# bad <- y[which(y$valence=="bad"),]
+# 
+# ezANOVA(data = good, dv = .(R_tot), wid = .(ResponseId),
+#         within = .(diagnostic12), detailed = FALSE, type = 2)
+# 
+# t.test(good$R_tot~good$diagnostic12)
+# tapply(good$R_tot, good$diagnostic12, descriptives)
+# t.test(good$M1~good$diagnostic12)
+# tapply(good$M1, good$diagnostic12, descriptives)
+# 
+# t.test(bad$R_tot~ bad$diagnostic12)
+# tapply(bad$R_tot, bad$diagnostic12, descriptives)
+# t.test(bad$M1 ~   bad$diagnostic12)
+# tapply(bad$M1,    bad$diagnostic12, descriptives)
 ```
 
 
@@ -468,6 +477,6 @@ tapply(bad$M1,    bad$diagnostic12, descriptives)
 
 
 ```{r, include=TRUE}
-ezANOVA(data = x, dv = .(M1_strength), wid = .(ResponseId),
-        within = .(condition,valence), detailed = FALSE, type = 2)
+# ezANOVA(data = x, dv = .(M1_strength), wid = .(ResponseId),
+#         within = .(condition,valence), detailed = FALSE, type = 2)
 ```

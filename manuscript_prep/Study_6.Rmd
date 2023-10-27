@@ -34,6 +34,7 @@ lineno            : no
 toc               : false
 lang              : "en-US"
 documentclass     : "apa7"
+replace_ampersands: no
 output:
   papaja::apa6_pdf
 header-includes:
@@ -82,7 +83,10 @@ library(reshape2)
 #install.packages("powerMediation")
 library("powerMediation")
 library("ggpubr")
+library(tidyverse)
+library("ftExtra")
 
+#remotes::install_github("atusy/ftExtra")
 
 # library(rstatix)
 
@@ -101,11 +105,33 @@ getwd()
 ```{r S3LoadData}
 #source("~/Dropbox/College/research/Research_general/cog_load/moral_dumbfounding_and_cognitive_load/read_and_sort_raw_data.R")
 #source("~/Dropbox/College/research/Research_general/cog_load/moral_dumbfounding_and_cognitive_load/load_study6_data.R")
+
+
+# write.csv(df_wide,       "data/study3_rep_data_wide.csv", row.names = FALSE)
+# write.csv(df_long,       "data/study3_rep_data_long.csv", row.names = FALSE)
+# write.csv(df_long_clean, "data/study3_rep_data_long_clean.csv", row.names = FALSE)
+# write.csv(df_wide_clean, "data/study3_rep_data_wide_clean.csv", row.names = FALSE)
+# write.csv(df_long_failed, "data/study3_rep_data_long_failed.csv", row.names = FALSE)
+
+
 rm(list = ls())
+
+#df_long <- read.csv("../data/study6_data_long.csv")
+#df_wide <- read.csv("../data/study6_data_wide.csv")
+#df_long_clean <- read.csv("../data/study6_data_long_clean.csv")
+
+#df3 <- df_long # read.csv("../data/study3_rep_data_long.csv")
+#df1 <- read.csv("../data/study6_data_wide.csv")
+#x <- read.csv("../data/study6_data_long_clean.csv")
+
+df_long <- read.csv("../data/study3_rep_data_long.csv")
+df_wide <- read.csv("../data/study3_rep_data_wide.csv")
+df_long_clean <- read.csv("../data/study3_rep_data_long_clean.csv")
 
 df3 <- df_long # read.csv("../data/study3_rep_data_long.csv")
 df1 <- read.csv("../data/study3_rep_data_wide.csv")
 x <- read.csv("../data/study3_rep_data_long_clean.csv")
+
 
 MPS <- x %>% 
   select(R1,R2,R3,R4)
@@ -126,8 +152,12 @@ Study 3 was a 2 $\times$ 2 within-subjects factorial design. The first independe
 A total sample of `r length(levels(as.factor(df3$ResponseId)))` (`r sum(df1$gender=="1",na.rm=T)` female, `r sum(df1$gender=="2", na.rm=T)` male, `r round(sum(df1$gender=="3", na.rm=T)/1)` non-binary, `r round(sum(df1$gender=="4", na.rm=T))` other; `r sum(df1$gender=="5", na.rm=T)` prefer not to say, *M*~age~ = `r round(mean(df3$age, na.rm=T),digits=2)`, min = `r min(df3$age, na.rm=T)`, max = `r max(df3$age, na.rm=T)`, *SD* = `r round(sd(df3$age, na.rm=T),digits=2)`) started the survey.  Participants were recruited from MTurk and paid $0.40 for their participation.
 
 ```{r}
-df1 <- read.csv("../data/study5_data_long.csv")
-df3 <- read.csv("../data/study5_data_long_clean.csv")
+# df1 <- read.csv("../data/study6_data_long.csv")
+# df3 <- read.csv("../data/study6_data_long_clean.csv")
+
+df1 <- read.csv("../data/study3_rep_data_long.csv")
+df3 <- read.csv("../data/study3_rep_data_long_clean.csv")
+
 df_long_clean <- df3
 table(df3$gender)
 length(df1$gender)/6
@@ -203,6 +233,45 @@ robin <- x[which(x$scenario=="robin"),]
 
 ```{r}
 x <- df3
+
+table(x$scenario,x$ResponseId)
+table(x$ResponseId)
+
+duplicated(x$ResponseId)
+levels(as.factor(x$ResponseId))[2]
+
+
+pid_len_fun <- function(y){
+    sum(x$ResponseId==levels(as.factor(x$ResponseId))[y])<4}
+
+
+
+sum(x$ResponseId==levels(as.factor(x$ResponseId))[1])<4
+
+pid_len_fun(1)
+
+lapply(c(1:10), pid_len_fun)
+
+
+test <- cbind.data.frame(levels(as.factor(x$ResponseId)), 
+                 unlist(
+                   lapply(c(1:length(levels(as.factor(x$ResponseId))))
+                          , pid_len_fun)))
+
+#x = 
+to_keep <- test[1][which(test[2]==FALSE),]
+
+
+#x %>% filter(ResponseId==c(test[1][which(test[2]==FALSE),]))
+
+test <- `colnames<-`(test, c("ResponseId","full"))
+
+full_responses <- left_join(x, test, by = "ResponseId")
+
+full_responses <- full_responses[which(full_responses$full==FALSE),]
+
+x <- full_responses
+
 tapply(x$R_tot, x$scenario, descriptives)
 # bad <- x[which(x$condition=="diagnostic"),]
 # good <- x[which(x$condition=="non-diagnostic"),]
@@ -253,6 +322,8 @@ x <- df3
 # bad <- x[which(x$condition=="diagnostic"),]
 # good <- x[which(x$condition=="non-diagnostic"),]
 #good$scenario_abb <- droplevels(good$scenario_abb)
+
+x <- full_responses
 
 #x <- bad
 aov_full <- rstatix::anova_test(
@@ -367,7 +438,7 @@ Overall, there was a significant main effect for condition,
 *F*(`r aov1$NumDF[1]`, `r round(aov1$DenDF[1])`) = `r f3a`, *p* `r paste(p_report(p3a))`;
 valence significantly predicted responses,
 *F*(`r aov1$NumDF[2]`, `r round(aov1$DenDF[2])`) = `r f3b`, *p* `r paste(p_report(p3b))`;
-and there was no significant condition $\times$ valence interaction,
+and there was a significant condition $\times$ valence interaction,
 *F*(`r aov1$NumDF[3]`, `r round(aov1$DenDF[3])`) = `r f3c`, *p* `r paste(p_report(p3c))`.
 
 
@@ -445,7 +516,7 @@ valence significantly predicted responses,
 and there was no significant condition $\times$ valence interaction,
 *F*(`r aov1$NumDF[3]`, `r round(aov1$DenDF[3])`) = `r f3c`, *p* `r paste(p_report(p3c))`.
 
-For both MP-4 and MM-1 we found a main effect for condition and valence, and there was no condition $\times$ valence interaction. We conducted follow-up analyses to test the if the main effect for condition holds for both good and bad descriptions separately.
+For both MP-4 and MM-1 we found a main effect for condition and valence, and there was a condition $\times$ valence interaction for MP-4 but not for MM-1. We conducted follow-up analyses to test the if the main effect for condition holds for both good and bad descriptions separately.
 
 ## Differences in the *Bad* Descriptions
 
@@ -512,7 +583,7 @@ anova(model1)
 
 ```
 
-We conducted a linear-mixed-effects model to test if condition influenced MPS-4 responses. Our outcome measure was MPS-4, our predictor variable was condition; we allowed intercepts and the effect of condition to vary across participants. Overall, the model did not significantly predict participants responses, or provide a better fit for the data than the baseline model, $\chi$^2^(`r results_anova$Df[2]`) = `r results_anova$Chisq[2]`, *p* `r paste(p_report(p1))`. Condition did not significantly influence MPS-4 responses *F*(`r aov1$NumDF[1]`, `r aov1$DenDF[1]`) = `r f3`, *p* `r paste(p_report(p3))`, and was not a significant predictor in the model $b$ = `r results_coef$Estimate[2]`, *t*(`r results_coef$df[2]`) = `r t1`, *p* `r paste(p_report(p2))`, see Figure\ \@ref(fig:S3bothconditionplot).
+We conducted a linear-mixed-effects model to test if condition influenced MPS-4 responses. Our outcome measure was MPS-4, our predictor variable was condition; we allowed intercepts and the effect of condition to vary across participants. Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model, $\chi$^2^(`r results_anova$Df[2]`) = `r results_anova$Chisq[2]`, *p* `r paste(p_report(p1))`. Condition significantly influenced MPS-4 responses *F*(`r aov1$NumDF[1]`, `r aov1$DenDF[1]`) = `r f3`, *p* `r paste(p_report(p3))`, and was a significant predictor in the model $b$ = `r results_coef$Estimate[2]`, *t*(`r results_coef$df[2]`) = `r t1`, *p* `r paste(p_report(p2))`, see Figure\ \@ref(fig:S3bothconditionplot).
 
 
 
@@ -577,9 +648,6 @@ anova(model1)
 
 ```
 
-There was a high degree of variability in the responses to the bad descriptions, with multiple participants rating the characters as good characters. It is possible that this reflects inattentive participants. Thus, as a follow-up exploratory analysis we employed a stricter measure of attention, and excluded participants who failed either attention check question. This left a sample of `r length(df4$gender)/4` participants (`r sum(df4$gender=="1",na.rm=T)/4` female, `r sum(df4$gender=="2", na.rm=T)/4` male, `r sum(df4$gender=="4", na.rm=T)/4` other, `r sum(df4$gender=="4", na.rm=T)/4` prefer not to say; *M*~age~ = `r round(mean(df4$age, na.rm=T),digits=2)`, min = `r min(df4$age, na.rm=T)`, max = `r max(df4$age, na.rm=T)`, *SD* = `r round(sd(df4$age, na.rm=T),digits=2)`). Using this stricter attention measure we conducted an additional linear-mixed-effects model to test if condition influenced MPS-4 responses. Overall, the model did not significantly predict participants responses, or provide a better fit for the data than the baseline model, $\chi$^2^(`r results_anova$Df[2]`) = `r results_anova$Chisq[2]`, *p* `r paste(p_report(p1))`. Condition did not significantly influence MPS-4 responses *F*(`r aov1$NumDF[1]`, `r aov1$DenDF[1]`) = `r f3`, *p* `r paste(p_report(p3))`, and was not a significant predictor in the model $b$ = `r results_coef$Estimate[2]`, *t*(`r results_coef$df[2]`) = `r t1`, *p* `r paste(p_report(p2))`.
-
-
 
 ```{r}
 x <- df3
@@ -643,8 +711,6 @@ We conducted a linear-mixed-effects model to test if condition influenced MM-1 r
 
 
 ## Differences in the *Good* Descriptions
-
-To interpret the interaction effect, we conducted separate analyses for the Good and Bad descriptions.
 
 
 
@@ -722,25 +788,47 @@ x$Valence <- dplyr::recode(x$valence
 ```{r S3Rtotconditionplot, fig.cap="Study 3: Differences in MPS-4 depending on condition", include=FALSE}
 
 mps4plot <- 
-ggplot(x,aes(x=condition,y=R_tot))+
-  geom_violin() +
-  stat_summary(fun=mean, geom="point", shape=23, size=2)+
-  geom_boxplot(width=0.1)+
+ggplot(x,aes(x=condition,y=R_tot
+             ,fill=condition #Valence
+             ,color= Valence #condition
+             ))+
+  geom_violin(color='black') +
+  
+  
 #  geom_dotplot(binaxis='y', stackdir='center', dotsize=.05)+
 # violin plot with jittered points
 # 0.2 : degree of jitter in x direction
   geom_jitter(shape=16
               , position=position_jitter(0.15)
               , size=.1
-              , color="dark grey") +
+              #, color="dark grey"
+              #, fill="white"
+              ) +
+  geom_boxplot(width=0.2
+               #,color='black'
+               , fill="white"
+               )+
+  geom_jitter(shape=16
+              , position=position_jitter(0.15)
+              , size=.1
+              #, color="dark grey"
+              #, fill="white"
+              ) +
+  stat_summary(fun=mean, geom="point", shape=23, size=4,color="black")+
+  
+  facet_grid(cols = vars(Valence)) +
+  #scale_fill_manual(values = c("lightpink","lightblue"))+
+  scale_fill_manual(values = c('yellow','purple'))+
+  scale_color_manual(values = c("lightpink","lightblue"))+
+  #scale_color_manual(values = c("darkred","navyblue"))+
+  #scale_color_manual(values = c('purple','darkgrey'))+
   xlab("Condition") +
   ylab("MPS-4") +
-  facet_grid(cols = vars(Valence)) +
   theme_bw() +
   theme(panel.border = element_blank(),
         axis.line = element_line(size = .2),
         strip.background  = element_blank(),
-        panel.grid = element_blank(),
+        #panel.grid = element_blank(),
         plot.title=element_text(#family="Times",
                                 size=12
                                 ),
@@ -762,10 +850,10 @@ ggplot(x,aes(x=condition,y=R_tot))+
                                   size = 12
                                   ),
          # strip.background = element_rect(fill = "white"),
-          legend.position="right")
+          legend.position="none")
 
 
-
+mps4plot
 
 ```
 
@@ -773,17 +861,40 @@ ggplot(x,aes(x=condition,y=R_tot))+
 ```{r S3M1conditionplot, fig.cap="Study 3: Differences in MM1 depending on condition", include=FALSE, out.width = "50%"}
 
 M1plot <- 
-  ggplot(x,aes(x=condition,y=M1))+
-  geom_violin() +
-  stat_summary(fun=mean, geom="point", shape=23, size=2)+
-  geom_boxplot(width=0.1)+
-  #  geom_dotplot(binaxis='y', stackdir='center', dotsize=.05)+
-  # violin plot with jittered points
-  # 0.2 : degree of jitter in x direction
+  ggplot(x,aes(x=condition,y=M1
+             ,fill=condition #Valence
+             ,color= Valence#condition
+             ))+
+    geom_violin(color='black') +
+  
+  
+#  geom_dotplot(binaxis='y', stackdir='center', dotsize=.05)+
+# violin plot with jittered points
+# 0.2 : degree of jitter in x direction
   geom_jitter(shape=16
               , position=position_jitter(0.15)
               , size=.1
-              , color="dark grey") +
+              #, color="dark grey"
+              #, fill="white"
+              ) +
+  geom_boxplot(width=0.2
+               #,color='black'
+               , fill="white"
+               )+
+  geom_jitter(shape=16
+              , position=position_jitter(0.15)
+              , size=.1
+              #, color="dark grey"
+              #, fill="white"
+              ) +
+  stat_summary(fun=mean, geom="point", shape=23, size=4,color="black")+
+  
+  facet_grid(cols = vars(Valence)) +
+  #scale_fill_manual(values = c("lightpink","lightblue"))+
+  scale_fill_manual(values = c('yellow','purple'))+
+  scale_color_manual(values = c("lightpink","lightblue"))+
+  #scale_color_manual(values = c("darkred","navyblue"))+
+  #scale_color_manual(values = c('purple','darkgrey'))+
   xlab("Condition") +
   ylab("MM-1")+
   facet_grid(cols = vars(Valence)) +
@@ -791,7 +902,7 @@ M1plot <-
   theme(panel.border = element_blank(),
         axis.line = element_line(size = .2),
         strip.background  = element_blank(),
-        panel.grid = element_blank(),
+        #panel.grid = element_blank(),
         plot.title=element_text(#family="Times",
           size=12
         ),
@@ -813,7 +924,7 @@ M1plot <-
           size = 12
         ),
         # strip.background = element_rect(fill = "white"),
-        legend.position="right")
+        legend.position="none")
 
 
 
@@ -829,6 +940,8 @@ figure <- ggarrange(mps4plot
                     #, widths = c(0.485, 0.5)
                     )
 figure
+
+ggsave("Study6.png",figure)
 ```
 
 
@@ -856,7 +969,7 @@ model0 <- lmerTest::lmer(M1 ~ 1
 
 summary(model0)
 model1 <- lmerTest::lmer(M1 ~
-                  condition#*scenario
+                  condition*scenario
                 + (1|ResponseId)
              #   + (1|ResponseId:condition)
                 , data = x
@@ -899,7 +1012,5 @@ anova(model1)
 
 We conducted a linear-mixed-effects model to test if condition influenced MM-1 responses. Our outcome measure was MM-1, our predictor variable was condition; we allowed intercepts and the effect of condition to vary across participants. Overall, the model significantly predicted participants responses, and provided a better fit for the data than the baseline model, $\chi$^2^(`r results_anova$Df[2]`) = `r results_anova$Chisq[2]`, *p* `r paste(p_report(p1))`. Condition significantly influenced MM-1 responses *F*(`r aov1$NumDF[1]`, `r round(aov1$DenDF[1])`) = `r f3`, *p* `r paste(p_report(p3))`, and was a significant predictor in the model $b$ = `r results_coef$Estimate[2]`, *t*(`r round(results_coef$df[2])`) = `r t1`, *p* `r paste(p_report(p2))`, see Figure\ \@ref(fig:S3bothconditionplot).
 
-In the supplementary analyses we report the effect of condition on moral perception for each description individually.
 
-The aim of Study 3 was to test if the moral dilution effect was moderated by valence of description. Based on the results of Studies 1 and 2 we hypothesized that a dilution effect would be observed for judgments of *bad* characters, but not for judgments of *good* characters. Interestingly, in Study 2 we found a dilution effect for *good* characters across both measures, however we only found a dilution effect for *bad* characters when using the single item measure of moral perception. 
 

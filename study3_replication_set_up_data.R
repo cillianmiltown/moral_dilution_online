@@ -5,7 +5,7 @@ library(tidyverse)
 
 # read the data file
 
-df <- suppressMessages(read_csv("../data/study_3_replication_May2023c.csv"))
+df <- suppressMessages(read_csv("../data/study_3_replication.csv"))
 #df <- suppressMessages(read_csv("../../data/study_5.csv"))
 
 
@@ -280,13 +280,52 @@ x$M1R_tot <- scale(scale(x$R_tot)+scale(x$M1))
 
 
 df_long <- x
+
 x <- df_long
 
-#x <- x[as.numeric(ave(x$ResponseId, x$ResponseId, FUN=length)) >= 4, ]
-x <- x[as.numeric(ave(x$ResponseId, x$ResponseId, FUN=length)) >= 4, ]
+
+x$att1_fail <- x$attn_chk_1Q!="7"
+x$att2_fail <- (x$attn_chk_2_Q=="2"|x$attn_chk_2_Q=="5")==FALSE
+
+#table(x$att1_fail,x$att2_fail)
+x$att_fail <- x$att1_fail==T & x$att2_fail==T
+
+#table(x$att_fail)
+
+df_long_clean <- x[which(x$att_fail==FALSE),]
+table(df_long_clean$attn_chk_1Q,df_long_clean$attn_chk_2_Q)
 
 
-x <- x[which(((x$attn_chk_2_Q=="2"|x$attn_chk_2_Q=="5")==FALSE&x$attn_chk_1Q!="7")==FALSE),]
+attn_missing <- x[which(is.na(x$att_fail)),]
+
+# x <- df_long
+# #x <- x[as.numeric(ave(x$ResponseId, x$ResponseId, FUN=length)) >= 4, ]
+# x <- x[as.numeric(ave(x$ResponseId, x$ResponseId, FUN=length)) >= 4, ]
+# #sum(x$attn_chk_1Q==7)
+# x <- x[which(((x$attn_chk_2_Q=="2"|x$attn_chk_2_Q=="5")==FALSE&x$attn_chk_1Q!="7")==FALSE),]
+# table(x$attn_chk_1Q)
+# table(x$attn_chk_2_Q)
+# # #x <-
+# # x[which(((x$attn_chk_2_Q=="2"|x$attn_chk_2_Q=="5")==FALSE | x$attn_chk_1Q=="7")),]
+# # x[which(((x$attn_chk_2_Q!="2"&x$attn_chk_2_Q!="5")==FALSE)),]
+# # x[which(((x$attn_chk_2_Q!="2"&x$attn_chk_2_Q!="5")==FALSE | x$attn_chk_1Q=="7")),]
+
+
+
+#df_long_clean <- x
+
+
+
+
+#df_long <- x
+# x <- df_long
+# #x <- x[as.numeric(ave(x$ResponseId, x$ResponseId, FUN=length)) >= 4, ]
+# x <- x[as.numeric(ave(x$ResponseId, x$ResponseId, FUN=length)) >= 4, ]
+# #sum(x$attn_chk_1Q==7)
+# x <- x[which(((x$attn_chk_2_Q=="2"|x$attn_chk_2_Q=="5")==FALSE&x$attn_chk_1Q!="7")==TRUE),]
+# table(x$attn_chk_1Q)
+# table(x$attn_chk_2_Q)
+
 # #x <-
 # x[which(((x$attn_chk_2_Q=="2"|x$attn_chk_2_Q=="5")==FALSE | x$attn_chk_1Q=="7")),]
 # x[which(((x$attn_chk_2_Q!="2"&x$attn_chk_2_Q!="5")==FALSE)),]
@@ -294,7 +333,7 @@ x <- x[which(((x$attn_chk_2_Q=="2"|x$attn_chk_2_Q=="5")==FALSE&x$attn_chk_1Q!="7
 
 
 
-df_long_clean <- x
+df_long_failed <- x[which(x$att_fail==TRUE),]
 
 
 
@@ -342,13 +381,26 @@ df_wide[which(
   ),]
 
 
-attention_fun <- function(data){
-  x <- data
-  x <- x[which(((x$attn_chk_2_Q=="2"|x$attn_chk_2_Q=="5")==FALSE&x$attn_chk_1Q!="7")==FALSE),]
-  x
-}
+# attention_fun <- function(data){
+#   x <- data
+#   x <- x[which(((x$attn_chk_2_Q=="2"|x$attn_chk_2_Q=="5")==FALSE&x$attn_chk_1Q!="7")==FALSE),]
+#   x
+# }
 #df_wide_clean <-
-df_wide_clean <- attention_fun(df_wide_clean)
+
+x <- df_wide
+
+x$att1_fail <- x$attn_chk_1Q!="7"
+x$att2_fail <- (x$attn_chk_2_Q=="2"|x$attn_chk_2_Q=="5")==FALSE
+
+#table(x$att1_fail,x$att2_fail)
+x$att_fail <- x$att1_fail==T & x$att2_fail==T
+
+#table(x$att_fail)
+
+df_wide_clean <- x[which(x$att_fail==FALSE),]
+
+#df_wide_clean <- attention_fun(df_wide_clean)
 
 # #x <-
 # x[which(((x$attn_chk_2_Q=="2"|x$attn_chk_2_Q=="5")==FALSE&x$attn_chk_1Q!="7")==FALSE),]
@@ -513,7 +565,7 @@ write.csv(df_wide,       "data/study3_rep_data_wide.csv", row.names = FALSE)
 write.csv(df_long,       "data/study3_rep_data_long.csv", row.names = FALSE)
 write.csv(df_long_clean, "data/study3_rep_data_long_clean.csv", row.names = FALSE)
 write.csv(df_wide_clean, "data/study3_rep_data_wide_clean.csv", row.names = FALSE)
-
+write.csv(df_long_failed, "data/study3_rep_data_long_failed.csv", row.names = FALSE)
 #
 #
 rm(df,M,ND1, ND2,x, alex, francis, robin, sam)
